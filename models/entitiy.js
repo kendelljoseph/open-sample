@@ -7,6 +7,8 @@ const Entitiy = sequelize.define('Entitiy', {
     type: DataTypes.STRING,
     allowNull: false
   }
+}, {
+    tableName: 'Entities'
 });
 
 Entitiy.sync();
