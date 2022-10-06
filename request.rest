@@ -1,0 +1,26 @@
+### Create an Entitity
+POST http://localhost:3000/v1/entity
+content-type: application/json
+
+{
+    "name": "My Entity"
+}
+
+### Get all Entities
+
+GET http://localhost:3000/v1/entity
+
+### Get Entitiy by ID
+GET http://localhost:3000/v1/entity/1
+
+### Update an Entitiy by ID
+PUT http://localhost:3000/v1/entity/1
+content-type: application/json
+
+{
+    "id": 1,
+    "name": "My New Name"
+}
+
+### Delete an Entitiy by ID
+DELETE http://localhost:3000/v1/entity/1
