@@ -1,5 +1,5 @@
-const auth = require('./auth');
+const authz = require('./authz');
 const audit = require('./audit');
 const routeError = require('./route_error');
 
-module.exports = {auth, audit, routeError}
+module.exports = {authz, audit, routeError};

@@ -4,7 +4,7 @@ const morgan = require('morgan');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const express = require('express');
-const { auth, audit, routeError } = require('./middleware');
+const { authz, audit, routeError } = require('./middleware');
 const { entity, adminAudit, adminRouteError } = require('./routes');
 
 const app = express();
@@ -18,7 +18,7 @@ app.use(express.json());
 app.use(morgan('tiny'));
 
 // Middleware
-app.use(auth());
+app.use(authz());
 app.use(audit());
 
 // Routes
