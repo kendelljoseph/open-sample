@@ -1,45 +1,45 @@
-const express = require('express')
+const express = require('express');
 const router = express.Router()
-const { Entitiy } = require('../models');
+const { Entity } = require('../models');
 
 // Create Entity
 router.post('/', async (req, res) => {
   const body = req.body;
-  const entitiy = await Entitiy.create(body, {
+  const entity = await Entity.create(body, {
     fields: ['name']
   });
 
-  const record = entitiy.dataValues;
+  const record = entity.dataValues;
 
   res.json(record);
 });
 
 // Get All Entities
 router.get('/', async (req, res) => {
-  const entities = await Entitiy.findAll()
-  const records = entities.map((entitiy) => {
-    return entitiy.dataValues;
+  const entities = await Entity.findAll()
+  const records = entities.map((entity) => {
+    return entity.dataValues;
   });
   
   res.json(records);
 });
 
-// Get Entitiy by Id
+// Get Entity by Id
 router.get('/:id', async (req, res) => {
   const id = req.params.id;
-  const entitiy = await Entitiy.findOne({
+  const entity = await Entity.findOne({
     where: {id}
   });
-  const record = entitiy && entitiy.dataValues;
+  const record = entity && entity.dataValues;
 
   res.json(record);
 });
 
-// Update an Entitity by Id
+// Update an Entity by Id
 router.put('/:id', async (req, res) => {
   const id = req.params.id;
   const body = req.body;
-  const record = await Entitiy.update(
+  const record = await Entity.update(
     body,
     {fields: ['name'], where: {id}}
   );
@@ -47,10 +47,10 @@ router.put('/:id', async (req, res) => {
   res.json(record);
 });
 
-// Delete an Entitiy by Id
+// Delete an Entity by Id
 router.delete('/:id', async (req, res) => {
   const id = req.params.id;
-  const record = await Entitiy.destroy(
+  const record = await Entity.destroy(
     {where: {id}}
   );
   

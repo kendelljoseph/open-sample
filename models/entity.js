@@ -1,8 +1,7 @@
 const { Sequelize, DataTypes } = require('sequelize');
 const sequelize = new Sequelize('sqlite::memory:');
 
-const Entitiy = sequelize.define('Entitiy', {
-  // Model attributes are defined here
+const Entity = sequelize.define('Entitiy', {
   name: {
     type: DataTypes.STRING,
     allowNull: false
@@ -11,6 +10,6 @@ const Entitiy = sequelize.define('Entitiy', {
     tableName: 'Entities'
 });
 
-Entitiy.sync();
+Entity.sync();
 
-module.exports = Entitiy;
+module.exports = Entity;
