@@ -9,7 +9,7 @@ module.exports = () => {
         path: req.path,
         event: req.audit && req.audit.event,
         message: error.message,
-        token: req.authz.token
+        token: req.authz && req.authz.token
       });
       res.status(500).json(error.message);
     } catch (error) {

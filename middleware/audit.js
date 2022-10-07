@@ -6,7 +6,7 @@ module.exports = () => {
     
     try {
       const audit = await Audit.create({
-        token: req.authz.token,
+        token: req.authz && req.authz.token,
         key: crypto.randomBytes(32).toString('hex'),
         event: appEvent
       });
