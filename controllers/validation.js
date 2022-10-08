@@ -7,6 +7,7 @@ module.exports = {
       .required()
       .isObject((obj) => {
         obj('name').required().isString();
+        obj().strict();
       });
 
     return validator.run();
@@ -17,6 +18,7 @@ module.exports = {
       .required()
       .isObject((obj) => {
         obj('id').required().isString();
+        obj().strict();
       });
 
     return validator.run();
