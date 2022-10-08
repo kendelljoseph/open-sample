@@ -1,16 +1,15 @@
-require('dotenv').config();
 require('colors');
 const morgan = require('morgan');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const express = require('express');
+const config = require('./config');
+
+const { PORT } = config.APP;
 const { authz, audit, routeError } = require('./middleware');
 const { entity, adminAudit, adminRouteError } = require('./routes');
 
 const app = express();
-
-// Config
-const port = process.env.PORT || 3000;
 
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -30,6 +29,6 @@ app.use('/admin/v1/route-error', adminRouteError);
 app.use(routeError());
 
 // Listen
-app.listen(port, () => {
-  console.log(`App listening on port ${port}`.bgYellow);
+app.listen(PORT, () => {
+  console.log(`App listening on port ${PORT}`.bgYellow);
 });
