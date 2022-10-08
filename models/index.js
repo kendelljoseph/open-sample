@@ -1,14 +1,6 @@
-const { Sequelize, DataTypes } = require('sequelize');
-const { POSTGRESQL } = require('../config');
+const { postgres } = require('../database');
 
-// const sequelize = new Sequelize('sqlite::memory:');
-const sequelize = new Sequelize(POSTGRESQL.DB, POSTGRESQL.USER, POSTGRESQL.PASSWORD, {
-  host: POSTGRESQL.HOST,
-  dialect: 'postgres',
-  operatorsAliases: false,
-  pool: POSTGRESQL.pool,
-  port: POSTGRESQL.PORT,
-});
+const { sequelize, DataTypes } = postgres;
 
 const Audit = sequelize.define('Audit', {
   event: {
@@ -74,7 +66,7 @@ const RouteError = sequelize.define('RouteError', {
   },
 });
 
-// Sync the models
+// Sync models
 sequelize
   .authenticate()
   .then(() => {
@@ -85,7 +77,7 @@ sequelize
     console.error('postgress db connection error'.bgRed, error.message.red);
   });
 
-// Export the models
+// Export models
 module.exports = {
   Entity,
   Authz,
