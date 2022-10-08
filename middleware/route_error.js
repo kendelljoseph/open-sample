@@ -1,18 +1,22 @@
 const { RouteError } = require('../models');
 
 module.exports = () => async (error, req, res, next) => {
-  console.error('500 Server Error'.bgRed, String(error.message).red);
+  const statusCode = error.statusCode || 500;
+  console.error(`${statusCode} Server Error`.bgRed, String(error.message).red);
   try {
     await RouteError.create({
       method: req.method,
       path: req.path,
       event: req.audit && req.audit.event,
-      message: error.message,
+      message: JSON.stringify(error.message),
+      statusCode,
       token: req.authz && req.authz.token,
     });
-    res.status(500).json(error.message);
+    if (!res.writableEnded) {
+      res.status(statusCode).json(error.message);
+    }
   } catch (err) {
-    console.error('500 Cascading Error'.bgRed, err);
+    console.error('500 Cascading Database or Express Error'.bgRed, err);
   }
 
   next();

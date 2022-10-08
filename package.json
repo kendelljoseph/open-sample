@@ -12,6 +12,7 @@
   "author": "Kendell Joseph",
   "license": "ISC",
   "dependencies": {
+    "better-validator": "^2.1.9",
     "body-parser": "^1.20.1",
     "colors": "^1.4.0",
     "cors": "^2.8.5",

@@ -1,6 +1,7 @@
 lockfileVersion: 5.4
 
 specifiers:
+  better-validator: ^2.1.9
   body-parser: ^1.20.1
   colors: ^1.4.0
   cors: ^2.8.5
@@ -19,6 +20,7 @@ specifiers:
   sqlite3: ^5.1.2
 
 dependencies:
+  better-validator: 2.1.9
   body-parser: 1.20.1
   colors: 1.4.0
   cors: 2.8.5
@@ -299,6 +301,13 @@ packages:
     engines: {node: '>= 0.8'}
     dependencies:
       safe-buffer: 5.1.2
+    dev: false
+
+  /better-validator/2.1.9:
+    resolution: {integrity: sha512-Oe0TIVk+lB14FQQu/GIZkVxCerhL+w45Te9XVwpxcODqvXsQ3a3DLqz2cqhfr81armw8rqa5VtImiY/akdCkEQ==}
+    dependencies:
+      underscore: 1.13.6
+      validator: 6.3.0
     dev: false
 
   /binary-extensions/2.2.0:
@@ -2558,6 +2567,10 @@ packages:
     resolution: {integrity: sha512-WxONCrssBM8TSPRqN5EmsjVrsv4A8X12J4ArBiiayv3DyyG3ZlIg6yysuuSYdZsVz3TKcTg2fd//Ujd4CHV1iA==}
     dev: true
 
+  /underscore/1.13.6:
+    resolution: {integrity: sha512-+A5Sja4HP1M08MaXya7p5LvjuM7K6q/2EaC0+iovj/wOcMsTzMvDFbasi/oSapiwOlt252IqsKqPjCl7huKS0A==}
+    dev: false
+
   /unique-filename/1.1.1:
     resolution: {integrity: sha512-Vmp0jIp2ln35UTXuryvjzkjGdRyf9b2lTXuSYUiPmzRcl3FDtYqAwOnTJkAngD9SWhnoJzDbTKwaOrZ+STtxNQ==}
     dependencies:
@@ -2598,6 +2611,11 @@ packages:
 
   /validator/13.7.0:
     resolution: {integrity: sha512-nYXQLCBkpJ8X6ltALua9dRrZDHVYxjJ1wgskNt1lH9fzGjs3tgojGSCBjmEPwkWS1y29+DrizMTW19Pr9uB2nw==}
+    engines: {node: '>= 0.10'}
+    dev: false
+
+  /validator/6.3.0:
+    resolution: {integrity: sha512-BylxTwhqwjQI5MDJF7amCy/L0ejJO+74DvCsLV52Lq3+3bhVcVMKqNqOiNcQJm2G48u9EAcw4xFERAmFbwXM9Q==}
     engines: {node: '>= 0.10'}
     dev: false
 
