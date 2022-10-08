@@ -5,7 +5,7 @@ authorization: Bearer PUBLIC
 content-type: application/json
 
 {
-    "name": "My Entity"
+    "name": "Bot"
 }
 
 ### Get all Entities
@@ -25,8 +25,7 @@ authorization: Bearer PUBLIC
 content-type: application/json
 
 {
-    "id": 1,
-    "name": "My New Name"
+    "name": "Bot Update"
 }
 
 ### Delete an Entitiy by ID

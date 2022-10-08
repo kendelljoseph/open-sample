@@ -2,7 +2,25 @@ const { postgres } = require('../database');
 
 const { sequelize, DataTypes } = postgres;
 
-const Audit = sequelize.define('Audit', {
+class DatabaseObject {
+  constructor(...args) {
+    return sequelize.define(...args);
+  }
+
+  static syncAll() {
+    sequelize
+      .authenticate()
+      .then(() => {
+        console.log('postgres db connected'.bgCyan);
+        return sequelize.sync();
+      })
+      .catch((error) => {
+        console.error('postgres db connection error'.bgRed, error.message.red);
+      });
+  }
+}
+
+const Audit = new DatabaseObject('Audit', {
   event: {
     type: DataTypes.STRING,
     allowNull: false,
@@ -17,7 +35,7 @@ const Audit = sequelize.define('Audit', {
   },
 });
 
-const Authz = sequelize.define(
+const Authz = new DatabaseObject(
   'Authorization',
   {
     key: {
@@ -35,7 +53,7 @@ const Authz = sequelize.define(
   },
 );
 
-const Entity = sequelize.define(
+const Entity = new DatabaseObject(
   'Entitiy',
   {
     name: {
@@ -48,7 +66,7 @@ const Entity = sequelize.define(
   },
 );
 
-const RouteError = sequelize.define('RouteError', {
+const RouteError = new DatabaseObject('RouteError', {
   method: {
     type: DataTypes.STRING,
   },
@@ -58,6 +76,9 @@ const RouteError = sequelize.define('RouteError', {
   event: {
     type: DataTypes.STRING,
   },
+  statusCode: {
+    type: DataTypes.INTEGER,
+  },
   message: {
     type: DataTypes.STRING,
   },
@@ -66,16 +87,7 @@ const RouteError = sequelize.define('RouteError', {
   },
 });
 
-// Sync models
-sequelize
-  .authenticate()
-  .then(() => {
-    console.log('postgres db connected'.bgCyan);
-    return sequelize.sync({ force: true });
-  })
-  .catch((error) => {
-    console.error('postgres db connection error'.bgRed, error.message.red);
-  });
+DatabaseObject.syncAll();
 
 // Export models
 module.exports = {
