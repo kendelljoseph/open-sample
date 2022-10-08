@@ -74,7 +74,7 @@ sequelize
     return sequelize.sync({ force: true });
   })
   .catch((error) => {
-    console.error('postgress db connection error'.bgRed, error.message.red);
+    console.error('postgres db connection error'.bgRed, error.message.red);
   });
 
 // Export models
