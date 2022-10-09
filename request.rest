@@ -38,6 +38,12 @@ GET http://localhost:3000/admin/v1/audit
 x-app-audit-event: admin-audit
 authorization: Bearer ADMINISTRATOR
 
+### Get Audit by Event (Admin)
+GET http://localhost:3000/admin/v1/audit/admin-audit-by-event
+x-app-audit-event: admin-audit-by-event
+authorization: Bearer ADMINISTRATOR
+
+
 ### Get Route Errors (Admin)
 GET http://localhost:3000/admin/v1/route-error
 x-app-audit-event: admin-route-errors

@@ -20,11 +20,11 @@ router.get('/:event', async (req, res, next) => {
   const { event } = req.params;
 
   try {
-    const audit = await Audit.findOne({
+    const audit = await Audit.findAll({
       where: { event },
     });
-    const record = audit && audit.dataValues;
-    res.status(200).json(record);
+    const records = audit.map(({ dataValues }) => dataValues);
+    res.status(200).json(records);
   } catch (error) {
     next(error);
   }
