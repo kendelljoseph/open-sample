@@ -39,8 +39,8 @@ router.post('/', async (req, res, exit) => {
     MERGE (entity)-[:USING_AUTHZ]->(authz)
     `,
     {
-      token: req.authz.token,
-      key: req.authz.key,
+      token: req.authz && req.authz.token,
+      key: req.authz && req.authz.key,
       ...record,
     },
   );
