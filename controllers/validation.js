@@ -23,4 +23,10 @@ module.exports = {
 
     return validator.run();
   },
+  isKey: (data) => {
+    const validator = new Validator();
+    validator(data).required().isString().isAlphanumeric();
+
+    return validator.run();
+  },
 };
