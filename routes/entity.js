@@ -1,10 +1,13 @@
 const express = require('express');
 
 const router = express.Router();
+
+const { Neo4jDatabaseConnection } = require('../database/neo4j');
 const { Entity } = require('../models');
 const { validation } = require('../controllers');
 
 const { isEntity, isRecord } = validation;
+const graph = new Neo4jDatabaseConnection();
 
 // Create Entity
 router.post('/', async (req, res, exit) => {
@@ -22,6 +25,22 @@ router.post('/', async (req, res, exit) => {
   });
 
   const record = entity.dataValues;
+
+  // Graph
+  const graphErr = await graph.write(
+    `
+    MERGE (entity:Entity {
+      name: $name,
+      createdAt: timestamp(),
+      updatedAt: timestamp()
+    })`,
+    record,
+  );
+  await graph.disconnect();
+
+  if (graphErr) {
+    return exit({ statusCode: 400, message: graphErr });
+  }
 
   // Respond
   res.json(record);
