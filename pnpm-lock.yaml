@@ -14,6 +14,7 @@ specifiers:
   jsonwebtoken: ^8.5.1
   morgan: ^1.10.0
   neo4j-driver: ^5.1.0
+  node-random-name: ^1.0.1
   nodemon: ^2.0.20
   pg: ^8.8.0
   prettier: ^2.7.1
@@ -31,6 +32,7 @@ dependencies:
   jsonwebtoken: 8.5.1
   morgan: 1.10.0
   neo4j-driver: 5.1.0
+  node-random-name: 1.0.1
   pg: 8.8.0
   prettier: 2.7.1
   sequelize: 6.24.0_pg@8.8.0+sqlite3@5.1.2
@@ -230,6 +232,10 @@ packages:
       fast-json-stable-stringify: 2.1.0
       json-schema-traverse: 0.4.1
       uri-js: 4.4.1
+
+  /alea/0.0.9:
+    resolution: {integrity: sha512-7GrAOnIHGlKtOmZm09dHL+n5tXlao4uBGeXUPRX+I5PAyZqa95CaSFC9bXpkFJpT6j5N3+UKoxDfPmmwBedg7A==}
+    dev: false
 
   /ansi-regex/5.0.1:
     resolution: {integrity: sha512-quJQXlTSUGL2LH9SUXo8VwsY4soanhgo6LNSm84E1LBcE8s3O0wpdiRzyR9z/ZZJMlMWv37qOOb9pdJlMUEKFQ==}
@@ -1811,6 +1817,12 @@ packages:
       - supports-color
     dev: false
     optional: true
+
+  /node-random-name/1.0.1:
+    resolution: {integrity: sha512-7+IpyBRtbHvTWXjdZxjxyaafdggIvA3IpNf2W3ZRe+ok3UyE32Qb8PCb4fKKPdZCCjoAk358yQZWywAimw8KCw==}
+    dependencies:
+      alea: 0.0.9
+    dev: false
 
   /nodemon/2.0.20:
     resolution: {integrity: sha512-Km2mWHKKY5GzRg6i1j5OxOHQtuvVsgskLfigG25yTtbyfRGn/GNvIbRyOf1PSCKJ2aT/58TiuUsuOU5UToVViw==}
