@@ -7,7 +7,6 @@ const { Entity } = require('../models');
 const { validation } = require('../controllers');
 
 const { isEntity, isRecord } = validation;
-const graph = new Neo4jDatabaseConnection();
 
 // Create Entity
 router.post('/', async (req, res, exit) => {
@@ -27,14 +26,23 @@ router.post('/', async (req, res, exit) => {
   const record = entity.dataValues;
 
   // Graph
+  const graph = new Neo4jDatabaseConnection();
   const graphErr = await graph.write(
     `
-    MERGE (entity:Entity {
+    MATCH (authz:Authz {token: $token})
+    CREATE (entity:Entity {
       name: $name,
       createdAt: timestamp(),
       updatedAt: timestamp()
-    })`,
-    record,
+    })
+    
+    MERGE (entity)-[:USING_AUTHZ]->(authz)
+    `,
+    {
+      token: req.authz.token,
+      key: req.authz.key,
+      ...record,
+    },
   );
   await graph.disconnect();
 
