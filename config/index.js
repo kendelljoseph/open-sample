@@ -1,5 +1,10 @@
 require('dotenv').config();
 
+const APP = {
+  PORT: process.env.PORT || 3000,
+  NODE_ENV: process.env.NODE_ENV,
+};
+
 const POSTGRESQL = {
   HOST: process.env.POSTGRESQL_DB_HOST,
   USER: process.env.POSTGRESQL_USER,
@@ -14,9 +19,10 @@ const POSTGRESQL = {
   },
 };
 
-const APP = {
-  PORT: process.env.PORT || 3000,
-  NODE_ENV: process.env.NODE_ENV,
+const NEO4J = {
+  NEO4J_USER: process.env.NEO4J_USER,
+  NEO4J_PASSWORD: process.env.NEO4J_PASSWORD,
+  NEO4J_URI: process.env.NEO4J_URI,
 };
 
-module.exports = { APP, POSTGRESQL };
+module.exports = { APP, POSTGRESQL, NEO4J };
