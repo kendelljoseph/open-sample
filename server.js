@@ -1,13 +1,18 @@
-require('colors');
-const morgan = require('morgan');
-const cors = require('cors');
-const bodyParser = require('body-parser');
-const express = require('express');
-const config = require('./config');
+// eslint-disable-next-line no-unused-vars
+import colors from 'colors';
+import morgan from 'morgan';
+import cors from 'cors';
+import bodyParser from 'body-parser';
+import express from 'express';
+import audit from './middleware/audit.js';
+import authz from './middleware/authz.js';
+import routeError from './middleware/route_error.js';
+import entity from './routes/entity.js';
+import adminAudit from './routes/audit.js';
+import adminRouteError from './routes/route_error.js';
+import { APP } from './config/index.js';
 
-const { PORT } = config.APP;
-const { authz, audit, routeError } = require('./middleware');
-const { entity, adminAudit, adminRouteError } = require('./routes');
+const { PORT } = APP;
 
 const app = express();
 
@@ -30,5 +35,6 @@ app.use(routeError());
 
 // Listen
 app.listen(PORT, () => {
+  // eslint-disable-next-line no-console
   console.log(`App listening on port ${PORT}`.bgYellow);
 });

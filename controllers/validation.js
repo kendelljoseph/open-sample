@@ -1,6 +1,6 @@
-const Validator = require('better-validator');
+import Validator from 'better-validator';
 
-module.exports = {
+export default {
   isEntity: (data) => {
     const validator = new Validator();
     validator(data)

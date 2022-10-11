@@ -1,10 +1,10 @@
-const express = require('express');
+import express from 'express';
+
+import Neo4jDatabaseConnection from '../database/neo4j.js';
+import { Entity } from '../models/record/index.js';
+import validation from '../controllers/validation.js';
 
 const router = express.Router();
-
-const { Neo4jDatabaseConnection } = require('../database/neo4j');
-const { Entity } = require('../models');
-const { validation } = require('../controllers');
 
 const { isEntity, isRecord } = validation;
 
@@ -52,6 +52,7 @@ router.post('/', async (req, res, exit) => {
 
   // Respond
   res.json(record);
+  return null;
 });
 
 // Get All Entities
@@ -79,6 +80,7 @@ router.get('/:id', async (req, res, exit) => {
 
   // Respond
   res.json(record);
+  return null;
 });
 
 // Update an Entity by Id
@@ -93,10 +95,14 @@ router.put('/:id', async (req, res, exit) => {
   }
 
   // Model
-  const record = await Entity.update(body, { fields: ['name'], where: { id } });
+  const record = await Entity.update(body, {
+    fields: ['name'],
+    where: { id },
+  });
 
   // Respond
   res.json(record);
+  return null;
 });
 
 // Delete an Entity by Id
@@ -113,6 +119,7 @@ router.delete('/:id', async (req, res, exit) => {
 
   // Respond
   res.json(record);
+  return null;
 });
 
-module.exports = router;
+export default router;

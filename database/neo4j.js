@@ -1,7 +1,7 @@
-const neo4j = require('neo4j-driver');
-const { NEO4J } = require('../config');
+import neo4j from 'neo4j-driver';
+import { NEO4J } from '../config/index.js';
 
-class Neo4jDatabaseConnection {
+export default class Neo4jDatabaseConnection {
   constructor() {
     this.driver = neo4j.driver(
       NEO4J.NEO4J_URI,
@@ -28,7 +28,3 @@ class Neo4jDatabaseConnection {
     return err;
   }
 }
-
-module.exports = {
-  Neo4jDatabaseConnection,
-};

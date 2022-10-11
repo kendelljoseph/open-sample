@@ -1,7 +1,7 @@
-const express = require('express');
+import express from 'express';
+import { RouteError } from '../models/record/index.js';
 
 const router = express.Router();
-const { RouteError } = require('../models');
 
 // Get All RouteError
 router.get('/', async (req, res) => {
@@ -9,6 +9,7 @@ router.get('/', async (req, res) => {
   const records = error.map(({ dataValues }) => dataValues);
 
   res.status(200).json(records);
+  return null;
 });
 
 // Get RouteError by Event
@@ -20,6 +21,7 @@ router.get('/:event', async (req, res) => {
   const record = error && error.dataValues;
 
   res.status(200).json(record);
+  return null;
 });
 
-module.exports = router;
+export default router;

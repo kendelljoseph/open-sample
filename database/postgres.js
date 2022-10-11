@@ -1,5 +1,5 @@
-const { Sequelize, DataTypes } = require('sequelize');
-const { POSTGRESQL, APP } = require('../config');
+import { Sequelize, DataTypes } from 'sequelize';
+import { POSTGRESQL, APP } from '../config/index.js';
 
 const sequelize = new Sequelize(POSTGRESQL.DB, POSTGRESQL.USER, POSTGRESQL.PASSWORD, {
   host: POSTGRESQL.HOST,
@@ -18,4 +18,4 @@ const sequelize = new Sequelize(POSTGRESQL.DB, POSTGRESQL.USER, POSTGRESQL.PASSW
   port: POSTGRESQL.PORT,
 });
 
-module.exports = { sequelize, DataTypes };
+export default { sequelize, DataTypes };

@@ -1,12 +1,12 @@
-const randomName = require('node-random-name');
-const jwt = require('jsonwebtoken');
-const { Neo4jDatabaseConnection } = require('../database/neo4j');
-const { Authz } = require('../models');
-const { validation } = require('../controllers');
+import randomName from 'node-random-name';
+import jwt from 'jsonwebtoken';
+import Neo4jDatabaseConnection from '../database/neo4j.js';
+import { Authz } from '../models/record/index.js';
+import validation from '../controllers/validation.js';
 
 const { isKey } = validation;
 
-module.exports = () => async (req, res, next) => {
+export default () => async (req, res, next) => {
   const authHeader = req.headers.authorization;
   const key = authHeader && authHeader.split(' ')[1];
   if (!key) return res.sendStatus(401);
@@ -63,5 +63,8 @@ module.exports = () => async (req, res, next) => {
     req.authzName = authzName;
     req.user = user;
     next();
+    return null;
   });
+
+  return null;
 };

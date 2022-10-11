@@ -1,7 +1,7 @@
-const crypto = require('crypto');
-const { Audit } = require('../models');
+import crypto from 'crypto';
+import { Audit } from '../models/record/index.js';
 
-module.exports = () => async (req, res, next) => {
+export default () => async (req, res, next) => {
   const appEvent = req.headers['x-app-audit-event'];
 
   try {

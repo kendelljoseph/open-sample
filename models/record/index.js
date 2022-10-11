@@ -1,9 +1,10 @@
-const { postgres } = require('../../database');
+import postgres from '../../database/postgres.js';
 
 const { sequelize, DataTypes } = postgres;
 
-class DatabaseRecord {
+export class DatabaseRecord {
   constructor(...args) {
+    // eslint-disable-next-line no-constructor-return
     return sequelize.define(...args);
   }
 
@@ -11,16 +12,18 @@ class DatabaseRecord {
     sequelize
       .authenticate()
       .then(() => {
+        // eslint-disable-next-line no-console
         console.log('postgres db connected'.bgCyan);
         return sequelize.sync();
       })
       .catch((error) => {
+        // eslint-disable-next-line no-console
         console.error('postgres db connection error'.bgRed, error.message.red);
       });
   }
 }
 
-const Audit = new DatabaseRecord('Audit', {
+export const Audit = new DatabaseRecord('Audit', {
   event: {
     type: DataTypes.STRING,
     allowNull: false,
@@ -35,7 +38,7 @@ const Audit = new DatabaseRecord('Audit', {
   },
 });
 
-const Authz = new DatabaseRecord(
+export const Authz = new DatabaseRecord(
   'Authorization',
   {
     key: {
@@ -53,7 +56,7 @@ const Authz = new DatabaseRecord(
   },
 );
 
-const Entity = new DatabaseRecord(
+export const Entity = new DatabaseRecord(
   'Entitiy',
   {
     name: {
@@ -66,7 +69,7 @@ const Entity = new DatabaseRecord(
   },
 );
 
-const RouteError = new DatabaseRecord('RouteError', {
+export const RouteError = new DatabaseRecord('RouteError', {
   method: {
     type: DataTypes.STRING,
   },
@@ -88,11 +91,3 @@ const RouteError = new DatabaseRecord('RouteError', {
 });
 
 DatabaseRecord.syncAll();
-
-// Export models
-module.exports = {
-  Entity,
-  Authz,
-  Audit,
-  RouteError,
-};

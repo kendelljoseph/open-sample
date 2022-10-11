@@ -1,7 +1,8 @@
-const { RouteError } = require('../models');
+import { RouteError } from '../models/record/index.js';
 
-module.exports = () => async (error, req, res, next) => {
+export default () => async (error, req, res, next) => {
   const statusCode = error.statusCode || 500;
+  // eslint-disable-next-line no-console
   console.error(`${statusCode} Server Error`.bgRed, String(error.message).red);
   try {
     await RouteError.create({
@@ -16,6 +17,7 @@ module.exports = () => async (error, req, res, next) => {
       res.status(statusCode).json(error.message);
     }
   } catch (err) {
+    // eslint-disable-next-line no-console
     console.error('500 Cascading Database or Express Error'.bgRed, err);
   }
 

@@ -1,7 +1,7 @@
-const express = require('express');
+import express from 'express';
+import { Audit } from '../models/record/index.js';
 
 const router = express.Router();
-const { Audit } = require('../models');
 
 // Get All Audits
 router.get('/', async (req, res, next) => {
@@ -13,6 +13,7 @@ router.get('/', async (req, res, next) => {
   } catch (error) {
     next(error);
   }
+  return null;
 });
 
 // Get Audit by Event
@@ -28,6 +29,7 @@ router.get('/:event', async (req, res, next) => {
   } catch (error) {
     next(error);
   }
+  return null;
 });
 
-module.exports = router;
+export default router;
