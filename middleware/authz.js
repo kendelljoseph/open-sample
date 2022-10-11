@@ -79,6 +79,7 @@ export default () => async (req, res, next) => {
       return null;
     },
     next,
+    '(🔑)',
   );
 
   return null;
