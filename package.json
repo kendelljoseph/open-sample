@@ -24,6 +24,7 @@
         "morgan": "^1.10.0",
         "neo4j-driver": "^5.1.0",
         "node-random-name": "^1.0.1",
+        "p-queue": "^7.3.0",
         "pg": "^8.8.0",
         "prettier": "^2.7.1",
         "sequelize": "^6.24.0",

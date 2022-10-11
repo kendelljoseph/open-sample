@@ -16,6 +16,7 @@ specifiers:
   neo4j-driver: ^5.1.0
   node-random-name: ^1.0.1
   nodemon: ^2.0.20
+  p-queue: ^7.3.0
   pg: ^8.8.0
   prettier: ^2.7.1
   sequelize: ^6.24.0
@@ -33,6 +34,7 @@ dependencies:
   morgan: 1.10.0
   neo4j-driver: 5.1.0
   node-random-name: 1.0.1
+  p-queue: 7.3.0
   pg: 8.8.0
   prettier: 2.7.1
   sequelize: 6.24.0_pg@8.8.0+sqlite3@5.1.2
@@ -935,6 +937,10 @@ packages:
   /etag/1.8.1:
     resolution: {integrity: sha512-aIL5Fx7mawVa300al2BnEE4iNvo1qETxLrPI/o05L7z6go7fCw1J6EQmbK4FmJ2AS7kgVF/KEZWufBfdClMcPg==}
     engines: {node: '>= 0.6'}
+    dev: false
+
+  /eventemitter3/4.0.7:
+    resolution: {integrity: sha512-8guHBZCwKnFhYdHr2ysuRWErTwhoN2X8XELRlrRwpmfeY2jjuUN4taQMsULKUVo1K4DvZl+0pgfyoysHxvmvEw==}
     dev: false
 
   /express/4.18.1:
@@ -1976,6 +1982,19 @@ packages:
       aggregate-error: 3.1.0
     dev: false
     optional: true
+
+  /p-queue/7.3.0:
+    resolution: {integrity: sha512-5fP+yVQ0qp0rEfZoDTlP2c3RYBgxvRsw30qO+VtPPc95lyvSG+x6USSh1TuLB4n96IO6I8/oXQGsTgtna4q2nQ==}
+    engines: {node: '>=12'}
+    dependencies:
+      eventemitter3: 4.0.7
+      p-timeout: 5.1.0
+    dev: false
+
+  /p-timeout/5.1.0:
+    resolution: {integrity: sha512-auFDyzzzGZZZdHz3BtET9VEz0SE/uMEAx7uWfGPucfzEwwe/xH0iVeZibQmANYE/hp9T2+UUZT5m+BKyrDp3Ew==}
+    engines: {node: '>=12'}
+    dev: false
 
   /packet-reader/1.0.0:
     resolution: {integrity: sha512-HAKu/fG3HpHFO0AA8WE8q2g+gBJaZ9MG7fcKk+IJPLTGAD6Psw4443l+9DGRbOIh3/aXr7Phy0TjilYivJo5XQ==}
