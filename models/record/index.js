@@ -14,9 +14,9 @@ export class DatabaseRecord {
       .then(() => {
         // eslint-disable-next-line no-console
         console.log('postgres db connected'.bgCyan);
-        if (process.env.NODE_ENV === 'test') {
+        if (process.env.NODE_ENV === 'test' || process.env.PURGE_DB_DATA) {
           // eslint-disable-next-line no-console
-          console.log('postgres db refreshing (test mode)'.bgCyan);
+          console.log('postgres db refreshing (purge mode)'.bgCyan);
           return sequelize.sync({ force: true });
         }
         return sequelize.sync();
