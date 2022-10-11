@@ -1,4 +1,5 @@
 import postgres from '../../database/postgres.js';
+import { APP } from '../../config/index.js';
 
 const { sequelize, DataTypes } = postgres;
 
@@ -14,7 +15,7 @@ export class DatabaseRecord {
       .then(() => {
         // eslint-disable-next-line no-console
         console.log('postgres db connected'.bgCyan);
-        if (process.env.NODE_ENV === 'test' || process.env.PURGE_DB_DATA) {
+        if (APP.NODE_ENV === 'test' || APP.PURGE_DB_DATA) {
           // eslint-disable-next-line no-console
           console.log('postgres db refreshing (purge mode)'.bgCyan);
           return sequelize.sync({ force: true });
