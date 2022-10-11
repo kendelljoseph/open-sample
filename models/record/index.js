@@ -41,11 +41,6 @@ export const Audit = new DatabaseRecord('Audit', {
 export const Authz = new DatabaseRecord(
   'Authorization',
   {
-    key: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      unique: true,
-    },
     token: {
       type: DataTypes.STRING,
       unique: true,
