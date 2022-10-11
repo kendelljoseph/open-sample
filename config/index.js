@@ -5,6 +5,10 @@ dotenv.config();
 export const APP = {
   PORT: process.env.PORT || 3000,
   NODE_ENV: process.env.NODE_ENV,
+  PURGE_DB_DATA: process.env.PURGE_DB_DATA,
+  AUTH_CALLBACK_URL: process.env.AUTH_CALLBACK_URL,
+  GOOGLE_OAUTH_CLIENT_ID: process.env.GOOGLE_OAUTH_CLIENT_ID,
+  GOOGLE_OAUTH_SECRET: process.env.GOOGLE_OAUTH_SECRET,
 };
 
 export const POSTGRESQL = {
