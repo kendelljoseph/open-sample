@@ -14,6 +14,11 @@ export class DatabaseRecord {
       .then(() => {
         // eslint-disable-next-line no-console
         console.log('postgres db connected'.bgCyan);
+        if (process.env.NODE_ENV === 'test') {
+          // eslint-disable-next-line no-console
+          console.log('postgres db refreshing (test mode)'.bgCyan);
+          return sequelize.sync({ force: true });
+        }
         return sequelize.sync();
       })
       .catch((error) => {
