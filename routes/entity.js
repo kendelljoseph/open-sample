@@ -29,7 +29,7 @@ router.post('/', async (req, res, exit) => {
     async () => {
       // Model
       const entity = await Entity.create(body, {
-        fields: ['name'],
+        fields: ['name', 'prompt'],
       });
 
       const record = entity.dataValues;
@@ -41,6 +41,7 @@ router.post('/', async (req, res, exit) => {
           MATCH (authn:Authn {accessToken: $accessToken})
           CREATE (entity:Entity {
             name: $name,
+            prompt: $prompt,
             createdAt: timestamp(),
             updatedAt: timestamp()
           })
@@ -140,7 +141,7 @@ router.put('/:id', async (req, res, exit) => {
       }
 
       const record = await Entity.update(body, {
-        fields: ['name'],
+        fields: ['name', 'prompt'],
         where: { id },
       });
 
