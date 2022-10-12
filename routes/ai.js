@@ -1,23 +1,35 @@
 import axios from 'axios';
 import express from 'express';
 import authn from '../middleware/authn.js';
+import audit from '../middleware/audit.js';
+import validation from '../controllers/validation.js';
 import enqueue from '../lib/enqueue.js';
 import { APP } from '../config/index.js';
 
 const router = express.Router();
 
-router.use(authn());
+const { isAi } = validation;
 
-// Get All Audits
-router.post('/', async (req, res, next) => {
+router.use(authn());
+router.use(audit());
+
+// Ai Prompts
+router.post('/prompt', async (req, res, next) => {
+  const { body } = req;
   const appEvent = req.headers['x-app-audit-event'] || 'unknown-event';
+
+  // Validation
+  const errors = isAi(body);
+  if (errors.length) {
+    return next({ statusCode: 400, message: errors });
+  }
 
   enqueue(
     req.authz ? req.authz.token : 'unauthorized',
     async () => {
       const payload = {
         model: 'text-davinci-002',
-        prompt: req.body.prompt,
+        prompt: body.prompt,
         temperature: 0.8,
         max_tokens: 2048,
         top_p: 1,

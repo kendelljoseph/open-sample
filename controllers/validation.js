@@ -46,6 +46,17 @@ export default {
 
     return validator.run();
   },
+  isAi: (data) => {
+    const validator = new Validator();
+    validator(data)
+      .required()
+      .isObject((obj) => {
+        obj('prompt').required().isString();
+        obj().strict();
+      });
+
+    return validator.run();
+  },
   isKey: (data) => {
     const validator = new Validator();
     validator(data).required().isString();
