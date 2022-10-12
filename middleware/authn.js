@@ -21,17 +21,28 @@ export default () => async (req, res, next) => {
   enqueue(
     token,
     async () => {
-      const authnRecord = await Authn.findOne({ where: { accessToken: token } });
+      const cacheKey = `authn/${token}`;
 
-      if (authnRecord === null) {
-        return next({ statusCode: 401, message: 'Unauthorized' });
-      }
+      const authenticate = async () => {
+        if (req.localCache.has(cacheKey)) {
+          const cache = req.localCache.get(cacheKey);
+          return cache;
+        }
+        const authnRecord = await Authn.findOne({ where: { accessToken: token } });
 
-      const authn = authnRecord.dataValues;
+        if (authnRecord === null) {
+          return next({ statusCode: 401, message: 'Unauthorized' });
+        }
 
-      const userRecord = await User.findOne({ where: { googleId: authn.googleId } });
+        const authn = authnRecord.dataValues;
 
-      const user = userRecord.dataValues;
+        const userRecord = await User.findOne({ where: { googleId: authn.googleId } });
+
+        const user = userRecord.dataValues;
+        return { authn, user };
+      };
+
+      const { authn, user } = await authenticate();
 
       // Graph
       const graph = new Neo4jDatabaseConnection();
@@ -61,6 +72,11 @@ export default () => async (req, res, next) => {
       req.authz = { token };
       req.authn = authn;
       req.user = user;
+
+      req.localCache.set(cacheKey, {
+        authn,
+        user,
+      });
       next();
 
       return null;
