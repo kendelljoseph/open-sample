@@ -26,7 +26,7 @@ router.get('/', async (req, res, next) => {
 });
 
 // Get RouteError by Event
-router.get('/:event', async (req, res) => {
+router.get('/:event', async (req, res, next) => {
   enqueue(
     req.authz ? req.authz.token : 'unauthorized',
     async () => {
