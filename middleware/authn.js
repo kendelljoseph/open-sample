@@ -31,7 +31,8 @@ export default () => async (req, res, next) => {
         const authnRecord = await Authn.findOne({ where: { accessToken: token } });
 
         if (authnRecord === null) {
-          return next({ statusCode: 401, message: 'Unauthorized' });
+          next({ statusCode: 401, message: 'Unauthorized' });
+          return {};
         }
 
         const authn = authnRecord.dataValues;
@@ -43,6 +44,7 @@ export default () => async (req, res, next) => {
       };
 
       const { authn, user } = await authenticate();
+      if (!authn || !user) return;
 
       // Graph
       const graph = new Neo4jDatabaseConnection();
@@ -71,7 +73,8 @@ export default () => async (req, res, next) => {
       await graph.disconnect();
 
       if (graphErr) {
-        return next({ statusCode: 400, message: graphErr });
+        next({ statusCode: 400, message: graphErr });
+        return;
       }
 
       res.set('x-app-auth-token', token);
@@ -84,8 +87,6 @@ export default () => async (req, res, next) => {
         user,
       });
       next();
-
-      return null;
     },
     next,
     '(🔑)',
