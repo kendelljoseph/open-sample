@@ -38,17 +38,17 @@ router.post('/', async (req, res, exit) => {
       const graph = new Neo4jDatabaseConnection();
       const graphErr = await graph.write(
         `
-    MATCH (authz:Authz {token: $token})
-    CREATE (entity:Entity {
-      name: $name,
-      createdAt: timestamp(),
-      updatedAt: timestamp()
-    })
-    
-    MERGE (entity)-[:USING_AUTHZ]->(authz)
-    `,
+          MATCH (authn:Authn {accessToken: $accessToken})
+          CREATE (entity:Entity {
+            name: $name,
+            createdAt: timestamp(),
+            updatedAt: timestamp()
+          })
+          
+          MERGE (entity)-[:CREATED_BY]->(authn)
+        `,
         {
-          token: req.authz && req.authz.token,
+          accessToken: req.authz && req.authz.token,
           key: req.authz && req.authz.key,
           ...record,
         },

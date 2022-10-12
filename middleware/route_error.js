@@ -16,7 +16,7 @@ export default () => async (error, req, res, next) => {
           method: req.method,
           path: req.path,
           event: appEvent,
-          message: error.message && error.message,
+          message: error.message && JSON.stringify(error.message),
           statusCode,
           token: req.authz && req.authz.token,
         });

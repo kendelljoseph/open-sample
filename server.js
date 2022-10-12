@@ -7,6 +7,7 @@ import express from 'express';
 import session from 'express-session';
 import routeError from './middleware/route_error.js';
 import entity from './routes/entity.js';
+import finance from './routes/finance.js';
 import adminAudit from './routes/audit.js';
 import adminRouteError from './routes/route_error.js';
 import { APP } from './config/index.js';
@@ -34,6 +35,7 @@ app.use(googleOauth.session());
 
 // API Routes
 app.use('/api/v1/entity', entity);
+app.use('/api/v1/finance', finance);
 app.use('/admin/v1/audit', adminAudit);
 app.use('/admin/v1/route-error', adminRouteError);
 

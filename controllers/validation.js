@@ -23,6 +23,28 @@ export default {
 
     return validator.run();
   },
+  isGift: (data) => {
+    const validator = new Validator();
+    validator(data)
+      .required()
+      .isObject((obj) => {
+        obj('name').required().isString();
+        obj().strict();
+      });
+
+    return validator.run();
+  },
+  isGrant: (data) => {
+    const validator = new Validator();
+    validator(data)
+      .required()
+      .isObject((obj) => {
+        obj('name').required().isString();
+        obj().strict();
+      });
+
+    return validator.run();
+  },
   isKey: (data) => {
     const validator = new Validator();
     validator(data).required().isString();
