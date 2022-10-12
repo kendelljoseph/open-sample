@@ -7,6 +7,7 @@ export default {
       .required()
       .isObject((obj) => {
         obj('name').required().isString();
+        obj('prompt').isString();
         obj().strict();
       });
 

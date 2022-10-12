@@ -102,6 +102,9 @@ export const Entity = new DatabaseRecord(
       type: DataTypes.STRING,
       allowNull: false,
     },
+    prompt: {
+      type: DataTypes.STRING(2048),
+    },
   },
   {
     tableName: 'Entities',
