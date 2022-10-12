@@ -1,10 +1,9 @@
-import randomName from 'node-random-name';
 import jwt from 'jsonwebtoken';
 
 import Neo4jDatabaseConnection from '../database/neo4j.js';
 import { Authn, User } from '../models/record/index.js';
 import validation from '../controllers/validation.js';
-import enqueue from './lib/enqueue.js';
+import enqueue from '../lib/enqueue.js';
 
 const { isKey } = validation;
 

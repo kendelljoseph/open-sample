@@ -1,5 +1,5 @@
 import { RouteError } from '../models/record/index.js';
-import enqueue from './lib/enqueue.js';
+import enqueue from '../lib/enqueue.js';
 
 export default () => async (error, req, res, next) => {
   const statusCode = error.statusCode || 500;

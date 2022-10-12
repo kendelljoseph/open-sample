@@ -2,7 +2,7 @@ import express from 'express';
 import { RouteError } from '../models/record/index.js';
 
 import audit from '../middleware/audit.js';
-import enqueue from '../middleware/lib/enqueue.js';
+import enqueue from '../lib/enqueue.js';
 
 const router = express.Router();
 

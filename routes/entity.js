@@ -5,7 +5,7 @@ import audit from '../middleware/audit.js';
 import Neo4jDatabaseConnection from '../database/neo4j.js';
 import { Entity } from '../models/record/index.js';
 import validation from '../controllers/validation.js';
-import enqueue from '../middleware/lib/enqueue.js';
+import enqueue from '../lib/enqueue.js';
 
 const router = express.Router();
 

@@ -1,6 +1,6 @@
 import crypto from 'crypto';
 import { Audit } from '../models/record/index.js';
-import enqueue from './lib/enqueue.js';
+import enqueue from '../lib/enqueue.js';
 
 export default () => async (req, res, next) => {
   const appEvent = req.headers['x-app-audit-event'] || 'unknown-event';
