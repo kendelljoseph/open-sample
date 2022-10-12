@@ -5,6 +5,7 @@ import cors from 'cors';
 import bodyParser from 'body-parser';
 import express from 'express';
 import session from 'express-session';
+import cache from './middleware/cache.js';
 import routeError from './middleware/route_error.js';
 import entity from './routes/entity.js';
 import finance from './routes/finance.js';
@@ -17,11 +18,15 @@ const { PORT } = APP;
 
 const app = express();
 
+// App Data Traffic Settings
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.json());
+
+// Logging
 app.use(morgan('tiny'));
 
+// Session Cookies
 app.use(
   session({
     secret: process.env.ACCESS_TOKEN_SECRET,
@@ -33,9 +38,14 @@ app.use(
 app.use(googleOauth.initialize());
 app.use(googleOauth.session());
 
+// Cache
+app.use(cache());
+
 // API Routes
 app.use('/api/v1/entity', entity);
 app.use('/api/v1/finance', finance);
+
+// Admin Routes
 app.use('/admin/v1/audit', adminAudit);
 app.use('/admin/v1/route-error', adminRouteError);
 
