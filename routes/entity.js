@@ -59,7 +59,6 @@ router.post('/', async (req, res, exit) => {
         return exit({ statusCode: 400, message: graphErr });
       }
 
-      // Respond
       res.json(record);
       return null;
     },
@@ -70,31 +69,44 @@ router.post('/', async (req, res, exit) => {
 });
 
 // Get All Entities
-router.get('/', async (req, res) => {
-  // Model
-  const entities = await Entity.findAll();
-  const records = entities.map((entity) => entity.dataValues);
+router.get('/', async (req, res, exit) => {
+  const appEvent = req.headers['x-app-audit-event'] || 'unknown-event';
+  enqueue(
+    req.authz.token,
+    async () => {
+      const entities = await Entity.findAll();
+      const records = entities.map((entity) => entity.dataValues);
 
-  res.json(records);
+      res.json(records);
+    },
+    exit,
+    appEvent,
+  );
 });
 
 // Get Entity by Id
 router.get('/:id', async (req, res, exit) => {
   const { id } = req.params;
 
-  // Validation
-  const errors = isRecord(req.params);
-  if (errors.length) {
-    return exit({ statusCode: 400, message: errors });
-  }
+  const appEvent = req.headers['x-app-audit-event'] || 'unknown-event';
+  enqueue(
+    req.authz.token,
+    async () => {
+      // Validation
+      const errors = isRecord(req.params);
+      if (errors.length) {
+        return exit({ statusCode: 400, message: errors });
+      }
 
-  // Model
-  const entity = await Entity.findByPk(id);
-  const record = entity && entity.dataValues;
+      const entity = await Entity.findByPk(id);
+      const record = entity && entity.dataValues;
 
-  // Respond
-  res.json(record);
-  return null;
+      res.json(record);
+      return null;
+    },
+    exit,
+    appEvent,
+  );
 });
 
 // Update an Entity by Id
@@ -102,38 +114,51 @@ router.put('/:id', async (req, res, exit) => {
   const { id } = req.params;
   const { body } = req;
 
-  // Validation
-  const errors = [isEntity(body), isRecord(req.params)].flat();
-  if (errors.length) {
-    return exit({ statusCode: 400, message: errors });
-  }
+  const appEvent = req.headers['x-app-audit-event'] || 'unknown-event';
+  enqueue(
+    req.authz.token,
+    async () => {
+      // Validation
+      const errors = [isEntity(body), isRecord(req.params)].flat();
+      if (errors.length) {
+        return exit({ statusCode: 400, message: errors });
+      }
 
-  // Model
-  const record = await Entity.update(body, {
-    fields: ['name'],
-    where: { id },
-  });
+      const record = await Entity.update(body, {
+        fields: ['name'],
+        where: { id },
+      });
 
-  // Respond
-  res.json(record);
-  return null;
+      res.json(record);
+      return null;
+    },
+    exit,
+    appEvent,
+  );
 });
 
 // Delete an Entity by Id
 router.delete('/:id', async (req, res, exit) => {
   const { id } = req.params;
 
-  // Validation
-  const errors = isRecord(req.params);
-  if (errors.length) {
-    return exit({ statusCode: 400, message: errors });
-  }
+  const appEvent = req.headers['x-app-audit-event'] || 'unknown-event';
+  enqueue(
+    req.authz.token,
+    async () => {
+      // Validation
+      const errors = isRecord(req.params);
+      if (errors.length) {
+        return exit({ statusCode: 400, message: errors });
+      }
 
-  const record = await Entity.destroy({ where: { id } });
+      const record = await Entity.destroy({ where: { id } });
 
-  // Respond
-  res.json(record);
-  return null;
+      res.json(record);
+      return null;
+    },
+    exit,
+    appEvent,
+  );
 });
 
 export default router;
