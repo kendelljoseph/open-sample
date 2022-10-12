@@ -64,7 +64,9 @@ app.get(
     failureRedirect: '/auth/callback/failure',
   }),
   (req, res) => {
-    res.send(`<img src="${req.user.picture}"></img><div>${req.user.displayName}</div>`);
+    res.send(
+      `<img src="${req.user.picture}"></img><h1>${req.user.displayName}</h1><div>${req.user.email}</div>`,
+    );
   },
 );
 
