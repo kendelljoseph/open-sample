@@ -1,12 +1,18 @@
 import express from 'express';
 
+import authn from '../middleware/authn.js';
+import audit from '../middleware/audit.js';
 import Neo4jDatabaseConnection from '../database/neo4j.js';
 import { Entity } from '../models/record/index.js';
 import validation from '../controllers/validation.js';
+import enqueue from '../middleware/lib/enqueue.js';
 
 const router = express.Router();
 
 const { isEntity, isRecord } = validation;
+
+router.use(authn());
+router.use(audit());
 
 // Create Entity
 router.post('/', async (req, res, exit) => {
@@ -17,18 +23,21 @@ router.post('/', async (req, res, exit) => {
   if (errors.length) {
     return exit({ statusCode: 400, message: errors });
   }
+  const appEvent = req.headers['x-app-audit-event'] || 'unknown-event';
+  enqueue(
+    req.authz.token,
+    async () => {
+      // Model
+      const entity = await Entity.create(body, {
+        fields: ['name'],
+      });
 
-  // Model
-  const entity = await Entity.create(body, {
-    fields: ['name'],
-  });
+      const record = entity.dataValues;
 
-  const record = entity.dataValues;
-
-  // Graph
-  const graph = new Neo4jDatabaseConnection();
-  const graphErr = await graph.write(
-    `
+      // Graph
+      const graph = new Neo4jDatabaseConnection();
+      const graphErr = await graph.write(
+        `
     MATCH (authz:Authz {token: $token})
     CREATE (entity:Entity {
       name: $name,
@@ -38,20 +47,25 @@ router.post('/', async (req, res, exit) => {
     
     MERGE (entity)-[:USING_AUTHZ]->(authz)
     `,
-    {
-      token: req.authz && req.authz.token,
-      key: req.authz && req.authz.key,
-      ...record,
+        {
+          token: req.authz && req.authz.token,
+          key: req.authz && req.authz.key,
+          ...record,
+        },
+      );
+      await graph.disconnect();
+
+      if (graphErr) {
+        return exit({ statusCode: 400, message: graphErr });
+      }
+
+      // Respond
+      res.json(record);
+      return null;
     },
+    exit,
+    appEvent,
   );
-  await graph.disconnect();
-
-  if (graphErr) {
-    return exit({ statusCode: 400, message: graphErr });
-  }
-
-  // Respond
-  res.json(record);
   return null;
 });
 

@@ -1,7 +1,11 @@
 import express from 'express';
 import { RouteError } from '../models/record/index.js';
 
+import audit from '../middleware/audit.js';
+
 const router = express.Router();
+
+router.use(audit());
 
 // Get All RouteError
 router.get('/', async (req, res) => {

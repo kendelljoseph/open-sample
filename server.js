@@ -4,13 +4,13 @@ import morgan from 'morgan';
 import cors from 'cors';
 import bodyParser from 'body-parser';
 import express from 'express';
-import audit from './middleware/audit.js';
-import authz from './middleware/authz.js';
+import session from 'express-session';
 import routeError from './middleware/route_error.js';
 import entity from './routes/entity.js';
 import adminAudit from './routes/audit.js';
 import adminRouteError from './routes/route_error.js';
 import { APP } from './config/index.js';
+import googleOauth from './auth/google.js';
 
 const { PORT } = APP;
 
@@ -21,14 +21,45 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.json());
 app.use(morgan('tiny'));
 
-// Middleware
-app.use(authz());
-app.use(audit());
+app.use(
+  session({
+    secret: process.env.ACCESS_TOKEN_SECRET,
+    resave: false,
+    saveUninitialized: true,
+    cookie: { secure: true },
+  }),
+);
+app.use(googleOauth.initialize());
+app.use(googleOauth.session());
 
-// Routes
-app.use('/v1/entity', entity);
+// API Routes
+app.use('/api/v1/entity', entity);
 app.use('/admin/v1/audit', adminAudit);
 app.use('/admin/v1/route-error', adminRouteError);
+
+// Login (Temporary)
+app.get('/login', (req, res) => {
+  res.send("<button><a href='/auth'>Login With Google</a></button>");
+});
+
+// Auth
+app.get('/auth', googleOauth.authenticate('google', { scope: ['email', 'profile'] }));
+
+// Auth Callback
+app.get(
+  '/auth/callback',
+  googleOauth.authenticate('google', {
+    failureRedirect: '/auth/callback/failure',
+  }),
+  (req, res) => {
+    res.send(`<img src="${req.user.picture}"></img><div>${req.user.displayName}</div>`);
+  },
+);
+
+// Auth failure
+app.get('/auth/callback/failure', (req, res) => {
+  res.send('Error');
+});
 
 // Errors
 app.use(routeError());

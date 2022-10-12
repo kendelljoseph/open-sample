@@ -3,14 +3,15 @@ import { Audit } from '../models/record/index.js';
 import enqueue from './lib/enqueue.js';
 
 export default () => async (req, res, next) => {
-  const appEvent = req.headers['x-app-audit-event'];
+  const appEvent = req.headers['x-app-audit-event'] || 'unknown-event';
+  const token = req.authz ? req.authz.token : 'unauthorized';
 
   enqueue(
-    req.authz.token,
+    token,
     async () => {
       try {
         const audit = await Audit.create({
-          token: req.authz && req.authz.token,
+          token,
           key: crypto.randomBytes(32).toString('hex'),
           event: appEvent,
         });
@@ -23,6 +24,6 @@ export default () => async (req, res, next) => {
       }
     },
     next,
-    appEvent,
+    `audit:${appEvent}`,
   );
 };

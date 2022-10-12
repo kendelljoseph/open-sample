@@ -3,20 +3,20 @@ import enqueue from './lib/enqueue.js';
 
 export default () => async (error, req, res, next) => {
   const statusCode = error.statusCode || 500;
+
   // eslint-disable-next-line no-console
-  if (!req.authz) console.error('UNAUTHORIZED REQUEST'.red);
-  // eslint-disable-next-line no-console
-  console.error(`${statusCode} Server Error`.bgRed, String(error.message).red);
+  console.error(`${statusCode} Server Error`.bgRed, String(error.message).red, error);
 
   enqueue(
-    req.authz || req.authz.token,
+    req.authz ? req.authz.token : 'unauthorized',
     async () => {
+      const appEvent = req.headers['x-app-audit-event'] || 'unknown-event';
       try {
         await RouteError.create({
           method: req.method,
           path: req.path,
-          event: req.audit && req.audit.event,
-          message: JSON.stringify(error.message),
+          event: appEvent,
+          message: error.message && error.message,
           statusCode,
           token: req.authz && req.authz.token,
         });

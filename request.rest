@@ -1,5 +1,5 @@
 ### Create an Entitity
-POST http://localhost:3000/v1/entity
+POST http://localhost:3000/api/v1/entity
 x-app-audit-event: create-entity
 authorization: Bearer PUBLIC
 content-type: application/json
@@ -9,17 +9,17 @@ content-type: application/json
 }
 
 ### Get all Entities
-GET http://localhost:3000/v1/entity
+GET http://localhost:3000/api/v1/entity
 x-app-audit-event: get-entity
 authorization: Bearer PUBLIC
 
 ### Get Entitiy by ID
-GET http://localhost:3000/v1/entity/1
+GET http://localhost:3000/api/v1/entity/1
 x-app-audit-event: get-entity-by-id
 authorization: Bearer PUBLIC
 
 ### Update an Entitiy by ID
-PUT http://localhost:3000/v1/entity/1
+PUT http://localhost:3000/api/v1/entity/1
 x-app-audit-event: update-entitiy-by-id
 authorization: Bearer PUBLIC
 content-type: application/json
@@ -29,7 +29,7 @@ content-type: application/json
 }
 
 ### Delete an Entitiy by ID
-DELETE http://localhost:3000/v1/entity/1
+DELETE http://localhost:3000/api/v1/entity/1
 x-app-audit-event: delete-entitiy-by-id
 authorization: Bearer PUBLIC
 
@@ -47,4 +47,4 @@ authorization: Bearer ADMINISTRATOR
 ### Get Route Errors (Admin)
 GET http://localhost:3000/admin/v1/route-error
 x-app-audit-event: admin-route-errors
-authorization: Bearer ADMINISTRATOR
+authorization: Bearer PUBLIC
