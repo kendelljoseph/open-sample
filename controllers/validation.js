@@ -25,7 +25,7 @@ export default {
   },
   isKey: (data) => {
     const validator = new Validator();
-    validator(data).required().isString().isAlphanumeric();
+    validator(data).required().isString();
 
     return validator.run();
   },
