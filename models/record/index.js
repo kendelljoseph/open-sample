@@ -39,16 +39,54 @@ export const Audit = new DatabaseRecord('Audit', {
     allowNull: false,
   },
   token: {
-    type: DataTypes.STRING,
+    type: DataTypes.STRING(2048),
     allowNull: false,
   },
 });
+
+export const User = new DatabaseRecord('User', {
+  displayName: {
+    type: DataTypes.STRING,
+  },
+  email: {
+    type: DataTypes.STRING,
+    unique: true,
+  },
+  googleId: {
+    type: DataTypes.STRING(2048),
+    unique: true,
+  },
+});
+
+export const Authn = new DatabaseRecord(
+  'Authentication',
+  {
+    googleId: {
+      type: DataTypes.STRING(2048),
+    },
+    accessToken: {
+      type: DataTypes.STRING(2048),
+      unique: true,
+    },
+  },
+  {
+    tableName: 'Authn',
+  },
+);
 
 export const Authz = new DatabaseRecord(
   'Authorization',
   {
     token: {
-      type: DataTypes.STRING,
+      type: DataTypes.STRING(2048),
+      unique: true,
+    },
+    accessToken: {
+      type: DataTypes.STRING(2048),
+      unique: true,
+    },
+    refreshToken: {
+      type: DataTypes.STRING(2048),
       unique: true,
     },
   },
@@ -87,7 +125,7 @@ export const RouteError = new DatabaseRecord('RouteError', {
     type: DataTypes.STRING,
   },
   token: {
-    type: DataTypes.STRING,
+    type: DataTypes.STRING(2048),
   },
 });
 
