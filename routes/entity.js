@@ -74,10 +74,17 @@ router.get('/', async (req, res, exit) => {
   enqueue(
     req.authz.token,
     async () => {
+      const cacheKey = req.localCache.generateRequestKey(req);
+
+      if (req.localCache.has(cacheKey)) {
+        const cache = req.localCache.get(cacheKey);
+        return res.json(cache);
+      }
       const entities = await Entity.findAll();
       const records = entities.map((entity) => entity.dataValues);
 
-      res.json(records);
+      req.localCache.set(cacheKey, records);
+      return res.json(records);
     },
     exit,
     appEvent,
@@ -98,9 +105,17 @@ router.get('/:id', async (req, res, exit) => {
         return exit({ statusCode: 400, message: errors });
       }
 
+      const cacheKey = req.localCache.generateRequestKey(req);
+
+      if (req.localCache.has(cacheKey)) {
+        const cache = req.localCache.get(cacheKey);
+        return res.json(cache);
+      }
+
       const entity = await Entity.findByPk(id);
       const record = entity && entity.dataValues;
 
+      req.localCache.set(cacheKey, record);
       res.json(record);
       return null;
     },
@@ -129,6 +144,10 @@ router.put('/:id', async (req, res, exit) => {
         where: { id },
       });
 
+      // Clear Cache
+      const cacheKey = req.localCache.generateRequestKey(req);
+      if (req.localCache.has(cacheKey)) req.localCache.del(cacheKey);
+
       res.json(record);
       return null;
     },
@@ -152,6 +171,10 @@ router.delete('/:id', async (req, res, exit) => {
       }
 
       const record = await Entity.destroy({ where: { id } });
+
+      // Clear Cache
+      const cacheKey = req.localCache.generateRequestKey(req);
+      if (req.localCache.has(cacheKey)) req.localCache.del(cacheKey);
 
       res.json(record);
       return null;
