@@ -1,37 +1,39 @@
 ### Create an Entitity
 POST http://localhost:3000/api/v1/entity
 x-app-audit-event: create-entity
-authorization: Bearer PUBLIC
+authorization: Bearer ya29.a0Aa4xrXMhaEr-5ppC3u4cDwpJjqsclFIKRZiBJLD5wA3ZeEmAxtfgxGkTVc0cHNLkH9n_QGsuqlUj0h03htxaLuoBe1Lay282T0JppTwzvQ8rwIZgnxgTm2GhHJtVj-WzpJE-o5ybMriPgfKSUPh0RpLKvnq8GwaCgYKATASARMSFQEjDvL9Jd4yYV7gMYNwmUySnI2OUQ0165
 content-type: application/json
 
 {
-    "name": "Bot"
+    "name": "Bot",
+    "prompt": "Hello, how are you?"
 }
 
 ### Get all Entities
 GET http://localhost:3000/api/v1/entity
-x-app-audit-event: get-entity
-authorization: Bearer PUBLIC
+x-app-audit-event: all-entities
+authorization: Bearer ya29.a0Aa4xrXMhaEr-5ppC3u4cDwpJjqsclFIKRZiBJLD5wA3ZeEmAxtfgxGkTVc0cHNLkH9n_QGsuqlUj0h03htxaLuoBe1Lay282T0JppTwzvQ8rwIZgnxgTm2GhHJtVj-WzpJE-o5ybMriPgfKSUPh0RpLKvnq8GwaCgYKATASARMSFQEjDvL9Jd4yYV7gMYNwmUySnI2OUQ0165
 
 ### Get Entitiy by ID
 GET http://localhost:3000/api/v1/entity/1
-x-app-audit-event: get-entity-by-id
-authorization: Bearer PUBLIC
+x-app-audit-event: entity
+authorization: Bearer ya29.a0Aa4xrXMhaEr-5ppC3u4cDwpJjqsclFIKRZiBJLD5wA3ZeEmAxtfgxGkTVc0cHNLkH9n_QGsuqlUj0h03htxaLuoBe1Lay282T0JppTwzvQ8rwIZgnxgTm2GhHJtVj-WzpJE-o5ybMriPgfKSUPh0RpLKvnq8GwaCgYKATASARMSFQEjDvL9Jd4yYV7gMYNwmUySnI2OUQ0165
 
 ### Update an Entitiy by ID
 PUT http://localhost:3000/api/v1/entity/1
-x-app-audit-event: update-entitiy-by-id
-authorization: Bearer PUBLIC
+x-app-audit-event: entity
+authorization: Bearer ya29.a0Aa4xrXMhaEr-5ppC3u4cDwpJjqsclFIKRZiBJLD5wA3ZeEmAxtfgxGkTVc0cHNLkH9n_QGsuqlUj0h03htxaLuoBe1Lay282T0JppTwzvQ8rwIZgnxgTm2GhHJtVj-WzpJE-o5ybMriPgfKSUPh0RpLKvnq8GwaCgYKATASARMSFQEjDvL9Jd4yYV7gMYNwmUySnI2OUQ0165
 content-type: application/json
 
 {
-    "name": "Bot Update"
+    "name": "John",
+    "prompt": "Hello, how are you today?"
 }
 
 ### Delete an Entitiy by ID
 DELETE http://localhost:3000/api/v1/entity/1
-x-app-audit-event: delete-entitiy-by-id
-authorization: Bearer PUBLIC
+x-app-audit-event: entity
+authorization: Bearer ya29.a0Aa4xrXMuWGONMHwyfgNEbD-AqGdUJMIPdgigrGQUL6MH6RNVVQ8L3QfrSZbA4jiyRoeRZ3EFIAB5KFgNnZXBnyzGX36XieVtBzmqW9sdVNu1DJNTB16ACDgY-qotGpi2UAgeBmvo95eIFDXiGRvHC1yvoRJ_gAaCgYKATASARMSFQEjDvL9it9Ar0zq8ImIhgfXaDuvRg0165
 
 ### Get Audit (Admin)
 GET http://localhost:3000/admin/v1/audit
@@ -47,4 +49,35 @@ authorization: Bearer ADMINISTRATOR
 ### Get Route Errors (Admin)
 GET http://localhost:3000/admin/v1/route-error
 x-app-audit-event: admin-route-errors
-authorization: Bearer PUBLIC
+authorization: Bearer ADMINISTRATOR
+
+### Gift
+POST http://localhost:3000/api/v1/finance/give-gift
+x-app-audit-event: give-gift
+authorization: Bearer ya29.a0Aa4xrXOu5fjrAY4D5fmtWk4MSvB__0zciRnPMMqB92yAytjVvDPHjLipJNuj0EqLWWvwIyxzCeP0DbG73ziMdEtJGm-GhMPCshPNwbNT7l-3Z7UFu4lXNuDOuTT--BaSsTpDgYQLqLqJxxbuHU8cjH5aq9EkRQaCgYKATASARMSFQEjDvL9_5kVb28WA8skXB4_flRz2A0165
+content-type: application/json
+
+{
+    "name": "Gift"
+}
+
+### Request Grant
+POST http://localhost:3000/api/v1/finance/request-grant
+x-app-audit-event: request-grant
+authorization: Bearer ya29.a0Aa4xrXO4DdN4yceLd0VIA5cN4yNkgGjFFrtlyIir5Ytzgu4aPsg966dqixe4-Ll6TyvOFuCniWjctpoAlyAflvQFwWlvZkN-lUFzOmFeHLeq64nvZmKQ_RiwK6ntTlNNBBaLrbB8FOwhu65ejwDIh1oLhTnkzgaCgYKATASARMSFQEjDvL9yStc1ITV4xwjLVECVjr9Qw0165
+content-type: application/json
+
+{
+    "name": "Grant"
+}
+
+
+### AI Prompt
+POST http://localhost:3000/api/v1/ai/prompt
+x-app-audit-event: ai-bot
+Authorization: Bearer ya29.a0Aa4xrXMhaEr-5ppC3u4cDwpJjqsclFIKRZiBJLD5wA3ZeEmAxtfgxGkTVc0cHNLkH9n_QGsuqlUj0h03htxaLuoBe1Lay282T0JppTwzvQ8rwIZgnxgTm2GhHJtVj-WzpJE-o5ybMriPgfKSUPh0RpLKvnq8GwaCgYKATASARMSFQEjDvL9Jd4yYV7gMYNwmUySnI2OUQ0165
+Content-Type: application/json
+
+{
+  "prompt": "server: I know this\n- 10 connections\n- 4 users\nuser: I can add or remove connections\nserver: I can add or remove users\nasker: How many connections and users are there?"
+}
