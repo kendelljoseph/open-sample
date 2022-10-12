@@ -125,7 +125,7 @@ export const RouteError = new DatabaseRecord('RouteError', {
     type: DataTypes.INTEGER,
   },
   message: {
-    type: DataTypes.STRING,
+    type: DataTypes.STRING(2048),
   },
   token: {
     type: DataTypes.STRING(2048),
