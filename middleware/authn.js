@@ -48,17 +48,23 @@ export default () => async (req, res, next) => {
       const graph = new Neo4jDatabaseConnection();
       const graphErr = await graph.write(
         `
+        MERGE (google:Authority {name:'google'})
         MERGE (email:Email {address: $email})
-        MERGE (user:User {googleId: $googleId, displayName: $displayName})
+        MERGE (user:User {displayName: $displayName})
         MERGE (authn:Authn {accessToken: $accessToken})
-        MERGE (email)-[:BELONGS_TO]->(user)
+        MERGE (passport:Passport {accessTokenSecret: $accessTokenSecret})
+        
         MERGE (user)-[:USING_AUTHN_METHOD]->(authn)
+        MERGE (user)-[:USING_PASSPORT]->(passport)
+        MERGE (user)-[:USING_EMAIL]->(email)
+        MERGE (google)-[:AUTHORIZED {googleId: $googleId}]->(user)
     `,
         {
           email: user.email,
           displayName: user.displayName,
           accessToken: authn.accessToken,
           googleId: authn.googleId,
+          accessTokenSecret: process.env.ACCESS_TOKEN_SECRET,
         },
       );
 
