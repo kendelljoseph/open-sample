@@ -111,6 +111,23 @@ export const Entity = new DatabaseRecord(
   },
 );
 
+export const SMSReciept = new DatabaseRecord(
+  'SMSReciept',
+  {
+    to: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    twilioSid: {
+      type: DataTypes.STRING(2048),
+      allowNull: false,
+    },
+  },
+  {
+    tableName: 'SMSReciepts',
+  },
+);
+
 export const RouteError = new DatabaseRecord('RouteError', {
   method: {
     type: DataTypes.STRING,

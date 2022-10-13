@@ -57,6 +57,18 @@ export default {
 
     return validator.run();
   },
+  isSMS: (data) => {
+    const validator = new Validator();
+    validator(data)
+      .required()
+      .isObject((obj) => {
+        obj('message').required().isString();
+        obj('to').required().isString();
+        obj().strict();
+      });
+
+    return validator.run();
+  },
   isKey: (data) => {
     const validator = new Validator();
     validator(data).required().isString();
