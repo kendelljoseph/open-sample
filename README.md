@@ -1,20 +1,20 @@
 # open-sample
 
-An open sample auditable NodeJS API.
+An open sample API.
 
-```json
-POST http://localhost:3000/v1/entity
+## Typical Request Format
+
+```yml
+# POST http://localhost:3000/v1/entity
 x-app-audit-event: create-entity
-authorization: Bearer PUBLIC
+authorization: Bearer PRIVATE_KEY
 content-type: application/json
-
+```
+```json
 {
-    "name": "My Entity"
+    "name": "Bot",
+    "prompt": "Hello, how are you?"
 }
-
-GET http://localhost:3000/v1/entity
-x-app-audit-event: get-entity
-authorization: Bearer PUBLIC
 ```
 
 ## Installation
@@ -24,10 +24,14 @@ pnpm i
 
 ## Start
 ```
-npm start
+pnpm start
 ```
 
 ## Dev
 ```
-npm run dev
+pnpm run dev
 ```
+
+## Meta Graph
+<img width="812" alt="metagraph" src="https://user-images.githubusercontent.com/1900724/195496438-763b7f3d-22a3-435d-972e-8a21ca87750e.png">
+
