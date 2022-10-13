@@ -9,6 +9,8 @@ import { APP } from '../config/index.js';
 import { SMSReciept } from '../models/record/index.js';
 
 const router = express.Router();
+const smsSenderPhone = APP.TWILIO_NUMBER;
+const client = twilio(APP.TWILIO_ACCOUNT_SID, APP.TWILIO_AUTH_TOKEN);
 
 const { isSMS } = validation;
 
@@ -29,8 +31,6 @@ router.post('/send', async (req, res, next) => {
   enqueue(
     req.authz ? req.authz.token : 'unauthorized',
     async () => {
-      const smsSenderPhone = APP.TWILIO_NUMBER;
-      const client = twilio(APP.TWILIO_ACCOUNT_SID, APP.TWILIO_AUTH_TOKEN);
       client.messages
         .create({ body: body.message, from: smsSenderPhone, to: body.to })
         .then(async (message) => {
@@ -77,6 +77,9 @@ router.post('/send', async (req, res, next) => {
             message: body.message,
           });
           return null;
+        })
+        .catch((error) => {
+          next(error);
         });
     },
     next,
