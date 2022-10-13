@@ -50,7 +50,7 @@ router.post('/:app', async (req, res, next) => {
         const smsPayload = { to: FROM, message: data.response };
 
         await axios.post(smsUrl, smsPayload, { ...config });
-        res.sendStatus(200);
+        res.end();
       } catch (error) {
         next(error);
       }
