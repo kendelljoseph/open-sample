@@ -10,6 +10,7 @@ import routeError from './middleware/route_error.js';
 import entity from './routes/entity.js';
 import finance from './routes/finance.js';
 import ai from './routes/ai.js';
+import sms from './routes/sms.js';
 import adminAudit from './routes/audit.js';
 import adminRouteError from './routes/route_error.js';
 import { APP } from './config/index.js';
@@ -46,6 +47,7 @@ app.use(cache());
 app.use('/api/v1/entity', entity);
 app.use('/api/v1/finance', finance);
 app.use('/api/v1/ai', ai);
+app.use('/api/v1/sms', sms);
 
 // Admin Routes
 app.use('/admin/v1/audit', adminAudit);
