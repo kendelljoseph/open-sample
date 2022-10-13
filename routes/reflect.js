@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import axios from 'axios';
 import NodeCache from 'node-cache';
 import express from 'express';
@@ -14,10 +13,6 @@ const reflectCache = new NodeCache({ stdTTL: 100000, checkperiod: 10 });
 
 // Reflect
 router.post('/:app', async (req, res, next) => {
-  console.info(req.headers);
-  console.info(req.body);
-  console.info(req.params);
-
   // Validate App
   if (req.params.app !== APP.TWILIO_TWIML_SID) {
     return next({ statusCode: 403, message: 'Unknown App Reflection' });
@@ -26,10 +21,18 @@ router.post('/:app', async (req, res, next) => {
   const { body } = req;
   const FROM = body.From;
   const BODY = body.Body;
+  const hashtags = String(BODY).match(/#[a-z0-9_]+/g);
 
   let prompt = BODY;
-  const cachedPrompt = reflectCache.get(FROM);
-  if (cachedPrompt) prompt = `${cachedPrompt}\n\n${BODY}`;
+  let cacheKey = FROM;
+  if (hashtags) {
+    cacheKey = `${FROM}:${hashtags.join(':')}`;
+  }
+
+  const cachedPrompt = reflectCache.get(cacheKey);
+  if (cachedPrompt) {
+    prompt = `${cachedPrompt}\n\n${BODY}`;
+  }
 
   enqueue(
     FROM,
@@ -58,7 +61,7 @@ router.post('/:app', async (req, res, next) => {
 
         await axios.post(smsUrl, smsPayload, { ...config });
         const newCachedPrompt = `${prompt}\n\n${data.response}`;
-        reflectCache.set(FROM, newCachedPrompt);
+        reflectCache.set(cacheKey, newCachedPrompt);
 
         res.end();
       } catch (error) {
