@@ -11,6 +11,7 @@ import entity from './routes/entity.js';
 import finance from './routes/finance.js';
 import ai from './routes/ai.js';
 import sms from './routes/sms.js';
+import reflect from './routes/reflect.js';
 import adminAudit from './routes/audit.js';
 import adminRouteError from './routes/route_error.js';
 import { APP } from './config/index.js';
@@ -48,6 +49,7 @@ app.use('/api/v1/entity', entity);
 app.use('/api/v1/finance', finance);
 app.use('/api/v1/ai', ai);
 app.use('/api/v1/sms', sms);
+app.use('/api/v1/reflect', reflect);
 
 // Admin Routes
 app.use('/admin/v1/audit', adminAudit);
