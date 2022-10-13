@@ -1,5 +1,6 @@
 /* eslint-disable no-console */
 import axios from 'axios';
+import NodeCache from 'node-cache';
 import express from 'express';
 import audit from '../middleware/audit.js';
 import enqueue from '../lib/enqueue.js';
@@ -8,6 +9,8 @@ import { APP } from '../config/index.js';
 const router = express.Router();
 
 router.use(audit());
+
+const reflectCache = new NodeCache({ stdTTL: 100000, checkperiod: 10 });
 
 // Reflect
 router.post('/:app', async (req, res, next) => {
@@ -23,7 +26,10 @@ router.post('/:app', async (req, res, next) => {
   const { body } = req;
   const FROM = body.From;
   const BODY = body.Body;
-  const prompt = BODY;
+
+  let prompt = BODY;
+  const cachedPrompt = reflectCache.get(FROM);
+  if (cachedPrompt) prompt = `${cachedPrompt}\n\n${BODY}`;
 
   enqueue(
     FROM,
@@ -47,9 +53,13 @@ router.post('/:app', async (req, res, next) => {
 
       try {
         const { data } = await axios.post(aiUrl, payload, config);
+
         const smsPayload = { to: FROM, message: data.response };
 
         await axios.post(smsUrl, smsPayload, { ...config });
+        const newCachedPrompt = `${prompt}\n\n${data.response}`;
+        reflectCache.set(FROM, newCachedPrompt);
+
         res.end();
       } catch (error) {
         next(error);
