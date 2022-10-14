@@ -103,12 +103,12 @@ router.post('/:app', async (req, res, next) => {
           // eslint-disable-next-line no-console
           console.error('reflect:prompt:no-response'.bgRed, data);
           smsPayload = { to: FROM, message: '🤷 IDK' };
-          await axios.post(smsUrl, smsPayload, { ...config });
+          await axios.post(smsUrl, smsPayload, { ...config('reflect:prompt:error') });
           res.end();
           return;
         }
 
-        await axios.post(smsUrl, smsPayload, { ...config });
+        await axios.post(smsUrl, smsPayload, { ...config('reflect:prompt:success') });
         const newCachedPrompt = `${prompt}\n\n${data.response}`;
         reflectCache.set(cacheKey, newCachedPrompt);
 
