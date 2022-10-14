@@ -22,11 +22,19 @@ router.post('/:app', async (req, res, next) => {
   const FROM = body.From;
   const BODY = body.Body;
   const hashtags = String(BODY).match(/#[a-z0-9_]+/g);
+  const tags = ['#reset', '#status', '#load', '#save', '#purge'];
 
   let prompt = BODY;
   let cacheKey = FROM;
+  let tagFound = false;
   if (hashtags) {
     cacheKey = `${FROM}:${hashtags.join(':')}`;
+    tags.forEach((tag) => {
+      if (hashtags.includes(tag)) {
+        if (!tagFound) tagFound = true;
+        reflectCache.del(cacheKey);
+      }
+    });
   }
 
   const cachedPrompt = reflectCache.get(cacheKey);
@@ -34,24 +42,32 @@ router.post('/:app', async (req, res, next) => {
     prompt = `${cachedPrompt}\n\n${BODY}`;
   }
 
+  const aiUrl = `${req.headers['x-forwarded-proto'] || 'http'}://${
+    req.headers.host
+  }/api/v1/ai/prompt`;
+  const smsUrl = `${req.headers['x-forwarded-proto'] || 'http'}://${
+    req.headers.host
+  }/api/v1/sms/send`;
+  const config = {
+    headers: {
+      Authorization: `Bearer ${APP.REFLECT_ACCESS_TOKEN}`,
+      'x-app-audit-event': 'reflect-api-call',
+    },
+  };
+
+  if (tagFound) {
+    try {
+      await axios.post(smsUrl, { to: FROM, message: 'Okay' }, { ...config });
+    } catch (error) {
+      return next(error);
+    }
+  }
+
   enqueue(
     FROM,
     async () => {
       const payload = {
         prompt,
-      };
-
-      const aiUrl = `${req.headers['x-forwarded-proto'] || 'http'}://${
-        req.headers.host
-      }/api/v1/ai/prompt`;
-      const smsUrl = `${req.headers['x-forwarded-proto'] || 'http'}://${
-        req.headers.host
-      }/api/v1/sms/send`;
-      const config = {
-        headers: {
-          Authorization: `Bearer ${APP.REFLECT_ACCESS_TOKEN}`,
-          'x-app-audit-event': 'reflect-api-call',
-        },
       };
 
       try {
