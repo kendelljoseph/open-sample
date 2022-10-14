@@ -59,8 +59,11 @@ router.post('/:app', async (req, res, next) => {
     try {
       await axios.post(smsUrl, { to: FROM, message: 'Okay' }, { ...config });
     } catch (error) {
+      res.end();
       return next(error);
     }
+    res.end();
+    return null;
   }
 
   enqueue(
