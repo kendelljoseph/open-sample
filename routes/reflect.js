@@ -56,8 +56,17 @@ router.post('/:app', async (req, res, next) => {
 
       try {
         const { data } = await axios.post(aiUrl, payload, config);
-
-        const smsPayload = { to: FROM, message: data.response };
+        let smsPayload = {};
+        if (data.response) {
+          smsPayload = { to: FROM, message: data.response };
+        } else {
+          // eslint-disable-next-line no-console
+          console.error('reflect:api/prompt:no-response'.bgRed, data);
+          smsPayload = { to: FROM, message: '🤷 IDK' };
+          await axios.post(smsUrl, smsPayload, { ...config });
+          res.end();
+          return;
+        }
 
         await axios.post(smsUrl, smsPayload, { ...config });
         const newCachedPrompt = `${prompt}\n\n${data.response}`;
