@@ -54,10 +54,11 @@ router.post('/send', async (req, res, next) => {
                 MERGE (to:PhoneNumber {phoneNumber: $to})
                 CREATE (sms:SMS {
                   message: $message,
-                  twilioSid: $twilioSid
+                  twilioSid: $twilioSid,
+                  timestamp: timestamp()
                 })
-                MERGE (authn)-[:USED_PHONE_NUMBER {timestamp: timestamp()}]->(to)
-                MERGE (from)-[:SENT {timestamp: timestamp()}]->(sms)-[:SENT_TO {timestamp: timestamp()}]->(to)
+                MERGE (authn)-[:USED_PHONE_NUMBER]->(to)
+                MERGE (from)-[:SENT]->(sms)-[:SENT_TO]->(to)
               `,
             {
               accessToken: req.authz && req.authz.token,
