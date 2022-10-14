@@ -33,5 +33,4 @@ pnpm run dev
 ```
 
 ## Meta Graph
-<img width="812" alt="metagraph" src="https://user-images.githubusercontent.com/1900724/195496438-763b7f3d-22a3-435d-972e-8a21ca87750e.png">
-
+<img width="1116" alt="meta_graph" src="https://user-images.githubusercontent.com/1900724/195940778-f99efd6d-4637-4fdb-adc6-1b1a4be905d8.png">
