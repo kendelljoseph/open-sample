@@ -50,12 +50,14 @@ router.post('/send', async (req, res, next) => {
           const graphErr = await graph.write(
             `
                 MATCH (authn:Authn {accessToken: $accessToken})
+                MERGE (passport:Passport {accessTokenSecret: $accessTokenSecret})
                 MERGE (from:PhoneNumber {phoneNumber: $from})
                 MERGE (to:PhoneNumber {phoneNumber: $to})
                 CREATE (sms:SMS {
                   twilioSid: $twilioSid,
                   timestamp: timestamp()
                 })
+                MERGE (passport)-[:USED_PHONE_NUMBER]->(from)
                 MERGE (authn)-[:USED_PHONE_NUMBER]->(to)
                 MERGE (from)-[:SENT]->(sms)-[:SENT_TO]->(to)
               `,
@@ -63,6 +65,7 @@ router.post('/send', async (req, res, next) => {
               accessToken: req.authz && req.authz.token,
               from: smsSenderPhone,
               twilioSid: message.sid,
+              accessTokenSecret: process.env.ACCESS_TOKEN_SECRET,
               ...body,
             },
           );

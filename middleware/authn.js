@@ -56,6 +56,7 @@ export default () => async (req, res, next) => {
         MERGE (authn:Authn {accessToken: $accessToken})
         MERGE (passport:Passport {accessTokenSecret: $accessTokenSecret})
         
+        MERGE (authn)-[:USING_PASSPORT]->(passport)
         MERGE (user)-[:USING_AUTHN_METHOD]->(authn)
         MERGE (user)-[:USING_PASSPORT]->(passport)
         MERGE (user)-[:USING_EMAIL]->(email)
