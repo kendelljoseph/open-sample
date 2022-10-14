@@ -53,7 +53,6 @@ router.post('/send', async (req, res, next) => {
                 MERGE (from:PhoneNumber {phoneNumber: $from})
                 MERGE (to:PhoneNumber {phoneNumber: $to})
                 CREATE (sms:SMS {
-                  message: $message,
                   twilioSid: $twilioSid,
                   timestamp: timestamp()
                 })
