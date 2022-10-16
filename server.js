@@ -27,7 +27,22 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.json());
 
 // Logging
-app.use(morgan('❓ :method :url :status :res[content-length] - :response-time ms'));
+app.use(
+  morgan((tokens, req, res) => [
+    '❓',
+    `${tokens.method(req, res)}`.cyan,
+    `${
+      tokens.status(req, res) === '200'
+        ? tokens.url(req, res).cyan
+        : tokens.url(req, res).red
+    }`,
+    `${tokens.status(req, res) === '200' ? '200 OK'.cyan : tokens.status(req, res).bgRed}`,
+    tokens.res(req, res, 'content-length'),
+    '-',
+    tokens['response-time'](req, res),
+    'ms',
+  ].join(' ')),
+);
 
 // Session Cookies
 app.use(
