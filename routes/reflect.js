@@ -40,7 +40,7 @@ router.post('/:app', async (req, res, next) => {
   const hashtags = BODY.match(/#[a-z0-9_]+/g);
   const fintags = BODY.match(/\$[a-z0-9_]+/g);
   const smsTags = fintags ? fintags.concat(hashtags) : hashtags;
-  const tags = ['#reset', '#status', '#save', '#purge', '$gift', '$grant'];
+  const tags = ['#help', '#reset', '#status', '#save', '#purge', '$gift', '$grant'];
 
   let prompt = BODY;
   let cacheKey = FROM;
@@ -80,27 +80,29 @@ router.post('/:app', async (req, res, next) => {
 
   if (tagFound) {
     try {
-      if (smsTags.includes('#save')) {
+      if (smsTags.includes('#help')) {
+        const helpMessage = '$gift - give a gift 💝\n$grant - request a grant 💚\n#purge - purge all records \n#save "text"- save a text\n#help - show this list again\n\n🤖 Remember too that, I am a person. You can also just talk to me.\n\n(I can assit you with just about anything)';
         await axios.post(
-          entityUrl,
-          { name: FROM, prompt },
-          { ...config('reflect:tag-found-entity-create') },
+          smsUrl,
+          { to: FROM, message: helpMessage },
+          { ...config('reflect:#help') },
         );
+        return res.end();
+      }
+
+      if (smsTags.includes('#save')) {
+        await axios.post(entityUrl, { name: FROM, prompt }, { ...config('reflect:#save') });
       }
 
       if (smsTags.includes('$gift')) {
-        await axios.post(giftUrl, { name: prompt }, { ...config('reflect:give-gift') });
+        await axios.post(giftUrl, { name: prompt }, { ...config('reflect:$gift') });
       }
 
       if (smsTags.includes('$grant')) {
-        await axios.post(grantUrl, { name: prompt }, { ...config('reflect:request-grant') });
+        await axios.post(grantUrl, { name: prompt }, { ...config('reflect:$grant') });
       }
 
-      await axios.post(
-        smsUrl,
-        { to: FROM, message: 'Okay' },
-        { ...config('reflect:tag-found-sms') },
-      );
+      await axios.post(smsUrl, { to: FROM, message: 'Okay' }, { ...config('reflect:okay') });
     } catch (error) {
       res.end();
       return next(error);
