@@ -23,7 +23,7 @@ router.post('/', async (req, res, exit) => {
   if (errors.length) {
     return exit({ statusCode: 400, message: errors });
   }
-  const appEvent = req.headers['x-app-audit-event'] || 'unknown-event';
+  const appEvent = req.appAuditEvent;
   enqueue(
     req.authz.token,
     async () => {
@@ -71,7 +71,7 @@ router.post('/', async (req, res, exit) => {
 
 // Get All Entities
 router.get('/', async (req, res, exit) => {
-  const appEvent = req.headers['x-app-audit-event'] || 'unknown-event';
+  const appEvent = req.appAuditEvent;
   enqueue(
     req.authz.token,
     async () => {
@@ -96,7 +96,7 @@ router.get('/', async (req, res, exit) => {
 router.get('/:id', async (req, res, exit) => {
   const { id } = req.params;
 
-  const appEvent = req.headers['x-app-audit-event'] || 'unknown-event';
+  const appEvent = req.appAuditEvent;
   enqueue(
     req.authz.token,
     async () => {
@@ -130,7 +130,7 @@ router.put('/:id', async (req, res, exit) => {
   const { id } = req.params;
   const { body } = req;
 
-  const appEvent = req.headers['x-app-audit-event'] || 'unknown-event';
+  const appEvent = req.appAuditEvent;
   enqueue(
     req.authz.token,
     async () => {
@@ -161,7 +161,7 @@ router.put('/:id', async (req, res, exit) => {
 router.delete('/:id', async (req, res, exit) => {
   const { id } = req.params;
 
-  const appEvent = req.headers['x-app-audit-event'] || 'unknown-event';
+  const appEvent = req.appAuditEvent;
   enqueue(
     req.authz.token,
     async () => {

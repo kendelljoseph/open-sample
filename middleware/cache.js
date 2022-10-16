@@ -7,7 +7,7 @@ class Cache {
 
   // eslint-disable-next-line class-methods-use-this
   generateRequestKey(req) {
-    const appEvent = req.headers['x-app-audit-event'] || 'unknown-event';
+    const appEvent = req.appAuditEvent;
     return `${req.originalUrl}/${appEvent}&accessToken=${req.authz.token}`;
   }
 

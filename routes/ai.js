@@ -16,7 +16,7 @@ router.use(audit());
 // Ai Prompts
 router.post('/prompt', async (req, res, next) => {
   const { body } = req;
-  const appEvent = req.headers['x-app-audit-event'] || 'unknown-event';
+  const appEvent = req.appAuditEvent;
 
   // Validation
   const errors = isAi(body);

@@ -20,7 +20,7 @@ router.use(audit());
 // Ai Prompts
 router.post('/send', async (req, res, next) => {
   const { body } = req;
-  const appEvent = req.headers['x-app-audit-event'] || 'unknown-sms-event';
+  const appEvent = req.appAuditEvent;
 
   // Validation
   const errors = isSMS(body);

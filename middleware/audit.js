@@ -3,7 +3,7 @@ import { Audit } from '../models/record/index.js';
 import enqueue from '../lib/enqueue.js';
 
 export default () => async (req, res, next) => {
-  const appEvent = req.headers['x-app-audit-event'] || 'unknown-event';
+  const appEvent = req.appAuditEvent;
   const token = req.authz ? req.authz.token : 'unauthorized';
 
   enqueue(

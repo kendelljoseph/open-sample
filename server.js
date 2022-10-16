@@ -6,6 +6,7 @@ import bodyParser from 'body-parser';
 import express from 'express';
 import session from 'express-session';
 import cache from './middleware/cache.js';
+import appEvents from './middleware/app_events.js';
 import routeError from './middleware/route_error.js';
 import entity from './routes/entity.js';
 import finance from './routes/finance.js';
@@ -26,12 +27,15 @@ app.use(cors());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.json());
 
+// App Events
+app.use(appEvents());
+
 // Logging
 app.use(
   morgan((tokens, req, res) => [
     '❓',
     `${tokens.method(req, res)}`.cyan,
-    `${req.headers['x-app-audit-event'] || 'unknown-event'}`.cyan,
+    `${req.appAuditEvent}`.cyan,
     `${
       tokens.status(req, res) === '200'
         ? tokens.url(req, res).cyan

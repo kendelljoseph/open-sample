@@ -10,7 +10,7 @@ export default () => async (error, req, res, next) => {
   enqueue(
     req.authz ? req.authz.token : 'unauthorized',
     async () => {
-      const appEvent = req.headers['x-app-audit-event'] || 'unknown-event';
+      const appEvent = req.appAuditEvent;
       try {
         await RouteError.create({
           method: req.method,
