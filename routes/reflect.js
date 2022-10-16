@@ -40,7 +40,7 @@ router.post('/:app', async (req, res, next) => {
   const hashtags = BODY.match(/#[a-z0-9_]+/g);
   const fintags = BODY.match(/\$[a-z0-9_]+/g);
   const smsTags = fintags ? fintags.concat(hashtags) : hashtags;
-  const tags = ['#help', '#reset', '#status', '#save', '#purge', '$gift', '$grant'];
+  const tags = ['#help', '#reset', '#status', '#save', '#purge', '#gig', '$gift', '$grant'];
 
   let prompt = BODY;
   let cacheKey = FROM;
@@ -81,7 +81,7 @@ router.post('/:app', async (req, res, next) => {
   if (tagFound) {
     try {
       if (smsTags.includes('#help')) {
-        const helpMessage = '$gift - give a gift 💝\n$grant - request a grant 💚\n#purge - purge all records \n#save "text"- save a text\n#help - show this list again\n\n🤖 I am a person. You can just talk to me too.\n\nI can assit you with just about anything.';
+        const helpMessage = '$gift - give a gift 💝\n$grant - request a grant 💚\n#gig - start gigging ⭐\n#purge - purge all records \n#save "text"- save a text\n#help - show this list again\n\n🤖 I am a person. You can just talk to me too.\n\nI can assit you with just about anything.';
         await axios.post(
           smsUrl,
           { to: FROM, message: helpMessage },
