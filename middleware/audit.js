@@ -24,6 +24,6 @@ export default () => async (req, res, next) => {
       }
     },
     next,
-    `audit:${appEvent}`,
+    `${appEvent}(audit)`,
   );
 };

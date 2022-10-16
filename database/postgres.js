@@ -2,6 +2,7 @@ import { Sequelize, DataTypes } from 'sequelize';
 import { POSTGRESQL, APP } from '../config/index.js';
 
 const sequelize = new Sequelize(POSTGRESQL.DB, POSTGRESQL.USER, POSTGRESQL.PASSWORD, {
+  logging: false,
   host: POSTGRESQL.HOST,
   dialect: 'postgres',
   dialectOptions:

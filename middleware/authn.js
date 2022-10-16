@@ -12,6 +12,8 @@ export default () => async (req, res, next) => {
   const token = authHeader && authHeader.split(' ')[1];
   if (!token) return res.sendStatus(401);
 
+  const appEvent = req.headers['x-app-audit-event'] || 'unknown-event';
+
   // Validation
   const errors = isKey(token);
   if (errors.length) {
@@ -90,7 +92,7 @@ export default () => async (req, res, next) => {
       next();
     },
     next,
-    '(🔑)',
+    `(🔑)${appEvent}`,
   );
 
   return null;
