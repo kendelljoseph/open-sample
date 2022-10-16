@@ -11,8 +11,24 @@ router.use(audit());
 
 const reflectCache = new NodeCache({ stdTTL: 100000, checkperiod: 10 });
 
+const apiUrls = (req) => {
+  const protocol = req.headers['x-forwarded-proto'] || 'http';
+  const { host } = req.headers;
+  return {
+    aiUrl: `${protocol}://${host}/api/v1/ai/prompt`,
+    smsUrl: `${protocol}://${host}/api/v1/sms/send`,
+    entityUrl: `${protocol}://${host}/api/v1/entity`,
+    giftUrl: `${protocol}://${host}/api/v1/finance/give-gift`,
+    grantUrl: `${protocol}://${host}/api/v1/finance/request-grant`,
+  };
+};
+
 // Reflect
 router.post('/:app', async (req, res, next) => {
+  const {
+    aiUrl, smsUrl, entityUrl, giftUrl, grantUrl,
+  } = apiUrls(req);
+
   // Validate App
   if (req.params.app !== APP.TWILIO_TWIML_SID) {
     return next({ statusCode: 403, message: 'Unknown App Reflection' });
@@ -20,19 +36,32 @@ router.post('/:app', async (req, res, next) => {
 
   const { body } = req;
   const FROM = body.From;
-  const BODY = body.Body;
-  const hashtags = String(BODY).match(/#[a-z0-9_]+/g);
-  const tags = ['#reset', '#status', '#load', '#save', '#purge'];
+  const BODY = String(body.Body);
+  const hashtags = BODY.match(/#[a-z0-9_]+/g);
+  const fintags = BODY.match(/\$[a-z0-9_]+/g);
+  const smsTags = fintags.concat(hashtags);
+  const tags = ['#reset', '#status', '#save', '#purge', '$gift', '$grant'];
 
   let prompt = BODY;
   let cacheKey = FROM;
   let tagFound = false;
-  if (hashtags) {
-    cacheKey = `${FROM}:${hashtags.join(':')}`;
+  if (smsTags) {
+    cacheKey = `${FROM}:${smsTags.join(':')}`;
     tags.forEach((tag) => {
-      if (hashtags.includes(tag)) {
+      if (smsTags.includes(tag)) {
         if (!tagFound) tagFound = true;
+      }
+
+      if (['#reset', '#purge', '#status'].includes(tag)) {
         reflectCache.del(cacheKey);
+      }
+
+      if (tagFound) {
+        // Remove tag from prompt
+        prompt = prompt.replace(tag, '');
+
+        // Use tag cache
+        cacheKey += `${cacheKey}${tag}`;
       }
     });
   }
@@ -42,15 +71,6 @@ router.post('/:app', async (req, res, next) => {
     prompt = `${cachedPrompt}\n\n${BODY}`;
   }
 
-  const aiUrl = `${req.headers['x-forwarded-proto'] || 'http'}://${
-    req.headers.host
-  }/api/v1/ai/prompt`;
-  const smsUrl = `${req.headers['x-forwarded-proto'] || 'http'}://${
-    req.headers.host
-  }/api/v1/sms/send`;
-  const entityUrl = `${req.headers['x-forwarded-proto'] || 'http'}://${
-    req.headers.host
-  }/api/v1/entity`;
   const config = (eventName) => ({
     headers: {
       Authorization: `Bearer ${APP.REFLECT_ACCESS_TOKEN}`,
@@ -58,19 +78,22 @@ router.post('/:app', async (req, res, next) => {
     },
   });
 
-  let savePrompt = null;
   if (tagFound) {
     try {
-      if (hashtags.includes('#save')) {
-        savePrompt = String(BODY).split(' ');
-        savePrompt.shift();
-        savePrompt = savePrompt.join('');
-
+      if (smsTags.includes('#save')) {
         await axios.post(
           entityUrl,
-          { name: FROM, prompt: savePrompt },
+          { name: FROM, prompt },
           { ...config('reflect:tag-found-entity-create') },
         );
+      }
+
+      if (smsTags.includes('$gift')) {
+        await axios.post(giftUrl, { name: prompt }, { ...config('reflect:give-gift') });
+      }
+
+      if (smsTags.includes('$grant')) {
+        await axios.post(grantUrl, { name: prompt }, { ...config('reflect:request-grant') });
       }
 
       await axios.post(
