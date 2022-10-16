@@ -31,6 +31,7 @@ app.use(
   morgan((tokens, req, res) => [
     '❓',
     `${tokens.method(req, res)}`.cyan,
+    `${req.headers['x-app-audit-event'] || 'unknown-event'}`.cyan,
     `${
       tokens.status(req, res) === '200'
         ? tokens.url(req, res).cyan

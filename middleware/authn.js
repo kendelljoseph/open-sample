@@ -92,7 +92,7 @@ export default () => async (req, res, next) => {
       next();
     },
     next,
-    `(🔑)${appEvent}`,
+    '(🔑)',
   );
 
   return null;
