@@ -39,7 +39,7 @@ router.post('/:app', async (req, res, next) => {
   const BODY = String(body.Body);
   const hashtags = BODY.match(/#[a-z0-9_]+/g);
   const fintags = BODY.match(/\$[a-z0-9_]+/g);
-  const smsTags = fintags.concat(hashtags);
+  const smsTags = fintags ? fintags.concat(hashtags) : hashtags;
   const tags = ['#reset', '#status', '#save', '#purge', '$gift', '$grant'];
 
   let prompt = BODY;
