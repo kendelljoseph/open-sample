@@ -16,7 +16,7 @@ import reflect from './routes/reflect.js';
 import adminAudit from './routes/audit.js';
 import adminRouteError from './routes/route_error.js';
 import { APP } from './config/index.js';
-import googleOauth from './auth/google.js';
+import passport from './auth/google.js';
 
 const { PORT } = APP;
 
@@ -58,8 +58,8 @@ app.use(
     cookie: { secure: true },
   }),
 );
-app.use(googleOauth.initialize());
-app.use(googleOauth.session());
+app.use(passport.initialize());
+app.use(passport.session());
 
 // Cache
 app.use(cache());
@@ -76,23 +76,83 @@ app.use('/admin/v1/audit', adminAudit);
 app.use('/admin/v1/route-error', adminRouteError);
 
 // Front End
-app.use(express.static('./public'));
+app.use(
+  '/',
+  // passport.authenticate('google', {
+  //   scope: ['email', 'profile'],
+  //   failureRedirect: '/auth/callback/failure',
+  // }),
+  passport.authenticate('session'),
+  express.static('./public'),
+);
 
 // Auth
-app.get('/auth', googleOauth.authenticate('google', { scope: ['email', 'profile'] }));
+app.get('/auth', passport.authenticate('google', { scope: ['email', 'profile'] }));
 
 // Auth Callback
 app.get(
   '/auth/callback',
-  googleOauth.authenticate('google', {
+  passport.authenticate('google', {
     failureRedirect: '/auth/callback/failure',
   }),
   (req, res) => {
     const { user } = req;
     res.send(
-      `<img src="${user.picture}"></img><h1>${user.displayName}</h1><div>${user.email}</div><div>${user.id}</div>
+      `
+      <style>
+        @import url('https://fonts.googleapis.com/css2?family=Merriweather&family=Silkscreen:wght@700&display=swap');
+        body {
+          display: flex;
+          flex-flow: column;
+          align-items: center;
+          justify-content: center;
+          height: 100vh;
+          overflow: hidden;
+        }
+        .user-image {
+          width: 120px;
+          margin-bottom: 30px;
+          border-radius: 100%;
+          animation-name: fade-in;
+          animation-duration: 2s; 
+
+        }
+        .auth-text {
+          font-family: 'Silkscreen', cursive;
+          animation-name: bounce;
+          animation-duration: 1s; 
+          animation-fill-mode: both; 
+        }
+        .caption {
+          margin-bottom: 20px;
+          font-family: 'Merriweather', serif;
+          font-size: 0.25em;
+        }
+
+        @keyframes bounce {
+          0%, 20%, 50%, 80%, 100% {transform: translateY(0);} 
+          40% {transform: translateY(-30px);} 
+          60% {transform: translateY(-15px);} 
+       }
+       
+       @keyframes fade-in {
+        0%, 20%, 50%, 80%, 100% {opacity: 0.5;} 
+        40% {opacity: 0.5;} 
+        60% {opacity: 0.15;} 
+     }
+      </style>
+      <img class="user-image" src="${user.picture}">
+      <h1 class='auth-text'>🤔 authenticating...</h1>
+      <p class="caption">logging you in as ${user.displayName}</p>
+      <script src='../js/cookies.js'></script>
       <script>
-        console.log(${user.id});
+        setCookie('userId', '${user.id}', 1);
+        setCookie('userEmail', '${user.email}', 1);
+        setCookie('userPhoto', '${user.picture}', 1);
+        setCookie('userDisplayName', '${user.displayName}', 1);
+        setTimeout(() => {
+          window.location='../../'
+        }, 3200);
       </script>`,
     );
   },
