@@ -40,7 +40,17 @@ router.post('/:app', async (req, res, next) => {
   const hashtags = BODY.match(/#[a-z0-9_]+/g);
   const fintags = BODY.match(/\$[a-z0-9_]+/g);
   const smsTags = fintags ? fintags.concat(hashtags) : hashtags;
-  const tags = ['#help', '#reset', '#status', '#save', '#purge', '#gig', '$gift', '$grant'];
+  const tags = [
+    '#help',
+    '#reset',
+    '#status',
+    '#save',
+    '#build',
+    '#purge',
+    '#gig',
+    '$gift',
+    '$grant',
+  ];
 
   let prompt = BODY;
   let cacheKey = FROM;
@@ -81,7 +91,7 @@ router.post('/:app', async (req, res, next) => {
   if (tagFound) {
     try {
       if (smsTags.includes('#help')) {
-        const helpMessage = '$gift - give a gift 💝\n$grant - request a grant 💚\n#gig - start gigging ⭐\n#purge - purge all records \n#save "text"- save a text\n#help - show this list again\n\nBy the way -- I am a person. You can just talk to me 💬!';
+        const helpMessage = '$gift - give a gift 💝\n$grant - request a grant 💚\n#gig - start gigging ⭐\n#build "description" - build a user experience\n#purge - purge all records \n#save "text" - save a text\n#help - show this list again\n\nBy the way -- I am a person. You can just talk to me 💬!';
         await axios.post(
           smsUrl,
           { to: FROM, message: helpMessage },
@@ -96,10 +106,40 @@ router.post('/:app', async (req, res, next) => {
 
       if (smsTags.includes('$gift')) {
         await axios.post(giftUrl, { name: prompt }, { ...config('reflect:$gift') });
+        await axios.post(
+          smsUrl,
+          {
+            to: FROM,
+            message: `$gift - give a gift 💝\n**GIVE A GIFT**\n\n\n${prompt}\n\nUse this link to complete a secure gift transaction using Stripe.\n${APP.STRIPE_GIFT_URL}`,
+          },
+          { ...config('reflect:$gift:stripe-url') },
+        );
+        return res.end();
       }
 
       if (smsTags.includes('$grant')) {
         await axios.post(grantUrl, { name: prompt }, { ...config('reflect:$grant') });
+        await axios.post(
+          smsUrl,
+          {
+            to: FROM,
+            message: `$grant - request a grant 💚\n**GRANT REQUESTED**\n\n${prompt}\n\nShare this link to anyone who would like to support this grant.\n${APP.STRIPE_GRANT_URL}`,
+          },
+          { ...config('reflect:$gift:stripe-url') },
+        );
+        return res.end();
+      }
+
+      if (smsTags.includes('#build')) {
+        await axios.post(
+          smsUrl,
+          {
+            to: FROM,
+            message: `#build - build a user experience\n\n${prompt}\n\nUse this link to view this build.\n${APP.PUBLIC_OS_URL}`,
+          },
+          { ...config('reflect:#build') },
+        );
+        return res.end();
       }
 
       await axios.post(smsUrl, { to: FROM, message: 'Okay' }, { ...config('reflect:okay') });
