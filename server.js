@@ -41,7 +41,7 @@ app.use(
         ? tokens.url(req, res).cyan
         : tokens.url(req, res).red
     }`,
-    `${tokens.status(req, res) === '200' ? '200 OK'.cyan : tokens.status(req, res).bgRed}`,
+    `${tokens.status(req, res) === '200' ? '200 OK'.cyan : tokens.status(req, res).yellow}`,
     tokens.res(req, res, 'content-length'),
     '-',
     tokens['response-time'](req, res),
@@ -75,10 +75,8 @@ app.use('/api/v1/reflect', reflect);
 app.use('/admin/v1/audit', adminAudit);
 app.use('/admin/v1/route-error', adminRouteError);
 
-// Login (Temporary)
-app.get('/login', (req, res) => {
-  res.send("<button><a href='/auth'>Login With Google</a></button>");
-});
+// Front End
+app.use(express.static('./public'));
 
 // Auth
 app.get('/auth', googleOauth.authenticate('google', { scope: ['email', 'profile'] }));
@@ -90,8 +88,12 @@ app.get(
     failureRedirect: '/auth/callback/failure',
   }),
   (req, res) => {
+    const { user } = req;
     res.send(
-      `<img src="${req.user.picture}"></img><h1>${req.user.displayName}</h1><div>${req.user.email}</div>`,
+      `<img src="${user.picture}"></img><h1>${user.displayName}</h1><div>${user.email}</div><div>${user.id}</div>
+      <script>
+        console.log(${user.id});
+      </script>`,
     );
   },
 );
