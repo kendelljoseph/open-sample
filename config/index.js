@@ -16,6 +16,9 @@ export const APP = {
   TWILIO_AUTH_TOKEN: process.env.TWILIO_AUTH_TOKEN,
   TWILIO_NUMBER: process.env.TWILIO_NUMBER,
   TWILIO_TWIML_SID: process.env.TWILIO_TWIML_SID,
+  STRIPE_GIFT_URL: process.env.STRIPE_GIFT_URL,
+  STRIPE_GRANT_URL: process.env.STRIPE_GRANT_URL,
+  PUBLIC_OS_URL: process.env.PUBLIC_OS_URL,
 };
 
 export const POSTGRESQL = {
