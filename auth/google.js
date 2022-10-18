@@ -29,6 +29,7 @@ passport.use(
           displayName: profile.displayName,
           email: profile.email,
           googleId: profile.id,
+          accessToken,
         },
       });
 

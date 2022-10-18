@@ -1,6 +1,20 @@
 import Validator from 'better-validator';
 
 export default {
+  isUser: (data) => {
+    const validator = new Validator();
+    validator(data)
+      .required()
+      .isObject((obj) => {
+        obj('displayName').isString();
+        obj('email').isString();
+        obj('googleId').isString();
+        obj('accessToken').isString();
+        obj('phoneNumber').isString();
+      });
+
+    return validator.run();
+  },
   isEntity: (data) => {
     const validator = new Validator();
     validator(data)

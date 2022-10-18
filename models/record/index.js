@@ -50,11 +50,15 @@ export const User = new DatabaseRecord('User', {
   },
   email: {
     type: DataTypes.STRING,
-    unique: true,
   },
   googleId: {
     type: DataTypes.STRING(2048),
-    unique: true,
+  },
+  accessToken: {
+    type: DataTypes.STRING,
+  },
+  phoneNumber: {
+    type: DataTypes.STRING,
   },
 });
 
