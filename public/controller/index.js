@@ -1,3 +1,4 @@
+const profile = document.querySelector('#profile');
 const user = document.querySelector('#user');
 const userPicture = document.querySelector('#user-image');
 const login = document.querySelector('#login');
@@ -9,14 +10,17 @@ const displayName = window.getCookie('userDisplayName');
 const userPictureUrl = window.getCookie('userPicture');
 
 if (displayName) {
+  profile.style.display = 'flex';
   interactionOptions.style.display = 'flex';
   user.innerHTML = displayName;
   logout.style.display = 'block';
+
   login.style.display = 'none';
 } else {
+  profile.style.display = 'none';
   interactionOptions.style.display = 'none';
-  user.remove();
   logout.style.display = 'none';
+
   login.style.display = 'block';
 }
 
@@ -28,6 +32,9 @@ if (userPictureUrl) {
 
 login.onclick = function () {
   window.location = '/auth';
+};
+profile.onclick = function () {
+  window.location = '/app/profile';
 };
 talk.onclick = function () {
   window.location = '/app/talk';
