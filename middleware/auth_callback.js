@@ -1,7 +1,7 @@
-import { User } from '../models/record/index.js';
+import { Authn } from '../models/record/index.js';
 import enqueue from '../lib/enqueue.js';
 
-const html = (user) => `
+const html = (user, accessToken) => `
 <!DOCTYPE html>
 <html>
 <head>
@@ -62,6 +62,7 @@ const html = (user) => `
   setCookie('userEmail', '${user.email}', 1);
   setCookie('userPicture', '${user.picture}', 1);
   setCookie('userDisplayName', '${user.displayName}', 1);
+  setCookie('userAccessToken', '${accessToken}', 1);
   setTimeout(() => {
     window.location='../../'
   }, 3200);
@@ -110,10 +111,15 @@ setTimeout(function() {
 export default () => async (req, res, next) => {
   const { user } = req;
 
+  const authnRecord = await Authn.findOne({ where: { googleId: user.id } });
+
+  const userAccessData = authnRecord.dataValues;
+  const { accessToken } = userAccessData;
+
   enqueue(
     'auth-callback',
     async () => {
-      res.send(html(user));
+      res.send(html(user, accessToken));
     },
     next,
     '(🔑):auth-callback',
