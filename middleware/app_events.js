@@ -1,4 +1,4 @@
 export default () => async (req, res, next) => {
-  req.appAuditEvent = req.headers['x-app-audit-event'] || 'x-app-audit-event';
+  req.appAuditEvent = req.headers['x-app-event'] || 'x-app-event';
   next();
 };

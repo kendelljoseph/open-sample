@@ -16,6 +16,7 @@ const html = (user) => `
       justify-content: center;
       height: 100vh;
       overflow: hidden;
+      font-family: 'Merriweather', serif;
     }
     .user-image {
       width: 120px;
@@ -64,6 +65,46 @@ const html = (user) => `
   setTimeout(() => {
     window.location='../../'
   }, 3200);
+</script>
+<script>
+var circle = document.createElement('div');
+circle.style.width = '100%';
+circle.style.height = '50px';
+circle.style.backgroundColor = 'green';
+circle.style.position = 'absolute';
+circle.style.top = '0px';
+circle.style.left = '0px';
+circle.style.transition = 'all 3.2s';
+circle.style.opacity = '0.5';
+document.body.appendChild(circle);
+var countdown = document.createElement('div');
+countdown.style.position = 'absolute';
+countdown.style.top = '100px';
+countdown.style.left = '0px';
+countdown.style.width = '100%';
+countdown.style.height = '50px';
+countdown.style.backgroundColor = 'transparent';
+countdown.style.color = 'black';
+countdown.style.fontSize = '4em';
+countdown.style.textAlign = 'center';
+countdown.style.lineHeight = '50px';
+countdown.innerHTML = '4';
+document.body.appendChild(countdown);
+setTimeout(function() {
+  circle.style.top = '100%';
+  circle.style.height = '0px';
+  circle.style.opacity = '0';
+  countdown.innerHTML = '3';
+}, 1000);
+setTimeout(function() {
+  countdown.innerHTML = '2';
+}, 2000);
+setTimeout(function() {
+  countdown.innerHTML = '1';
+}, 3000);
+setTimeout(function() {
+  countdown.innerHTML = '0';
+}, 4000);
 </script>`;
 
 export default () => async (req, res, next) => {
