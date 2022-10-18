@@ -81,6 +81,16 @@
       #submit:disabled{
         opacity: 0.25;
       }
+      #loading {
+        z-index: 9999;
+        display: none;
+        position: absolute;
+        bottom: 0;
+        right: 10vw;
+        pointer-events: none;
+        width: 200px;
+        max-width: 200px;
+      }
     </style>
 </head>
 <body>
@@ -88,6 +98,7 @@
   <img id="user-image" src="">
   <button id="back" class="button rotate">&#10149;</button>
   <button id="submit" class="button small">👷‍♀️ build</button>
+  <img id="loading" src="../../assets/thinking.gif" alt="thinking">
   <div id="editor">/* log hello world to the console. */
 console.log('Hello World');</div>
 </body>

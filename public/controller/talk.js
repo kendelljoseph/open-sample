@@ -2,6 +2,7 @@ const user = document.querySelector('#user');
 const userPicture = document.querySelector('#user-image');
 const submit = document.querySelector('#submit');
 const back = document.querySelector('#back');
+const loading = document.querySelector('#loading');
 
 const displayName = window.getCookie('userDisplayName');
 const userPictureUrl = window.getCookie('userPicture');
@@ -9,6 +10,7 @@ const userAccessToken = window.getCookie('userAccessToken');
 
 // eslint-disable-next-line no-undef
 const editor = ace.edit('editor');
+editor.setOption('wrap', true);
 editor.setTheme('ace/theme/chrome');
 editor.getSession().setMode('ace/mode/text');
 document.getElementById('editor').style.fontSize = '14px';
@@ -34,6 +36,7 @@ back.onclick = () => {
 
 submit.onclick = async () => {
   submit.disabled = true;
+  loading.style.display = 'block';
 
   const selectedText = editor.getSelectedText();
   let prompt = '';
@@ -59,4 +62,5 @@ submit.onclick = async () => {
   );
   editor.setValue(`${data.prompt}${data.response}`);
   submit.disabled = false;
+  loading.style.display = 'none';
 };
