@@ -6,7 +6,7 @@ An open sample API.
 
 ```yml
 # POST http://localhost:3000/v1/entity
-x-app-audit-event: create-entity
+x-app-event: create-entity
 authorization: Bearer PRIVATE_KEY
 content-type: application/json
 ```

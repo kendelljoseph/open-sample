@@ -1,7 +1,7 @@
 ### Create an Entitity
 POST http://localhost:3000/api/v1/entity
-x-app-audit-event: create-entity
-authorization: Bearer ya29.a0Aa4xrXMhaEr-5ppC3u4cDwpJjqsclFIKRZiBJLD5wA3ZeEmAxtfgxGkTVc0cHNLkH9n_QGsuqlUj0h03htxaLuoBe1Lay282T0JppTwzvQ8rwIZgnxgTm2GhHJtVj-WzpJE-o5ybMriPgfKSUPh0RpLKvnq8GwaCgYKATASARMSFQEjDvL9Jd4yYV7gMYNwmUySnI2OUQ0165
+x-app-event: create-entity
+authorization: Bearer ACCESS_TOKEN_OR_API_KEY
 content-type: application/json
 
 {
@@ -11,18 +11,18 @@ content-type: application/json
 
 ### Get all Entities
 GET http://localhost:3000/api/v1/entity
-x-app-audit-event: all-entities
-authorization: Bearer ya29.a0Aa4xrXMhaEr-5ppC3u4cDwpJjqsclFIKRZiBJLD5wA3ZeEmAxtfgxGkTVc0cHNLkH9n_QGsuqlUj0h03htxaLuoBe1Lay282T0JppTwzvQ8rwIZgnxgTm2GhHJtVj-WzpJE-o5ybMriPgfKSUPh0RpLKvnq8GwaCgYKATASARMSFQEjDvL9Jd4yYV7gMYNwmUySnI2OUQ0165
+x-app-event: all-entities
+authorization: Bearer ACCESS_TOKEN_OR_API_KEY
 
 ### Get Entitiy by ID
 GET http://localhost:3000/api/v1/entity/1
-x-app-audit-event: entity
-authorization: Bearer ya29.a0Aa4xrXMhaEr-5ppC3u4cDwpJjqsclFIKRZiBJLD5wA3ZeEmAxtfgxGkTVc0cHNLkH9n_QGsuqlUj0h03htxaLuoBe1Lay282T0JppTwzvQ8rwIZgnxgTm2GhHJtVj-WzpJE-o5ybMriPgfKSUPh0RpLKvnq8GwaCgYKATASARMSFQEjDvL9Jd4yYV7gMYNwmUySnI2OUQ0165
+x-app-event: entity
+authorization: Bearer ACCESS_TOKEN_OR_API_KEY
 
 ### Update an Entitiy by ID
 PUT http://localhost:3000/api/v1/entity/1
-x-app-audit-event: entity
-authorization: Bearer ya29.a0Aa4xrXMhaEr-5ppC3u4cDwpJjqsclFIKRZiBJLD5wA3ZeEmAxtfgxGkTVc0cHNLkH9n_QGsuqlUj0h03htxaLuoBe1Lay282T0JppTwzvQ8rwIZgnxgTm2GhHJtVj-WzpJE-o5ybMriPgfKSUPh0RpLKvnq8GwaCgYKATASARMSFQEjDvL9Jd4yYV7gMYNwmUySnI2OUQ0165
+x-app-event: entity
+authorization: Bearer ACCESS_TOKEN_OR_API_KEY
 content-type: application/json
 
 {
@@ -32,29 +32,29 @@ content-type: application/json
 
 ### Delete an Entitiy by ID
 DELETE http://localhost:3000/api/v1/entity/1
-x-app-audit-event: entity
-authorization: Bearer ya29.a0Aa4xrXMuWGONMHwyfgNEbD-AqGdUJMIPdgigrGQUL6MH6RNVVQ8L3QfrSZbA4jiyRoeRZ3EFIAB5KFgNnZXBnyzGX36XieVtBzmqW9sdVNu1DJNTB16ACDgY-qotGpi2UAgeBmvo95eIFDXiGRvHC1yvoRJ_gAaCgYKATASARMSFQEjDvL9it9Ar0zq8ImIhgfXaDuvRg0165
+x-app-event: entity
+authorization: Bearer ACCESS_TOKEN_OR_API_KEY
 
 ### Get Audit (Admin)
 GET http://localhost:3000/admin/v1/audit
-x-app-audit-event: admin-audit
-authorization: Bearer ADMINISTRATOR
+x-app-event: admin-audit
+authorization: Bearer ADMINISTRATOR_ACCESS_TOKEN_OR_API_KEY
 
 ### Get Audit by Event (Admin)
 GET http://localhost:3000/admin/v1/audit/admin-audit-by-event
-x-app-audit-event: admin-audit-by-event
-authorization: Bearer ADMINISTRATOR
+x-app-event: admin-audit-by-event
+authorization: Bearer ADMINISTRATOR_ACCESS_TOKEN_OR_API_KEY
 
 
 ### Get Route Errors (Admin)
 GET http://localhost:3000/admin/v1/route-error
-x-app-audit-event: admin-route-errors
-authorization: Bearer ADMINISTRATOR
+x-app-event: admin-route-errors
+authorization: Bearer ADMINISTRATOR_ACCESS_TOKEN_OR_API_KEY
 
 ### Gift
 POST http://localhost:3000/api/v1/finance/give-gift
-x-app-audit-event: give-gift
-authorization: Bearer ya29.a0Aa4xrXOu5fjrAY4D5fmtWk4MSvB__0zciRnPMMqB92yAytjVvDPHjLipJNuj0EqLWWvwIyxzCeP0DbG73ziMdEtJGm-GhMPCshPNwbNT7l-3Z7UFu4lXNuDOuTT--BaSsTpDgYQLqLqJxxbuHU8cjH5aq9EkRQaCgYKATASARMSFQEjDvL9_5kVb28WA8skXB4_flRz2A0165
+x-app-event: give-gift
+authorization: Bearer ACCESS_TOKEN_OR_API_KEY
 content-type: application/json
 
 {
@@ -63,8 +63,8 @@ content-type: application/json
 
 ### Request Grant
 POST http://localhost:3000/api/v1/finance/request-grant
-x-app-audit-event: request-grant
-authorization: Bearer ya29.a0Aa4xrXO4DdN4yceLd0VIA5cN4yNkgGjFFrtlyIir5Ytzgu4aPsg966dqixe4-Ll6TyvOFuCniWjctpoAlyAflvQFwWlvZkN-lUFzOmFeHLeq64nvZmKQ_RiwK6ntTlNNBBaLrbB8FOwhu65ejwDIh1oLhTnkzgaCgYKATASARMSFQEjDvL9yStc1ITV4xwjLVECVjr9Qw0165
+x-app-event: request-grant
+authorization: Bearer ACCESS_TOKEN_OR_API_KEY
 content-type: application/json
 
 {
@@ -74,8 +74,8 @@ content-type: application/json
 
 ### AI Prompt
 POST http://localhost:3000/api/v1/ai/prompt
-x-app-audit-event: ai-bot
-Authorization: Bearer ya29.a0Aa4xrXMhaEr-5ppC3u4cDwpJjqsclFIKRZiBJLD5wA3ZeEmAxtfgxGkTVc0cHNLkH9n_QGsuqlUj0h03htxaLuoBe1Lay282T0JppTwzvQ8rwIZgnxgTm2GhHJtVj-WzpJE-o5ybMriPgfKSUPh0RpLKvnq8GwaCgYKATASARMSFQEjDvL9Jd4yYV7gMYNwmUySnI2OUQ0165
+x-app-event: ai-bot
+Authorization: Bearer ACCESS_TOKEN_OR_API_KEY
 Content-Type: application/json
 
 {

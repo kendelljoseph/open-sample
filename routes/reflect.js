@@ -84,7 +84,7 @@ router.post('/:app', async (req, res, next) => {
   const config = (eventName) => ({
     headers: {
       Authorization: `Bearer ${APP.REFLECT_ACCESS_TOKEN}`,
-      'x-app-audit-event': eventName,
+      'x-app-event': eventName,
     },
   });
 
