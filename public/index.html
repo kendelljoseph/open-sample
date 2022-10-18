@@ -2,6 +2,7 @@
 <html>
 <head>
     <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Open Sample</title>
     <style>
       @import url('https://fonts.googleapis.com/css2?family=Merriweather&display=swap');
@@ -15,15 +16,61 @@
         overflow: hidden;
       }
       .google-icon {
-        max-width: 50px;
+        max-width: 20px;
+        margin-right: 10px;
+      }
+      #logout {
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        height: 2em;
+        font-size: 2em;
+      }
+      #login, #logout {
+        cursor: pointer;
+        font-size: 1em;
+        background: white;
+        border: 1px solid grey;
+        border-radius: 5px;
+      }
+      #login {
+        margin-top: 20px;
+      }
+      .google-login-text {
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+        flex-flow: row;
+        padding: 10px;
+      }
+      #user {
+        position: absolute;
+        top: 15px;
+        right: 50px;
+      }
+      #user-image {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        width: 32px;
+        border-radius: 100%;
       }
     </style>
 </head>
 <body>
-    <h1>Open Sample</h1>
-    <p>An open source AI assisted API.</p>
-    <hr size="1" width="300px" color="grey">  
-    <h2>Login</h2>
-    <button><a href='/auth'><img class="google-icon" src="assets/google.png" alt="google login"></a></button>
+  <div id="user">User</div>
+  <img id="user-image" src="">
+  <h1>Open Sample</h1>
+  <p>An open source AI assisted API.</p>
+  <hr size="1" width="300px" color="grey">  
+  <button id="login">
+    <div class="google-login-text">
+      <img class="google-icon" src="assets/google.png" alt="google login">
+      Login with Google
+    </div>
+  </button>
+  <button id="logout">logout</button>
 </body>
+<script src='js/cookies.js'></script>
+<script src='controller/user.js'></script>
 </html>
