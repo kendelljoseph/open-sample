@@ -91,7 +91,7 @@ router.post('/:app', async (req, res, next) => {
   if (tagFound) {
     try {
       if (smsTags.includes('#help')) {
-        const helpMessage = '$gift - give a gift 💝\n$grant - request a grant 💚\n#gig - start gigging ⭐\n#build "text" - build an experience\n#purge - purge all records \n#save "text" - save a text\n#help - show this list again\n\nBy the way -- I am a person. You can just talk to me 💬!';
+        const helpMessage = `${req.protocol}://${req.hostname}\n\n$gift - give a gift 💝\n$grant - request a grant 💚\n#gig - start gigging ⭐\n#build "text" - build an experience\n#purge - purge all records \n#save "text" - save a text\n#help - show this list again\n\nBy the way -- I am a person. You can just talk to me 💬!`;
         await axios.post(
           smsUrl,
           { to: FROM, message: helpMessage },
