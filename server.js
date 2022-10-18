@@ -34,21 +34,21 @@ app.use(appEvents());
 
 // Logging
 app.use(
-  morgan((tokens, req, res) => [
-    '❓',
-    `${tokens.method(req, res)}`.cyan,
-    `${req.appAuditEvent}`.cyan,
-    `${
-      tokens.status(req, res) === '200'
-        ? tokens.url(req, res).cyan
-        : tokens.url(req, res).red
-    }`,
-    `${tokens.status(req, res) === '200' ? '200 OK'.cyan : tokens.status(req, res).yellow}`,
-    tokens.res(req, res, 'content-length'),
-    '-',
-    tokens['response-time'](req, res),
-    'ms',
-  ].join(' ')),
+  morgan((tokens, req, res) => {
+    const status = tokens.status(req, res) || '';
+    const url = tokens.url(req, res) || '';
+    return [
+      '❓',
+      `${tokens.method(req, res)}`.cyan,
+      `${req.appAuditEvent}`.cyan,
+      `${status === '200' ? url.cyan : url.red}`,
+      `${status === '200' ? '200 OK'.cyan : status.yellow}`,
+      tokens.res(req, res, 'content-length'),
+      '-',
+      tokens['response-time'](req, res),
+      'ms',
+    ].join(' ');
+  }),
 );
 
 // Session Cookies
