@@ -1,11 +1,7 @@
-const user = document.querySelector('#user');
-const userPicture = document.querySelector('#user-image');
 const submit = document.querySelector('#submit');
 const back = document.querySelector('#back');
 const loading = document.querySelector('#loading');
 
-const displayName = window.getCookie('userDisplayName');
-const userPictureUrl = window.getCookie('userPicture');
 const userAccessToken = window.getCookie('userAccessToken');
 
 // eslint-disable-next-line no-undef
@@ -13,21 +9,14 @@ const editor = ace.edit('editor');
 editor.setOption('wrap', true);
 editor.setTheme('ace/theme/chrome');
 editor.getSession().setMode('ace/mode/text');
+editor.getSession().setTabSize(2);
 document.getElementById('editor').style.fontSize = '14px';
 
-if (displayName) {
-  user.innerHTML = displayName;
+if (userAccessToken) {
   back.style.display = 'block';
   submit.style.display = 'block';
 } else {
-  user.remove();
   submit.style.display = 'none';
-}
-
-if (userPictureUrl) {
-  userPicture.src = userPictureUrl;
-} else {
-  userPicture.remove();
 }
 
 back.onclick = () => {
