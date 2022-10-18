@@ -77,15 +77,7 @@ app.use('/admin/v1/audit', adminAudit);
 app.use('/admin/v1/route-error', adminRouteError);
 
 // Front End
-app.use(
-  '/',
-  // passport.authenticate('google', {
-  //   scope: ['email', 'profile'],
-  //   failureRedirect: '/auth/callback/failure',
-  // }),
-  passport.authenticate('session'),
-  express.static('./public'),
-);
+app.use('/', passport.authenticate('session'), express.static('./public'));
 
 // Auth
 app.get('/auth', passport.authenticate('google', { scope: ['email', 'profile'] }));
