@@ -146,7 +146,7 @@ router.put('/:id', async (req, res, exit) => {
 
       const record = await User.update(body, {
         fields: ['displayName', 'email', 'googleId', 'accessToken', 'phoneNumber'],
-        where: { id },
+        where: { googleId: id },
       });
 
       // Clear Cache
