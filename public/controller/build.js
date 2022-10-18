@@ -10,7 +10,7 @@ const userAccessToken = window.getCookie('userAccessToken');
 // eslint-disable-next-line no-undef
 const editor = ace.edit('editor');
 editor.setTheme('ace/theme/chrome');
-editor.getSession().setMode('ace/mode/text');
+editor.getSession().setMode('ace/mode/javascript');
 document.getElementById('editor').style.fontSize = '14px';
 
 if (displayName) {
@@ -42,8 +42,7 @@ submit.onclick = async () => {
   } else {
     prompt = editor.getValue();
   }
-
-  const aiUrl = `${window.location.protocol}//${window.location.host}/api/v1/ai/prompt`;
+  const aiUrl = `${window.location.protocol}//${window.location.host}/api/v1/ai/code`;
   // eslint-disable-next-line no-undef
   const { data } = await axios.post(
     aiUrl,
@@ -53,7 +52,7 @@ submit.onclick = async () => {
     {
       headers: {
         Authorization: `Bearer ${userAccessToken}`,
-        'x-app-event': 'talk-web-app',
+        'x-app-event': 'build-web-app',
       },
     },
   );
