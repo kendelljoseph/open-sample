@@ -8,6 +8,7 @@ const build = document.querySelector('#build');
 const history = document.querySelector('#history');
 const admin = document.querySelector('#admin');
 const entities = document.querySelector('#entities');
+const github = document.querySelector('#github');
 const interactionOptions = document.querySelector('#interaction-options');
 const displayName = window.getCookie('userDisplayName');
 const userPictureUrl = window.getCookie('userPicture');
@@ -33,6 +34,9 @@ if (userPictureUrl) {
   userPicture.remove();
 }
 
+github.onclick = function () {
+  window.open('https://kendelljoseph.github.io/open-source/');
+};
 login.onclick = function () {
   window.location = '/auth';
 };
