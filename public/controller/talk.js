@@ -45,7 +45,7 @@ submit.onclick = async () => {
     {
       headers: {
         Authorization: `Bearer ${userAccessToken}`,
-        'x-app-event': 'talk-web-app',
+        'x-app-event': 'talk-browser-app',
       },
     },
   );

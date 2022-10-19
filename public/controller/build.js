@@ -43,7 +43,7 @@ submit.onclick = async () => {
     {
       headers: {
         Authorization: `Bearer ${userAccessToken}`,
-        'x-app-event': 'build-web-app',
+        'x-app-event': 'build-browser-app',
       },
     },
   );
