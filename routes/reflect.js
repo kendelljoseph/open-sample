@@ -101,7 +101,11 @@ router.post('/:app', async (req, res, next) => {
       }
 
       if (smsTags.includes('#save')) {
-        await axios.post(entityUrl, { name: FROM, prompt }, { ...config('reflect:#save') });
+        await axios.post(
+          entityUrl,
+          { name: '#save', prompt },
+          { ...config('reflect:#save') },
+        );
       }
 
       if (smsTags.includes('$gift')) {
