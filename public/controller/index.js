@@ -6,6 +6,7 @@ const logout = document.querySelector('#logout');
 const talk = document.querySelector('#talk');
 const build = document.querySelector('#build');
 const history = document.querySelector('#history');
+const admin = document.querySelector('#admin');
 const entities = document.querySelector('#entities');
 const interactionOptions = document.querySelector('#interaction-options');
 const displayName = window.getCookie('userDisplayName');
@@ -40,6 +41,9 @@ history.onclick = function () {
 };
 entities.onclick = function () {
   window.location = '/app/entity';
+};
+admin.onclick = function () {
+  window.location = '/app/admin';
 };
 profile.onclick = function () {
   window.location = '/app/profile';
