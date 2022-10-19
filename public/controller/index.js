@@ -5,6 +5,8 @@ const login = document.querySelector('#login');
 const logout = document.querySelector('#logout');
 const talk = document.querySelector('#talk');
 const build = document.querySelector('#build');
+const history = document.querySelector('#history');
+const entities = document.querySelector('#entities');
 const interactionOptions = document.querySelector('#interaction-options');
 const displayName = window.getCookie('userDisplayName');
 const userPictureUrl = window.getCookie('userPicture');
@@ -32,6 +34,12 @@ if (userPictureUrl) {
 
 login.onclick = function () {
   window.location = '/auth';
+};
+history.onclick = function () {
+  window.location = '/app/history';
+};
+entities.onclick = function () {
+  window.location = '/app/entity';
 };
 profile.onclick = function () {
   window.location = '/app/profile';

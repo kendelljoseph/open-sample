@@ -34,10 +34,22 @@
         max-width: 20px;
         margin-right: 10px;
       }
-      #logout {
+      #logout, #history, #entities {
         position: absolute;
-        top: 10px;
+      } 
+      #logout {
         left: 10px;
+        top: 10px;
+      }
+      #history {
+        right: 10px;
+        top: 52px;
+        width: 80px;
+      }
+      #entities {
+        right: 10px;
+        top: 80px;
+        width: 80px;
       }
       .button {
         cursor: pointer;
@@ -53,6 +65,11 @@
         padding: 5px;
         font-size: 2em;
         border: 0;
+      }
+      .tiny {
+        padding: 4px;
+        font-size: 0.5em;
+        border: 1px solid lightgray;
       }
       #login {
         margin-top: 20px;
@@ -116,6 +133,8 @@
 
   <div id="interaction-options">
     <button id="logout" class="button">logout</button>
+    <button id="history" class="button tiny">history</button>
+    <button id="entities" class="button tiny">entities</button>
     <button id="talk" class="button large">💬 talk</button>
     <button id="build" class="button large">👷‍♀️ build</button>
   </div>
