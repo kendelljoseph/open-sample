@@ -3,6 +3,8 @@ const back = document.querySelector('#back');
 const loading = document.querySelector('#loading');
 
 const userAccessToken = window.getCookie('userAccessToken');
+const userRefectToken = window.getCookie('userRefectToken');
+const userPhoneNumber = window.getCookie('userPhoneNumber');
 
 // eslint-disable-next-line no-undef
 const editor = ace.edit('editor');
@@ -35,21 +37,27 @@ submit.onclick = async () => {
     prompt = editor.getValue();
   }
 
-  const aiUrl = `${window.location.protocol}//${window.location.host}/api/v1/ai/prompt`;
+  const aiUrl = `${window.location.protocol}//${window.location.host}/api/v1/reflect/${userRefectToken}`;
   // eslint-disable-next-line no-undef
   const { data } = await axios.post(
     aiUrl,
     {
-      prompt,
+      From: userPhoneNumber,
+      Body: prompt,
     },
     {
       headers: {
         Authorization: `Bearer ${userAccessToken}`,
-        'x-app-event': 'talk-browser-app',
+        'x-app-event': 'talk-reflect-browser-app',
       },
     },
   );
-  editor.setValue(`${data.prompt}${data.response}`);
+
+  editor.setValue(
+    `${data.prompt || ''}${
+      data.response || "Oops, there was an error -- you shouldn't be seeing this!"
+    }`,
+  );
   submit.disabled = false;
   loading.style.display = 'none';
 };

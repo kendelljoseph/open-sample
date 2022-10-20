@@ -53,30 +53,25 @@ router.post('/:app', async (req, res, next) => {
   ];
 
   let prompt = BODY;
-  let cacheKey = FROM;
   let tagFound = false;
   if (smsTags) {
-    cacheKey = `${FROM}:${smsTags.join(':')}`;
     tags.forEach((tag) => {
       if (smsTags.includes(tag)) {
         if (!tagFound) tagFound = true;
       }
 
       if (['#reset', '#purge', '#status'].includes(tag)) {
-        reflectCache.del(cacheKey);
+        reflectCache.del(FROM);
       }
 
       if (tagFound) {
         // Remove tag from prompt
         prompt = prompt.replace(tag, '');
-
-        // Use tag cache
-        cacheKey += `${cacheKey}${tag}`;
       }
     });
   }
 
-  const cachedPrompt = reflectCache.get(cacheKey);
+  const cachedPrompt = reflectCache.get(FROM);
   if (cachedPrompt) {
     prompt = `${cachedPrompt}\n\n${BODY}`;
   }
@@ -97,7 +92,7 @@ router.post('/:app', async (req, res, next) => {
           { to: FROM, message: helpMessage },
           { ...config('reflect:#help') },
         );
-        return res.end();
+        return res.json({ response: helpMessage });
       }
 
       if (smsTags.includes('#save')) {
@@ -109,50 +104,57 @@ router.post('/:app', async (req, res, next) => {
       }
 
       if (smsTags.includes('$gift')) {
+        const giftMessage = `$gift - give a gift 💝\n**GIVE A GIFT**\n\n\n${prompt}\n\nUse this link to complete a secure gift transaction using Stripe.\n${APP.STRIPE_GIFT_URL}`;
         await axios.post(giftUrl, { name: prompt }, { ...config('reflect:$gift') });
         await axios.post(
           smsUrl,
           {
             to: FROM,
-            message: `$gift - give a gift 💝\n**GIVE A GIFT**\n\n\n${prompt}\n\nUse this link to complete a secure gift transaction using Stripe.\n${APP.STRIPE_GIFT_URL}`,
+            message: giftMessage,
           },
           { ...config('reflect:$gift:stripe-url') },
         );
-        return res.end();
+        return res.json({ response: giftMessage });
       }
 
       if (smsTags.includes('$grant')) {
+        const grantMessage = `$grant - request a grant 💚\n**GRANT REQUESTED**\n\n${prompt}\n\nShare this link to anyone who would like to support this grant.\n${APP.STRIPE_GRANT_URL}`;
         await axios.post(grantUrl, { name: prompt }, { ...config('reflect:$grant') });
         await axios.post(
           smsUrl,
           {
             to: FROM,
-            message: `$grant - request a grant 💚\n**GRANT REQUESTED**\n\n${prompt}\n\nShare this link to anyone who would like to support this grant.\n${APP.STRIPE_GRANT_URL}`,
+            message: grantMessage,
           },
           { ...config('reflect:$gift:stripe-url') },
         );
-        return res.end();
+        return res.json({ response: grantMessage });
       }
 
       if (smsTags.includes('#build')) {
+        const buildMessage = `#build - build a user experience\n\n${prompt}\n\nUse this link to view this build.\n${APP.PUBLIC_OS_URL}`;
         await axios.post(
           smsUrl,
           {
             to: FROM,
-            message: `#build - build a user experience\n\n${prompt}\n\nUse this link to view this build.\n${APP.PUBLIC_OS_URL}`,
+            message: buildMessage,
           },
           { ...config('reflect:#build') },
         );
-        return res.end();
+        return res.json({ response: buildMessage });
       }
 
       await axios.post(smsUrl, { to: FROM, message: 'Okay' }, { ...config('reflect:okay') });
     } catch (error) {
-      res.end();
+      res.json({ response: error && error.message });
       return next(error);
     }
 
-    res.end();
+    if (smsTags.includes('#purge')) {
+      res.json({ response: 'Okay' });
+    } else {
+      res.json({ response: 'unknown tag error - you should not be seeing this.' });
+    }
     return null;
   }
 
@@ -179,9 +181,9 @@ router.post('/:app', async (req, res, next) => {
 
         await axios.post(smsUrl, smsPayload, { ...config('reflect:prompt:success') });
         const newCachedPrompt = `${prompt}\n\n${data.response}`;
-        reflectCache.set(cacheKey, newCachedPrompt);
+        reflectCache.set(FROM, newCachedPrompt);
 
-        res.end();
+        res.json(data);
       } catch (error) {
         next(error);
       }
