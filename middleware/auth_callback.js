@@ -1,7 +1,8 @@
 import { Authn } from '../models/record/index.js';
 import enqueue from '../lib/enqueue.js';
+import { APP } from '../config/index.js';
 
-const html = (user, accessToken) => `
+const html = (user, accessToken, appPhoneNumber) => `
 <!DOCTYPE html>
 <html>
 <head>
@@ -63,6 +64,7 @@ const html = (user, accessToken) => `
   setCookie('userPicture', '${user.picture}', 1);
   setCookie('userDisplayName', '${user.displayName}', 1);
   setCookie('userAccessToken', '${accessToken}', 1);
+  setCookie('appPhoneNumber', '${appPhoneNumber}', 1);
   setTimeout(() => {
     window.location='../../'
   }, 3200);
@@ -115,11 +117,12 @@ export default () => async (req, res, next) => {
 
   const userAccessData = authnRecord.dataValues;
   const { accessToken } = userAccessData;
+  const appPhoneNumber = APP.TWILIO_NUMBER;
 
   enqueue(
     'auth-callback',
     async () => {
-      res.send(html(user, accessToken));
+      res.send(html(user, accessToken, appPhoneNumber));
     },
     next,
     '(🔑):auth-callback',
