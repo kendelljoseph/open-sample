@@ -43,10 +43,13 @@ router.post('/', async (req, res, next) => {
 
       try {
         // Model
-        await User.update(body, {
-          fields: ['phoneNumber'],
-          where: { accessToken: req.authz && req.authz.token },
-        });
+        await User.update(
+          { phoneNumber: twilioData.phoneNumber },
+          {
+            fields: ['phoneNumber'],
+            where: { accessToken: req.authz && req.authz.token },
+          },
+        );
 
         // Graph
         const graph = new Neo4jDatabaseConnection();
@@ -73,6 +76,7 @@ router.post('/', async (req, res, next) => {
         res.json({
           displayName: body.displayName,
           email: body.email,
+          phoneNumber: twilioData.phoneNumber,
           validationCode: twilioData.validationCode,
         });
       } catch (error) {
