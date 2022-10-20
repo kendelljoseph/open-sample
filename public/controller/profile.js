@@ -10,6 +10,7 @@ const validationError = document.querySelector('#validationError');
 const userAccessToken = window.getCookie('userAccessToken');
 const appPhoneNumber = window.getCookie('appPhoneNumber');
 const displayName = window.getCookie('userDisplayName');
+const userPhoneNumber = window.getCookie('userPhoneNumber');
 
 if (userAccessToken) {
   back.style.display = 'block';
@@ -17,6 +18,7 @@ if (userAccessToken) {
   validationCodeInput.style.display = 'none';
   validationError.style.display = 'none';
   appPhoneNumberSpan.innerHTML = appPhoneNumber;
+  phoneNumberInput.placeholder = userPhoneNumber === 'null' ? 'enter phone number' : userPhoneNumber;
 } else {
   submit.style.display = 'none';
 }
@@ -53,6 +55,10 @@ submit.onclick = async () => {
     } else {
       validationCodeInput.style.display = 'block';
       validationCodeInput.value = data.validationCode;
+      phoneNumberInput.placeholder = data.phoneNumber;
+      phoneNumberInput.value = data.phoneNumber;
+
+      window.setCookie('userPhoneNumber', `${data.phoneNumber}`, 1);
     }
   } catch (error) {
     validationError.innerHTML = error.message;

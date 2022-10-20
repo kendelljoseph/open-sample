@@ -26,6 +26,9 @@ back.onclick = () => {
 };
 
 submit.onclick = async () => {
+  if (userPhoneNumber === 'null') {
+    return alert('You must validate your phone number before using this service.');
+  }
   submit.disabled = true;
   loading.style.display = 'block';
 

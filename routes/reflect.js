@@ -4,6 +4,7 @@ import express from 'express';
 import audit from '../middleware/audit.js';
 import enqueue from '../lib/enqueue.js';
 import { APP } from '../config/index.js';
+import { User } from '../models/record/index.js';
 
 const router = express.Router();
 
@@ -76,9 +77,18 @@ router.post('/:app', async (req, res, next) => {
     prompt = `${cachedPrompt}\n\n${BODY}`;
   }
 
+  let userAccessToken;
+  try {
+    const userRecord = await User.findOne({ where: { phoneNumber: FROM } });
+    const { accessToken } = userRecord.dataValues;
+    userAccessToken = accessToken;
+  } catch (error) {
+    return next({ statusCode: 403, message: 'Unknown User Phone Number' });
+  }
+
   const config = (eventName) => ({
     headers: {
-      Authorization: `Bearer ${APP.REFLECT_ACCESS_TOKEN}`,
+      Authorization: `Bearer ${userAccessToken}`,
       'x-app-event': eventName,
     },
   });
