@@ -3,8 +3,6 @@ const back = document.querySelector('#back');
 const loading = document.querySelector('#loading');
 
 const userAccessToken = window.getCookie('userAccessToken');
-const userRefectToken = window.getCookie('userRefectToken');
-const userPhoneNumber = window.getCookie('userPhoneNumber');
 
 // eslint-disable-next-line no-undef
 const editor = ace.edit('editor');
@@ -26,9 +24,6 @@ back.onclick = () => {
 };
 
 submit.onclick = async () => {
-  if (userPhoneNumber === 'null') {
-    return alert('You must validate your phone number before using this service.');
-  }
   submit.disabled = true;
   loading.style.display = 'block';
 
@@ -40,18 +35,17 @@ submit.onclick = async () => {
     prompt = editor.getValue();
   }
 
-  const aiUrl = `${window.location.protocol}//${window.location.host}/api/v1/reflect/${userRefectToken}`;
+  const url = `${window.location.protocol}//${window.location.host}/api/v1/ai/prompt`;
   // eslint-disable-next-line no-undef
   const { data } = await axios.post(
-    aiUrl,
+    url,
     {
-      From: userPhoneNumber,
-      Body: prompt,
+      prompt,
     },
     {
       headers: {
         Authorization: `Bearer ${userAccessToken}`,
-        'x-app-event': 'talk-reflect-browser-app',
+        'x-app-event': 'talk-ai-prompt-browser-app',
       },
     },
   );
