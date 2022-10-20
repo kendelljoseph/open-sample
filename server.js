@@ -15,6 +15,7 @@ import ai from './routes/ai.js';
 import sms from './routes/sms.js';
 import reflect from './routes/reflect.js';
 import user from './routes/user.js';
+import verify from './routes/verify.js';
 import adminAudit from './routes/audit.js';
 import adminRouteError from './routes/route_error.js';
 import { APP } from './config/index.js';
@@ -75,6 +76,9 @@ app.use('/api/v1/reflect', reflect);
 
 // User Routes
 app.use('/api/v1/user', user);
+
+// Verify Routes
+app.use('/api/v1/verify', verify);
 
 // Admin Routes
 app.use('/admin/v1/audit', adminAudit);
