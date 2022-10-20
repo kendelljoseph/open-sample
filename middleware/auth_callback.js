@@ -1,8 +1,8 @@
-import { Authn } from '../models/record/index.js';
+import { Authn, User } from '../models/record/index.js';
 import enqueue from '../lib/enqueue.js';
 import { APP } from '../config/index.js';
 
-const html = (user, accessToken, appPhoneNumber) => `
+const html = (user, accessToken, reflectToken, appPhoneNumber, phoneNumber) => `
 <!DOCTYPE html>
 <html>
 <head>
@@ -63,7 +63,9 @@ const html = (user, accessToken, appPhoneNumber) => `
   setCookie('userEmail', '${user.email}', 1);
   setCookie('userPicture', '${user.picture}', 1);
   setCookie('userDisplayName', '${user.displayName}', 1);
+  setCookie('userPhoneNumber', '${phoneNumber}', 1);
   setCookie('userAccessToken', '${accessToken}', 1);
+  setCookie('userRefectToken', '${reflectToken}', 1);
   setCookie('appPhoneNumber', '${appPhoneNumber}', 1);
   setTimeout(() => {
     window.location='../../'
@@ -114,15 +116,18 @@ export default () => async (req, res, next) => {
   const { user } = req;
 
   const authnRecord = await Authn.findOne({ where: { googleId: user.id } });
+  const userRecord = await User.findOne({ where: { googleId: user.id } });
 
-  const userAccessData = authnRecord.dataValues;
-  const { accessToken } = userAccessData;
+  const reflectToken = APP.TWILIO_TWIML_SID;
   const appPhoneNumber = APP.TWILIO_NUMBER;
+  const userAccessData = authnRecord.dataValues;
+  const { phoneNumber } = userRecord.dataValues;
+  const { accessToken } = userAccessData;
 
   enqueue(
     'auth-callback',
     async () => {
-      res.send(html(user, accessToken, appPhoneNumber));
+      res.send(html(user, accessToken, reflectToken, appPhoneNumber, phoneNumber));
     },
     next,
     '(🔑):auth-callback',
