@@ -45,7 +45,7 @@ submit.onclick = async () => {
     {
       headers: {
         Authorization: `Bearer ${userAccessToken}`,
-        'x-app-event': 'talk-ai-prompt-browser-app',
+        'x-app-event': 'write-ai-prompt-browser-app',
       },
     },
   );

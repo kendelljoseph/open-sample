@@ -3,7 +3,7 @@ const user = document.querySelector('#user');
 const userPicture = document.querySelector('#user-image');
 const login = document.querySelector('#login');
 const logout = document.querySelector('#logout');
-const talk = document.querySelector('#talk');
+const write = document.querySelector('#write');
 const build = document.querySelector('#build');
 const history = document.querySelector('#history');
 const admin = document.querySelector('#admin');
@@ -52,8 +52,8 @@ admin.onclick = function () {
 profile.onclick = function () {
   window.location = '/app/profile';
 };
-talk.onclick = function () {
-  window.location = '/app/talk';
+write.onclick = function () {
+  window.location = '/app/write';
 };
 build.onclick = function () {
   window.location = '/app/build';
