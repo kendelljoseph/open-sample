@@ -14,6 +14,7 @@ document.getElementById('editor').style.fontSize = '14px';
 
 // A controller that selects response text
 const selectResponse = (rawText) => {
+  if (!rawText || !rawText.length) return;
   const value = editor.session.getValue();
   const text = rawText.match(/^.*\n.*\n([\s\S]*)$/)[1]; // skip first two new lines
   const startRow = value.substr(0, value.indexOf(text)).split(/\r\n|\r|\n/).length - 1;
@@ -42,8 +43,10 @@ back.onclick = () => {
   window.location = '/';
 };
 
-submit.onclick = async () => {
+const submitFunction = async () => {
+  if (submit.disabled) return;
   submit.disabled = true;
+  editor.setReadOnly(true);
   loading.style.display = 'block';
 
   const selectedText = editor.getSelectedText();
@@ -73,4 +76,15 @@ submit.onclick = async () => {
   selectResponse(data.response);
   submit.disabled = false;
   loading.style.display = 'none';
+  editor.setReadOnly(false);
 };
+
+editor.commands.addCommand({
+  name: 'detectCommandEnter',
+  bindKey: { win: 'Ctrl-Enter', mac: 'Command-Enter' },
+  exec(editor) {
+    submitFunction();
+  },
+});
+
+submit.onclick = submitFunction;
