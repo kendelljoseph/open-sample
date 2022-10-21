@@ -85,8 +85,26 @@ const submitFunction = async () => {
 editor.commands.addCommand({
   name: 'detectCommandEnter',
   bindKey: { win: 'Ctrl-Enter', mac: 'Command-Enter' },
-  exec(editor) {
+  exec() {
     submitFunction();
+  },
+});
+
+const modes = ['text', 'javascript', 'json'];
+let modeIndex = 0;
+const nextMode = () => {
+  modeIndex += 1;
+  if (modeIndex > modes.length - 1) {
+    modeIndex = 0;
+  }
+  return modes[modeIndex];
+};
+
+editor.commands.addCommand({
+  name: 'detectCommandShiftEnter',
+  bindKey: { win: 'Ctrl-Shift-Enter', mac: 'Command-Shift-Enter' },
+  exec() {
+    editor.getSession().setMode(`ace/mode/${nextMode()}`);
   },
 });
 
