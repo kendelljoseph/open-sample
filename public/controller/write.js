@@ -16,7 +16,10 @@ document.getElementById('editor').style.fontSize = '14px';
 const selectResponse = (rawText) => {
   if (!rawText || !rawText.length) return;
   const value = editor.session.getValue();
-  const text = rawText.match(/^.*\n.*\n([\s\S]*)$/)[1]; // skip first two new lines
+  const text = rawText.match(/^.*\n.*\n([\s\S]*)$/)
+    ? rawText.match(/^.*\n.*\n([\s\S]*)$/)[1]
+    : null; // skip first two new lines
+  if (text === null) return;
   const startRow = value.substr(0, value.indexOf(text)).split(/\r\n|\r|\n/).length - 1;
   const startCol = editor.session.getLine(startRow).indexOf(text);
   const endRowOffset = text.split(/\r\n|\r|\n/).length;
