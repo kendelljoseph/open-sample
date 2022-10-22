@@ -108,4 +108,22 @@ editor.commands.addCommand({
   },
 });
 
+editor.commands.addCommand({
+  name: 'executeAsCode',
+  bindKey: { win: 'Alt-Shift-Enter', mac: 'Option-Shift-Enter' },
+  exec() {
+    const selectedText = editor.getSelectedText();
+    const allText = editor.session.getValue();
+    const value = selectedText.length ? selectedText : allText;
+
+    try {
+      // eslint-disable-next-line no-eval
+      window.eval(value);
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error(error);
+    }
+  },
+});
+
 submit.onclick = submitFunction;
