@@ -54,33 +54,63 @@ const submitFunction = async () => {
   } else {
     prompt = editor.getValue();
   }
-  const aiUrl = `${window.location.protocol}//${window.location.host}/api/v1/ai/code`;
-  // eslint-disable-next-line no-undef
-  const { data } = await axios.post(
-    aiUrl,
-    {
-      prompt,
-    },
-    {
-      headers: {
-        Authorization: `Bearer ${userAccessToken}`,
-        'x-app-event': 'build-browser-app',
+
+  try {
+    const url = `${window.location.protocol}//${window.location.host}/api/v1/ai/code`;
+    // eslint-disable-next-line no-undef
+    const { data } = await axios.post(
+      url,
+      {
+        prompt,
       },
-    },
-  );
-  editor.setValue(`${data.prompt || ''}${data.response || ''}`);
-  selectResponse(data.response);
-  submit.disabled = false;
-  loading.style.display = 'none';
-  editor.setReadOnly(false);
+      {
+        headers: {
+          Authorization: `Bearer ${userAccessToken}`,
+          'x-app-event': 'build-browser-app',
+        },
+      },
+    );
+    editor.setValue(`${data.prompt || ''}${data.response || ''}`);
+    selectResponse(data.response);
+    submit.disabled = false;
+    loading.style.display = 'none';
+    editor.setReadOnly(false);
+  } catch (error) {
+    submit.disabled = false;
+    loading.style.display = 'none';
+    editor.setReadOnly(false);
+    // eslint-disable-next-line no-console
+    console.error(error);
+    // eslint-disable-next-line no-alert
+    alert(`${error.message}`);
+  }
 };
 
 editor.commands.addCommand({
   name: 'detectCommandEnter',
   bindKey: { win: 'Ctrl-Enter', mac: 'Command-Enter' },
-  exec(editor) {
-    console.log('User pressed Command-Enter');
+  exec() {
     submitFunction();
+  },
+});
+
+editor.commands.addCommand({
+  name: 'executeAsCode',
+  bindKey: { win: 'Alt-Shift-Enter', mac: 'Option-Shift-Enter' },
+  exec() {
+    const selectedText = editor.getSelectedText();
+    const allText = editor.session.getValue();
+    const value = selectedText.length ? selectedText : allText;
+
+    try {
+      // eslint-disable-next-line no-eval
+      window.eval(value);
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error(error);
+      // eslint-disable-next-line no-alert
+      alert(`${error.message}`);
+    }
   },
 });
 

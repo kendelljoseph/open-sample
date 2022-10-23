@@ -60,26 +60,36 @@ const submitFunction = async () => {
     prompt = editor.getValue();
   }
 
-  const url = `${window.location.protocol}//${window.location.host}/api/v1/ai/prompt`;
-  // eslint-disable-next-line no-undef
-  const { data } = await axios.post(
-    url,
-    {
-      prompt,
-    },
-    {
-      headers: {
-        Authorization: `Bearer ${userAccessToken}`,
-        'x-app-event': 'write-ai-prompt-browser-app',
+  try {
+    const url = `${window.location.protocol}//${window.location.host}/api/v1/ai/prompt`;
+    // eslint-disable-next-line no-undef
+    const { data } = await axios.post(
+      url,
+      {
+        prompt,
       },
-    },
-  );
+      {
+        headers: {
+          Authorization: `Bearer ${userAccessToken}`,
+          'x-app-event': 'write-ai-prompt-browser-app',
+        },
+      },
+    );
 
-  editor.setValue(`${data.prompt || ''}${data.response || ''}`);
-  selectResponse(data.response);
-  submit.disabled = false;
-  loading.style.display = 'none';
-  editor.setReadOnly(false);
+    editor.setValue(`${data.prompt || ''}${data.response || ''}`);
+    selectResponse(data.response);
+    submit.disabled = false;
+    loading.style.display = 'none';
+    editor.setReadOnly(false);
+  } catch (error) {
+    submit.disabled = false;
+    loading.style.display = 'none';
+    editor.setReadOnly(false);
+    // eslint-disable-next-line no-console
+    console.error(error);
+    // eslint-disable-next-line no-alert
+    alert(`${error.message}`);
+  }
 };
 
 editor.commands.addCommand({
@@ -122,6 +132,8 @@ editor.commands.addCommand({
     } catch (error) {
       // eslint-disable-next-line no-console
       console.error(error);
+      // eslint-disable-next-line no-alert
+      alert(`${error.message}`);
     }
   },
 });
