@@ -91,12 +91,23 @@
         width: 200px;
         max-width: 200px;
       }
+      #loading-bubble {
+        z-index: 9999;
+        display: none;
+        position: absolute;
+        top: 8px;
+        right: 120px;
+        pointer-events: none;
+        width: 50px;
+        max-width: 200px;
+      }
     </style>
 </head>
 <body>
   <button id="back" class="button rotate">&#10149;</button>
   <button id="submit" class="button small">👷‍♀️ submit</button>
   <img id="loading" src="../../assets/thinking.gif" alt="thinking">
+  <img id="loading-bubble" src="../../assets/bubble.gif" alt="thinking">
   <div id="editor">/* How do I log to the console in javascript?*/</div>
 </body>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.1.3/axios.min.js" integrity="sha512-0qU9M9jfqPw6FKkPafM3gy2CBAvUWnYVOfNPDYKVuRTel1PrciTj+a9P3loJB+j0QmN2Y0JYQmkBBS8W+mbezg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>

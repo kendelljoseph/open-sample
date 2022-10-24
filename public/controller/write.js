@@ -1,6 +1,7 @@
 const submit = document.querySelector('#submit');
 const back = document.querySelector('#back');
 const loading = document.querySelector('#loading');
+const loadingBubble = document.querySelector('#loading-bubble');
 
 const userAccessToken = window.getCookie('userAccessToken');
 
@@ -11,6 +12,20 @@ editor.setTheme('ace/theme/chrome');
 editor.getSession().setMode('ace/mode/text');
 editor.getSession().setTabSize(2);
 document.getElementById('editor').style.fontSize = '14px';
+
+const lastMode = localStorage.getItem('writeEditorSessionMode');
+if (lastMode) {
+  editor.getSession().setMode(lastMode);
+}
+
+const lastValue = localStorage.getItem('writeEditorSessionValue');
+if (lastValue && lastValue.length) {
+  editor.setValue(lastValue);
+}
+
+editor.on('change', () => {
+  localStorage.setItem('writeEditorSessionValue', editor.getValue());
+});
 
 // A controller that selects response text
 const selectResponse = (rawText) => {
@@ -51,6 +66,7 @@ const submitFunction = async () => {
   submit.disabled = true;
   editor.setReadOnly(true);
   loading.style.display = 'block';
+  loadingBubble.style.display = 'block';
 
   const selectedText = editor.getSelectedText();
   let prompt = '';
@@ -80,10 +96,12 @@ const submitFunction = async () => {
     selectResponse(data.response);
     submit.disabled = false;
     loading.style.display = 'none';
+    loadingBubble.style.display = 'none';
     editor.setReadOnly(false);
   } catch (error) {
     submit.disabled = false;
     loading.style.display = 'none';
+    loadingBubble.style.display = 'none';
     editor.setReadOnly(false);
     // eslint-disable-next-line no-console
     console.error(error);
@@ -114,7 +132,9 @@ editor.commands.addCommand({
   name: 'detectCommandShiftEnter',
   bindKey: { win: 'Ctrl-Shift-Enter', mac: 'Command-Shift-Enter' },
   exec() {
-    editor.getSession().setMode(`ace/mode/${nextMode()}`);
+    const mode = `ace/mode/${nextMode()}`;
+    editor.getSession().setMode(mode);
+    localStorage.setItem('writeEditorSessionMode', mode);
   },
 });
 

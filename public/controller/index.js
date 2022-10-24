@@ -34,37 +34,38 @@ if (userPictureUrl) {
   userPicture.remove();
 }
 
-github.onclick = function () {
+github.onclick = () => {
   window.open('https://kendelljoseph.github.io/open-source/');
 };
-login.onclick = function () {
+login.onclick = () => {
   window.location = '/auth';
 };
-history.onclick = function () {
+history.onclick = () => {
   window.location = '/app/history';
 };
-entities.onclick = function () {
+entities.onclick = () => {
   window.location = '/app/entity';
 };
-admin.onclick = function () {
+admin.onclick = () => {
   window.location = '/app/admin';
 };
-profile.onclick = function () {
+profile.onclick = () => {
   window.location = '/app/profile';
 };
-write.onclick = function () {
+write.onclick = () => {
   window.location = '/app/write';
 };
-build.onclick = function () {
+build.onclick = () => {
   window.location = '/app/build';
 };
-logout.onclick = function () {
-  const cookies = document.cookie.split(';');
-  for (let i = 0; i < cookies.length; i++) {
-    const cookie = cookies[i];
-    const eqPos = cookie.indexOf('=');
-    const name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
-    document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 GMT`;
-  }
+logout.onclick = () => {
+  sessionStorage.clear();
+  localStorage.clear();
+  document.cookie.split(';').forEach(
+    // eslint-disable-next-line no-return-assign
+    (c) => (document.cookie = c
+      .replace(/^ +/, '')
+      .replace(/=.*/, `=;expires=${new Date().toUTCString()};path=/`)),
+  );
   window.location.reload();
 };

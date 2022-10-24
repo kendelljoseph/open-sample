@@ -1,6 +1,7 @@
 const submit = document.querySelector('#submit');
 const back = document.querySelector('#back');
 const loading = document.querySelector('#loading');
+const loadingBubble = document.querySelector('#loading-bubble');
 
 const userAccessToken = window.getCookie('userAccessToken');
 
@@ -11,6 +12,20 @@ editor.setTheme('ace/theme/chrome');
 editor.getSession().setMode('ace/mode/javascript');
 editor.getSession().setTabSize(2);
 document.getElementById('editor').style.fontSize = '14px';
+
+const lastMode = localStorage.getItem('buildEditorSessionMode');
+if (lastMode) {
+  editor.getSession().setMode(lastMode);
+}
+
+const lastValue = localStorage.getItem('buildEditorSessionValue');
+if (lastValue && lastValue.length) {
+  editor.setValue(lastValue);
+}
+
+editor.on('change', () => {
+  localStorage.setItem('buildEditorSessionValue', editor.getValue());
+});
 
 // A controller that selects response text
 const selectResponse = (rawText) => {
@@ -45,6 +60,7 @@ back.onclick = () => {
 const submitFunction = async () => {
   submit.disabled = true;
   loading.style.display = 'block';
+  loadingBubble.style.display = 'block';
   editor.setReadOnly(true);
 
   const selectedText = editor.getSelectedText();
@@ -74,10 +90,12 @@ const submitFunction = async () => {
     selectResponse(data.response);
     submit.disabled = false;
     loading.style.display = 'none';
+    loadingBubble.style.display = 'none';
     editor.setReadOnly(false);
   } catch (error) {
     submit.disabled = false;
     loading.style.display = 'none';
+    loadingBubble.style.display = 'none';
     editor.setReadOnly(false);
     // eslint-disable-next-line no-console
     console.error(error);
