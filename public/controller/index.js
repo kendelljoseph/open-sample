@@ -9,6 +9,7 @@ const history = document.querySelector('#history');
 const admin = document.querySelector('#admin');
 const entities = document.querySelector('#entities');
 const github = document.querySelector('#github');
+const donate = document.querySelector('#donate');
 const interactionOptions = document.querySelector('#interaction-options');
 const displayName = window.getCookie('userDisplayName');
 const userPictureUrl = window.getCookie('userPicture');
@@ -34,6 +35,9 @@ if (userPictureUrl) {
   userPicture.remove();
 }
 
+donate.onclick = () => {
+  window.open('https://donate.stripe.com/9AQ8xnaLGcMbgj66oo');
+};
 github.onclick = () => {
   window.open('https://kendelljoseph.github.io/open-source/');
 };
