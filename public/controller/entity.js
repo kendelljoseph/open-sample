@@ -22,6 +22,23 @@ back.onclick = () => {
   window.location = '/';
 };
 
+editor.commands.addCommand({
+  name: 'detectCommandShiftEnter',
+  bindKey: { win: 'Ctrl-Shift-Enter', mac: 'Command-Shift-Enter' },
+  exec() {
+    const lastValue = localStorage.getItem('writeEditorSessionValue');
+    const selectedText = editor.getSelectedText();
+    const value = selectedText.length ? selectedText : null;
+
+    let updatedValue;
+    if (value && lastValue) {
+      updatedValue = `${lastValue}\n\n${value}`;
+    }
+    localStorage.setItem('writeEditorSessionValue', updatedValue);
+    window.location.href = '/app/write';
+  },
+});
+
 submit.onclick = async () => {
   submit.disabled = true;
   loading.style.display = 'block';
