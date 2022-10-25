@@ -13,6 +13,8 @@ editor.commands.addCommand({
 });
 
 const savePrompt = async (prompt) => {
+  // eslint-disable-next-line no-alert
+  const name = window.prompt('name:') || new Date().toDateString();
   submit.disabled = true;
   loading.style.display = 'block';
   loadingBubble.style.display = 'block';
@@ -22,7 +24,7 @@ const savePrompt = async (prompt) => {
     await axios.post(
       url,
       {
-        name: new Date().toDateString(),
+        name,
         prompt,
       },
       {
