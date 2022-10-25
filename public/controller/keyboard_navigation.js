@@ -58,6 +58,8 @@ editor.commands.addCommand({
     const selectedText = editor.getSelectedText();
     const allText = editor.session.getValue();
     const prompt = selectedText.length ? selectedText : allText;
+    // eslint-disable-next-line no-restricted-globals
+    if (!confirm(`Save${selectedText.length ? ' selection' : ''}?`)) return;
 
     savePrompt(prompt);
   },
