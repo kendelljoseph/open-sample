@@ -31,8 +31,8 @@ editor.commands.addCommand({
     const value = selectedText.length ? selectedText : null;
 
     let updatedValue;
-    if (value && lastValue) {
-      updatedValue = `${lastValue}\n\n${value}`;
+    if (value) {
+      updatedValue = `${lastValue && lastValue.length ? lastValue : ''}\n\n${value}`;
     }
     localStorage.setItem('writeEditorSessionValue', updatedValue);
     window.location.href = '/app/write';
