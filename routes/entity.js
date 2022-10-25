@@ -89,8 +89,8 @@ router.get('/', async (req, res, exit) => {
           MATCH (authn:Authn {accessToken: $accessToken})
           MATCH (authn)-[:USED_PHONE_NUMBER]->(phone:PhoneNumber)
           MATCH (phone)<-[:USED_PHONE_NUMBER]-(allAuthnz:Authn)
-          MATCH (entity:Entity)-[:CREATED_BY]->(allAuthnz)
-          RETURN {name: entity.name, prompt: entity.prompt} as entity
+          MATCH (e:Entity)-[:CREATED_BY]->(allAuthnz)
+          RETURN {id: toString(id(e)), name: e.name, prompt: e.prompt} as entity
         `,
         {
           accessToken: req.authz && req.authz.token,
@@ -191,13 +191,33 @@ router.delete('/:id', async (req, res, exit) => {
         return exit({ statusCode: 400, message: errors });
       }
 
-      const record = await Entity.destroy({ where: { id } });
+      // Graph
+      const graph = new Neo4jDatabaseConnection();
+      const graphErr = await graph.write(
+        `
+          MATCH (authn:Authn {accessToken: $accessToken})
+          MATCH (authn)-[:USED_PHONE_NUMBER]->(phone:PhoneNumber)
+          MATCH (phone)<-[:USED_PHONE_NUMBER]-(allAuthnz:Authn)
+          MATCH (entity:Entity)-[:CREATED_BY]->(allAuthnz)
+          WHERE toString(id(entity)) = $id
+          DETACH DELETE entity
+        `,
+        {
+          accessToken: req.authz && req.authz.token,
+          id,
+        },
+      );
+      await graph.disconnect();
+
+      if (graphErr) {
+        return exit({ statusCode: 400, message: graphErr });
+      }
 
       // Clear Cache
       const cacheKey = req.localCache.generateRequestKey(req);
       if (req.localCache.has(cacheKey)) req.localCache.del(cacheKey);
 
-      res.json(record);
+      res.end();
       return null;
     },
     exit,
