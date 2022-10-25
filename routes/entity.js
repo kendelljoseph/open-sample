@@ -81,8 +81,28 @@ router.get('/', async (req, res, exit) => {
         const cache = req.localCache.get(cacheKey);
         return res.json(cache);
       }
-      const entities = await Entity.findAll();
-      const records = entities.map((entity) => entity.dataValues);
+
+      // Graph
+      const graph = new Neo4jDatabaseConnection();
+      const { response, error: graphErr } = await graph.read(
+        `
+          MATCH (authn:Authn {accessToken: $accessToken})
+          MATCH (authn)-[:USED_PHONE_NUMBER]->(phone:PhoneNumber)
+          MATCH (phone)<-[:USED_PHONE_NUMBER]-(allAuthnz:Authn)
+          MATCH (entity:Entity)-[:CREATED_BY]->(allAuthnz)
+          RETURN {name: entity.name, prompt: entity.prompt} as entity
+        `,
+        {
+          accessToken: req.authz && req.authz.token,
+        },
+      );
+      await graph.disconnect();
+
+      if (graphErr) {
+        return exit({ statusCode: 400, message: graphErr });
+      }
+
+      const records = response.map((record) => record.get('entity'));
 
       req.localCache.set(cacheKey, records);
       return res.json(records);
