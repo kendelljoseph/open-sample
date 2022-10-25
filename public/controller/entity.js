@@ -39,6 +39,44 @@ editor.commands.addCommand({
   },
 });
 
+const deleteEntity = async (id) => {
+  const url = `${window.location.protocol}//${window.location.host}/api/v1/entity/${id}`;
+  try {
+    // eslint-disable-next-line no-undef
+    await axios.delete(url, {
+      headers: {
+        Authorization: `Bearer ${userAccessToken}`,
+        'x-app-event': 'entity-browser-app',
+      },
+    });
+    // eslint-disable-next-line no-alert
+    alert(`${id} deleted. please reload.`);
+  } catch (error) {
+    // eslint-disable-next-line no-alert
+    alert(error.message);
+  }
+};
+
+editor.commands.addCommand({
+  name: 'deleteEntityById',
+  bindKey: { win: 'Ctrl-Shift-D', mac: 'Command-Shift-D' },
+  exec() {
+    const selectedText = editor.getSelectedText();
+    const id = selectedText.length ? selectedText : null;
+
+    if (!id) return;
+    // eslint-disable-next-line no-alert, no-restricted-globals
+    if (!confirm(`Delete selected entity id ${id}?`)) return;
+    submit.disabled = true;
+    loading.style.display = 'block';
+
+    deleteEntity(id);
+
+    submit.disabled = false;
+    loading.style.display = 'none';
+  },
+});
+
 submit.onclick = async () => {
   submit.disabled = true;
   loading.style.display = 'block';
@@ -54,7 +92,7 @@ submit.onclick = async () => {
 
   const text = data.map(
     // eslint-disable-next-line no-undef
-    (record) => `${record.name} - ${record.prompt}`,
+    (record) => `\nid: ${record.id}\nname: ${record.name}\n\n${record.prompt}`,
   );
 
   editor.setValue(text.join('\n'));
