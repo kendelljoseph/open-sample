@@ -27,4 +27,21 @@ export default class Neo4jDatabaseConnection {
 
     return err;
   }
+
+  async read(query, variables) {
+    const session = this.driver.session({ database: 'neo4j' });
+
+    let err = null;
+    let response = null;
+    try {
+      const { records } = await session.executeRead((tx) => tx.run(query, variables));
+      response = records;
+    } catch (error) {
+      err = error;
+    } finally {
+      await session.close();
+    }
+
+    return { response, error: err };
+  }
 }
