@@ -36,6 +36,7 @@ router.post('/prompt', async (req, res, next) => {
         frequency_penalty: 0,
         presence_penalty: 0,
         stop: ['service:', 'user:', 'asker:'],
+        user: req.authz ? req.authz.token : 'unauthorized',
       };
 
       const url = APP.OPENAI_COMPLETIONS_URL;
