@@ -90,7 +90,7 @@ submit.onclick = async () => {
     },
   });
 
-  const text = data.map(
+  const text = data.reverse().map(
     // eslint-disable-next-line no-undef
     (record) => `\nid: ${record.id}\nname: ${record.name}\n\n${record.prompt}`,
   );
