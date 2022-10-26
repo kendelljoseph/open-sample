@@ -64,6 +64,7 @@ back.onclick = () => {
 const submitFunction = async () => {
   if (submit.disabled) return;
   submit.disabled = true;
+  submit.style.display = 'none';
   editor.setReadOnly(true);
   loading.style.display = 'block';
   loadingBubble.style.display = 'block';
@@ -95,11 +96,13 @@ const submitFunction = async () => {
     editor.setValue(`${data.prompt || ''}${data.response || ''}`);
     selectResponse(data.response);
     submit.disabled = false;
+    submit.style.display = 'block';
     loading.style.display = 'none';
     loadingBubble.style.display = 'none';
     editor.setReadOnly(false);
   } catch (error) {
     submit.disabled = false;
+    submit.style.display = 'block';
     loading.style.display = 'none';
     loadingBubble.style.display = 'none';
     editor.setReadOnly(false);
