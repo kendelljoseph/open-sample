@@ -47,13 +47,6 @@
         top: 15px;
         right: 50px;
       }
-      #user-image {
-        position: absolute;
-        top: 10px;
-        right: 10px;
-        width: 32px;
-        border-radius: 100%;
-      }
       #editor { 
         position: absolute;
         top: 50px;
@@ -78,7 +71,7 @@
       #validationError {
         position: absolute;
         top: 40px;
-        right: 10px;
+        right: 5px;
         display: flex;
         justify-content: center;
         align-items: center;
@@ -142,7 +135,7 @@
   <button id="back" class="button rotate">&#10149;</button>
   <button id="submit" class="btn btn-success btn-sm">✅ submit</button>
   <img id="loading" src="../../assets/thinking.gif" alt="thinking">
-  <div id="profile">
+  <div id="profile" class="shadow-lg p-5 rounded">
     <div class="input-group mb-3">
       <span class="input-group-text" id="basic-addon1">phone number</span>
       <input id="phoneNumber" type="tel" class="form-control" placeholder="Phone Number" pattern=”[0-9]{2}-[0-9]{5}” aria-label="phone">
@@ -152,7 +145,7 @@
       <input id="validationCode" name="validationCode" readonly disabled/>
     </div>
     <hr size="1" width="300px" color="grey">  
-    <div id="validationError"></div>
+    <div id="validationError" class="badge bg-dark"></div>
     <div id="validationInfo">
       write 📝 by texting 💬!
     </div>
@@ -161,11 +154,10 @@
         You may use the write service on the go by texting to:
       </div>
       <span id="appPhoneNumber">a phone number</span> 
-      <div>
-        after you verify your phone number.
-      </div>
-      <div>
-        text <strong>#help</strong> for a full list of text only commands.
+      <div class="shadow-none text-center p-3 bg-light rounded">
+        after you verify your phone number. 
+        <br/>
+        text <span class="badge bg-primary">#help</span> for a full list of text only commands.
       </div>
     </div>
   </div>
