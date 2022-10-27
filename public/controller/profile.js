@@ -20,7 +20,7 @@ if (userAccessToken) {
   appPhoneNumberSpan.innerHTML = appPhoneNumber;
   phoneNumberInput.placeholder = userPhoneNumber === 'null' ? 'enter phone number' : userPhoneNumber;
   if (userPhoneNumber !== 'null') {
-    validationError.innerHTML = '🔒 profile is validated.';
+    validationError.innerHTML = '🔒 profile is already validated OK.';
     validationError.style.display = 'block';
   }
 } else {
