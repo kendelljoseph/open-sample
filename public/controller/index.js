@@ -5,9 +5,6 @@ const login = document.querySelector('#login');
 const logout = document.querySelector('#logout');
 const write = document.querySelector('#write');
 const build = document.querySelector('#build');
-const history = document.querySelector('#history');
-const admin = document.querySelector('#admin');
-const entities = document.querySelector('#entities');
 const github = document.querySelector('#github');
 const donate = document.querySelector('#donate');
 const interactionOptions = document.querySelector('#interaction-options');
@@ -43,18 +40,6 @@ github.onclick = () => {
 };
 login.onclick = () => {
   window.location = '/auth';
-};
-history.onclick = () => {
-  window.location = '/app/history';
-};
-entities.onclick = () => {
-  window.location = '/app/entity';
-};
-admin.onclick = () => {
-  window.location = '/app/admin';
-};
-profile.onclick = () => {
-  window.location = '/app/profile';
 };
 write.onclick = () => {
   window.location = '/app/write';

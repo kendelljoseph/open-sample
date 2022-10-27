@@ -53,28 +53,18 @@
         text-transform: lowercase;
         font-size: 0.75em;
       }
-      #logout, #history, #entities, #admin {
-        position: absolute;
-      } 
       #logout {
+        position: absolute;
         left: 10px;
         top: 10px;
         position: absolute;
       }
-      #history {
-        right: 10px;
-        top: 52px;
-        width: 80px;
-      }
-      #entities {
-        right: 10px;
-        top: 88px;
-        width: 80px;
-      }
-      #admin {
-        right: 10px;
-        top: 124px;
-        width: 80px;
+      #user-image {
+        position: absolute;
+        left: 100px;
+        top: 10px;
+        min-width: 40px;
+        min-height: 40px;
       }
       .button {
         cursor: pointer;
@@ -115,20 +105,6 @@
         position: absolute;
         top: 10px;
         right: 8px;
-        width: 130px;
-        display: flex;
-        flex-flow: row;
-        align-items: center;
-        justify-content: center;
-        cursor: pointer;
-        font-size: 1em;
-        /* color: #333; */
-        /* background: white; */
-        border: 1px solid lightgrey;
-        box-shadow: 0px 5px 10px -5px rgba(0,0,0,0.25);
-        border-radius: 3px;
-        padding: 5px;
-        margin: 0 3px;
       }
       #user {
         font-size: 0.75em;
@@ -152,26 +128,29 @@
       }
       #animation-graphic {
         cursor: pointer;
-        position: absolute;
-        top: 50px;
-        max-width: 150px;
-        height: 150px;
-        border: 4px solid rgb(233, 233, 233);
+        user-select: none;
+        width: 170px;
+        height: 170px;
+        margin-bottom: 10px;
         border-radius: 100%;
         box-sizing: border-box;
-        box-shadow: 0 6px 20px -10px #000;
+        box-shadow: 0 8px 10px -8px #888;
+        transition: all 0.15s ease-out;
+      }
+      #animation-graphic:hover {
+        box-shadow: 0 15px 80px -8px #333, 0 3px 30px 1px #f0f;
+        transform: scale(1.05);
+      }
+      #build {
+        display: none;
       }
     </style>
 </head>
 <body>
-  <div id="profile" class="btn btn-outline-dark btn-sm">
-    <img id="user-image" src="">
-    <div id="user">User</div>
   </div>
   <iframe id="animation-graphic" src="https://cdpn.io/pen/debug/yLEyeYX/e780f8a9ee647338909cd8d3e969d432" frameborder="0"></iframe>
-  <img id="os-qr" src="assets/os_qr.png" alt="qr">
   <h1>Open Sample</h1>
-  <p>An <a style="text-decoration: none;" target="_blank" href="https://openai.com/">Open AI</a> assisted API.</p>
+  <p class="text-center px-3">Your AI assistant and API for school, work and home.</p>
   <hr size="1" width="300px" color="grey">  
   <button id="login" class="btn btn-outline-dark">
     <div class="google-login-text">
@@ -187,13 +166,26 @@
   <button id="github" class="btn btn-outline-light btn-sm">
     <img class="github-icon" src="assets/github_logo.png" alt="github">
   </button>
+  <div id="profile" class="btn-group">
+    <button type="button" class="btn btn-outline-dark">
+      <div id="user"></div>
+    </button>
+    <button type="button" class="btn btn-success dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
+      <span class="visually-hidden">Toggle Dropdown</span>
+    </button>
+    <ul class="dropdown-menu">
+      <li><a class="dropdown-item" href="/app/profile">Profile</a></li>
+      <li><a class="dropdown-item" href="/app/entity">Samples</a></li>
+      <li><hr class="dropdown-divider"></li>
+      <li><a class="dropdown-item" href="/app/history">History</a></li>
+      <li><a class="dropdown-item" href="/app/admin">Admin</a></li>
+    </ul>
+  </div>
   <div id="interaction-options">
+    <img id="user-image" src="">
     <button id="logout" class="btn btn-danger">logout</button>
-    <button id="history" class="btn btn-outline-secondary btn-sm">history</button>
-    <button id="entities" class="btn btn-outline-secondary btn-sm">entities</button>
-    <button id="admin" class="btn btn-outline-secondary btn-sm">admin</button>
-    <button id="write" class="button large">📝 write</button>
-    <div class="large-text">or</div>
+    <button id="write" class="btn btn-outline-dark">📝 Write with your AI assistant</button>
+    <!-- <div class="large-text">or</div> -->
     <button id="build" class="button large">👷‍♀️ build</button>
   </div>
 </body>
