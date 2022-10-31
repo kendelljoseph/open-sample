@@ -1,4 +1,5 @@
 const submit = document.querySelector('#submit');
+const tag = document.querySelector('#tag');
 const back = document.querySelector('#back');
 const loading = document.querySelector('#loading');
 
@@ -14,8 +15,10 @@ document.getElementById('editor').style.fontSize = '14px';
 
 if (userAccessToken) {
   submit.style.display = 'block';
+  tag.style.display = 'block';
 } else {
   submit.style.display = 'none';
+  tag.style.display = 'none';
 }
 
 back.onclick = () => {
@@ -68,17 +71,59 @@ editor.commands.addCommand({
     // eslint-disable-next-line no-alert, no-restricted-globals
     if (!confirm(`Delete selected entity id ${id}?`)) return;
     submit.disabled = true;
+    tag.disabled = true;
     loading.style.display = 'block';
 
     deleteEntity(id);
 
     submit.disabled = false;
+    tag.disabled = false;
     loading.style.display = 'none';
   },
 });
 
+tag.onclick = async () => {
+  const selectedText = editor.getSelectedText();
+  const id = selectedText.length ? selectedText : null;
+
+  if (!id) return;
+  // eslint-disable-next-line no-alert, no-restricted-globals
+  if (!confirm(`Tag selected entity id ${id}?`)) return;
+  // eslint-disable-next-line no-alert
+  const name = prompt('name:');
+  if (!name || name.length < 2) return;
+
+  submit.disabled = true;
+  tag.disabled = true;
+  loading.style.display = 'block';
+
+  const url = `${window.location.protocol}//${window.location.host}/api/v1/tag`;
+  // eslint-disable-next-line no-undef
+  await axios.post(
+    url,
+    {
+      name,
+      entityId: id,
+    },
+    {
+      headers: {
+        Authorization: `Bearer ${userAccessToken}`,
+        'x-app-event': 'tag-browser-app',
+      },
+    },
+  );
+
+  submit.disabled = false;
+  tag.disabled = false;
+  loading.style.display = 'none';
+
+  // eslint-disable-next-line no-alert
+  alert('Tag Saved!');
+};
+
 submit.onclick = async () => {
   submit.disabled = true;
+  tag.disabled = true;
   loading.style.display = 'block';
 
   const url = `${window.location.protocol}//${window.location.host}/api/v1/entity`;
@@ -97,5 +142,6 @@ submit.onclick = async () => {
 
   editor.setValue(text.join('\n'));
   submit.disabled = false;
+  tag.disabled = false;
   loading.style.display = 'none';
 };
