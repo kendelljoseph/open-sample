@@ -15,6 +15,18 @@ export default {
 
     return validator.run();
   },
+  isTag: (data) => {
+    const validator = new Validator();
+    validator(data)
+      .required()
+      .isObject((obj) => {
+        obj('name').required().isString();
+        obj('entityId').isString();
+        obj().strict();
+      });
+
+    return validator.run();
+  },
   isEntity: (data) => {
     const validator = new Validator();
     validator(data)

@@ -10,6 +10,7 @@ import appEvents from './middleware/app_events.js';
 import routeError from './middleware/route_error.js';
 import authCallback from './middleware/auth_callback.js';
 import entity from './routes/entity.js';
+import tag from './routes/tag.js';
 import finance from './routes/finance.js';
 import ai from './routes/ai.js';
 import sms from './routes/sms.js';
@@ -69,6 +70,7 @@ app.use(cache());
 
 // API Routes
 app.use('/api/v1/entity', entity);
+app.use('/api/v1/tag', tag);
 app.use('/api/v1/finance', finance);
 app.use('/api/v1/ai', ai);
 app.use('/api/v1/sms', sms);
