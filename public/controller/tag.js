@@ -37,7 +37,10 @@ submit.onclick = async () => {
 
   const text = data.reverse().map(
     // eslint-disable-next-line no-undef
-    (record) => `id: ${record.id}\nname: ${record.name}\nslug: ${record.slug}\n`,
+    (record) => {
+      const tagUrl = `${window.location.protocol}//${window.location.host}/completions/${record.slug}`;
+      return `id: ${record.id}\nname: ${record.name}\nslug: ${record.slug}\nurl: ${tagUrl}\n`;
+    },
   );
 
   editor.setValue(text.join('\n'));
