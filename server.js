@@ -13,6 +13,7 @@ import entity from './routes/entity.js';
 import tag from './routes/tag.js';
 import finance from './routes/finance.js';
 import ai from './routes/ai.js';
+import completions from './routes/completions.js';
 import sms from './routes/sms.js';
 import reflect from './routes/reflect.js';
 import user from './routes/user.js';
@@ -88,6 +89,7 @@ app.use('/admin/v1/route-error', adminRouteError);
 
 // Front End
 app.use('/', passport.authenticate('session'), express.static('./public'));
+app.get('/completions/:tag', completions());
 
 // Auth
 app.get('/auth', passport.authenticate('google', { scope: ['email', 'profile'] }));
