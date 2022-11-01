@@ -93,9 +93,38 @@
         width: 50px;
         max-width: 200px;
       }
+      .meter {
+        position: absolute;
+        left: 50px;
+        height: 13px;
+      }
+      #profile-meter {
+        top: 13px;
+        width: 100px;
+        height: 13px;
+      }
+      #token-meter {
+        top: 30px;
+        width: 100px;
+      }
+      .meter-bar {
+        font-size: 5pt;
+      }
+      .profile-meter-bar {
+        width: 85%;
+      }
+      .token-meter-bar {
+        width: 80%;
+      }
     </style>
 </head>
 <body>
+  <div id="profile-meter" class="meter progress">
+    <div class="meter-bar profile-meter-bar progress-bar progress-bar-animated bg-success" role="progressbar" aria-label="Animated striped example" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" >standing</div>
+  </div>
+  <div id="token-meter" class="meter progress">
+    <div class="meter-bar token-meter-bar progress-bar progress-bar-striped progress-bar-animated bg-dark" role="progressbar" aria-label="Animated striped example" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" >tokens</div>
+  </div>
   <button id="back" class="button rotate">&#10149;</button>
   <button id="submit" class="btn btn-success btn-sm">📝 submit</button>
   <img id="loading" src="../../assets/thinking.gif" alt="thinking">
