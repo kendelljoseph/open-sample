@@ -112,32 +112,53 @@ router.get('/', async (req, res, exit) => {
   );
 });
 
-// Get Entity by Id
-router.get('/:id', async (req, res, exit) => {
-  const { id } = req.params;
+// Get Entity by Tag
+router.get('/:tag', async (req, res, exit) => {
+  const { tag } = req.params;
 
   const appEvent = req.appAuditEvent;
   enqueue(
     req.authz.token,
     async () => {
-      // Validation
-      const errors = isRecord(req.params);
-      if (errors.length) {
-        return exit({ statusCode: 400, message: errors });
+      // // Validation
+      // const errors = isRecord(req.params);
+      // if (errors.length) {
+      //   return exit({ statusCode: 400, message: errors });
+      // }
+
+      // Graph
+      const graph = new Neo4jDatabaseConnection();
+      const { response, error: graphErr } = await graph.read(
+        `
+          MATCH (authn:Authn {accessToken: $accessToken})
+          MATCH (tag:Tag {slug: $tag})
+          MATCH (entity)-[:TAGGED]->(tag)
+          RETURN {prompt: entity.prompt} as entity
+        `,
+        {
+          accessToken: req.authz && req.authz.token,
+          tag,
+        },
+      );
+      await graph.disconnect();
+
+      if (graphErr) {
+        return exit({ statusCode: 400, message: graphErr });
       }
 
+      const records = response.map((record) => record.get('entity'));
+
+      // Clear Cache
       const cacheKey = req.localCache.generateRequestKey(req);
+      if (req.localCache.has(cacheKey)) req.localCache.del(cacheKey);
 
       if (req.localCache.has(cacheKey)) {
         const cache = req.localCache.get(cacheKey);
         return res.json(cache);
       }
 
-      const entity = await Entity.findByPk(id);
-      const record = entity && entity.dataValues;
-
-      req.localCache.set(cacheKey, record);
-      res.json(record);
+      req.localCache.set(cacheKey, records);
+      res.json(records);
       return null;
     },
     exit,
