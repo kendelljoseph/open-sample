@@ -117,6 +117,30 @@
       .token-meter-bar {
         width: 80%;
       }
+      #animation-graphic {
+        z-index: 9999;
+        position: absolute;
+        bottom: 200px;
+        right: 50px;
+        cursor: pointer;
+        user-select: none;
+        width: 170px;
+        height: 170px;
+        margin-bottom: 10px;
+        border-radius: 100%;
+        box-sizing: border-box;
+        box-shadow: 0 8px 10px -8px #888;
+        transition: all 0.15s ease-out;
+      }
+      .hidden {
+        user-select: none;
+        pointer-events: none;
+        opacity: 0;
+      }
+      #animation-graphic:hover {
+        box-shadow: 0 15px 80px -8px #333, 0 3px 30px 1px #f0f;
+        transform: scale(1.05);
+      }
     </style>
 </head>
 <body>
@@ -128,6 +152,7 @@
   </div>
   <button id="back" class="button rotate">&#10149;</button>
   <button id="submit" class="btn btn-success btn-sm">📝 submit</button>
+  <iframe id="animation-graphic" class="hidden" src="https://cdpn.io/pen/debug/yLEyeYX/e780f8a9ee647338909cd8d3e969d432" frameborder="0"></iframe>
   <img id="loading" src="../../assets/thinking.gif" alt="thinking">
   <img id="loading-bubble" src="../../assets/bubble.gif" alt="thinking">
   <div id="editor">What is one plus one?</div>

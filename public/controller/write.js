@@ -1,6 +1,7 @@
 const submit = document.querySelector('#submit');
 const back = document.querySelector('#back');
 const loading = document.querySelector('#loading');
+const animationGraphic = document.querySelector('#animation-graphic');
 const loadingBubble = document.querySelector('#loading-bubble');
 
 const userAccessToken = window.getCookie('userAccessToken');
@@ -68,6 +69,7 @@ const submitFunction = async () => {
   editor.setReadOnly(true);
   loading.style.display = 'block';
   loadingBubble.style.display = 'block';
+  animationGraphic.classList.remove('hidden');
 
   const selectedText = editor.getSelectedText();
   let prompt = '';
@@ -99,12 +101,14 @@ const submitFunction = async () => {
     submit.style.display = 'block';
     loading.style.display = 'none';
     loadingBubble.style.display = 'none';
+    animationGraphic.classList.add('hidden');
     editor.setReadOnly(false);
   } catch (error) {
     submit.disabled = false;
     submit.style.display = 'block';
     loading.style.display = 'none';
     loadingBubble.style.display = 'none';
+    animationGraphic.classList.add('hidden');
     editor.setReadOnly(false);
     // eslint-disable-next-line no-console
     console.error(error);
