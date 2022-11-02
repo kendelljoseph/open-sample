@@ -86,7 +86,7 @@ router.post('/code', async (req, res, next) => {
         top_p: 1,
         frequency_penalty: 0,
         presence_penalty: 0,
-        stop: ['service:', 'user:', 'asker:'],
+        stop: ['@:'],
       };
 
       const url = APP.OPENAI_COMPLETIONS_URL;
