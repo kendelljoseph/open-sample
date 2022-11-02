@@ -12,6 +12,18 @@ editor.getSession().setMode('ace/mode/text');
 editor.getSession().setTabSize(2);
 document.getElementById('editor').style.fontSize = '14px';
 
+editor.commands.addCommand({
+  name: 'detectCommandEnter',
+  bindKey: { win: 'Ctrl-Shift-O', mac: 'Command-Shift-O' },
+  exec() {
+    const url = editor.getSelectedText();
+
+    if (url.length) {
+      window.location.href = url;
+    }
+  },
+});
+
 if (userAccessToken) {
   submit.style.display = 'block';
 } else {
@@ -39,7 +51,7 @@ submit.onclick = async () => {
     // eslint-disable-next-line no-undef
     (record) => {
       const tagUrl = `${window.location.protocol}//${window.location.host}/completions/${record.slug}`;
-      return `id: ${record.id}\nname: ${record.name}\nslug: ${record.slug}\nurl: ${tagUrl}\n`;
+      return `${record.id}: ${record.slug}\n${tagUrl}\n`;
     },
   );
 
