@@ -114,6 +114,7 @@ const html = (tag) => `
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.1.3/axios.min.js" integrity="sha512-0qU9M9jfqPw6FKkPafM3gy2CBAvUWnYVOfNPDYKVuRTel1PrciTj+a9P3loJB+j0QmN2Y0JYQmkBBS8W+mbezg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.1.3/ace.js"></script>
+<script src="https://unpkg.com/mustache@latest"></script>
 <script src='../js/cookies.js'></script>
 <script>
   setCookie('activeTag', '${tag}', 1);
@@ -124,10 +125,11 @@ var circle = document.createElement('div');
 circle.style.width = '100%';
 circle.style.height = '10px';
 circle.style.backgroundColor = 'green';
+circle.style.zIndex = '999999';
 circle.style.position = 'absolute';
 circle.style.top = '0px';
 circle.style.left = '0px';
-circle.style.transition = 'all 3.2s';
+circle.style.transition = 'all 4.2s';
 circle.style.opacity = '0.5';
 document.body.appendChild(circle);
 var countdown = document.createElement('div');
