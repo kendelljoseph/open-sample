@@ -1,27 +1,8 @@
 const back = document.querySelector('#back');
 const loading = document.querySelector('#loading');
+const promptList = document.querySelector('#prompt-list');
 
 const userAccessToken = window.getCookie('userAccessToken');
-
-// eslint-disable-next-line no-undef
-const editor = ace.edit('editor');
-editor.setOption('wrap', true);
-editor.setTheme('ace/theme/chrome');
-editor.getSession().setMode('ace/mode/text');
-editor.getSession().setTabSize(2);
-document.getElementById('editor').style.fontSize = '14px';
-
-editor.commands.addCommand({
-  name: 'detectCommandEnter',
-  bindKey: { win: 'Ctrl-Shift-O', mac: 'Command-Shift-O' },
-  exec() {
-    const url = editor.getSelectedText();
-
-    if (url.length) {
-      window.location.href = url;
-    }
-  },
-});
 
 if (!userAccessToken) {
   window.location.href = '/';
@@ -29,6 +10,29 @@ if (!userAccessToken) {
 
 back.onclick = () => {
   window.location = '/';
+};
+
+const populateList = (records) => {
+  records.forEach((record) => {
+    const writeButton = document.createElement('button');
+
+    writeButton.classList.add(
+      'btn',
+      'my-1',
+      'btn-lg',
+      'list-group-item-action',
+      'btn-outline-light',
+    );
+
+    writeButton.textContent = `💛 ${record.slug}`;
+
+    writeButton.onclick = () => {
+      const tagUrl = `${window.location.protocol}//${window.location.host}/completions/${record.slug}`;
+      window.location.href = tagUrl;
+    };
+    promptList.appendChild(writeButton);
+    return writeButton;
+  });
 };
 
 const loadTags = async () => {
@@ -43,15 +47,7 @@ const loadTags = async () => {
     },
   });
 
-  const text = data.reverse().map(
-    // eslint-disable-next-line no-undef
-    (record) => {
-      const tagUrl = `${window.location.protocol}//${window.location.host}/completions/${record.slug}`;
-      return `${record.id}: ${record.slug}\n${tagUrl}\n`;
-    },
-  );
-
-  editor.setValue(text.join('\n'));
+  populateList(data);
   loading.style.display = 'none';
 };
 
