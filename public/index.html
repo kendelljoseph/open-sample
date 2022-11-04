@@ -144,12 +144,15 @@
       #build {
         display: none;
       }
+      #write {
+        font-size: 2.5em;
+      }
     </style>
 </head>
 <body>
   <iframe id="animation-graphic" src="https://cdpn.io/pen/debug/yLEyeYX/e780f8a9ee647338909cd8d3e969d432" frameborder="0"></iframe>
   <h1>Open Sample</h1>
-  <p class="text-center px-3">Your AI assistant and API for school, work and home.</p>
+  <p class="text-center px-3">Samples for work, school and home.</p>
   <hr size="1" width="300px" color="grey">  
   <button id="login" class="btn btn-outline-dark">
     <div class="google-login-text">
@@ -175,8 +178,8 @@
     <ul class="dropdown-menu">
       <li><a class="dropdown-item" href="/app/profile">Profile</a></li>
       <li><hr class="dropdown-divider"></li>
-      <li><a class="dropdown-item" href="/app/entity">Prompts</a></li>
-      <li><a class="dropdown-item" href="/app/tag">Completions</a></li>
+      <li><a class="dropdown-item" href="/app/prompts">Prompts</a></li>
+      <li><a class="dropdown-item" href="/app/completions">Completions</a></li>
       <li><hr class="dropdown-divider"></li>
       <li><a class="dropdown-item" href="/app/history">History</a></li>
       <li><a class="dropdown-item" href="/app/admin">Admin</a></li>
@@ -185,7 +188,7 @@
   <div id="interaction-options">
     <img id="user-image" src="">
     <button id="logout" class="btn btn-danger">logout</button>
-    <button id="write" class="btn btn-outline-dark">📝 Write with your AI assistant</button>
+    <button id="write" class="btn btn-success">📝 write</button>
     <!-- <div class="large-text">or</div> -->
     <button id="build" class="button large">👷‍♀️ build</button>
   </div>

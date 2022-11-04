@@ -4,9 +4,9 @@ editor.commands.addCommand({
   bindKey: { win: 'Ctrl-Shift-E', mac: 'Command-Shift-E' },
   exec() {
     if (window.location.pathname.match(/app\/write/)) {
-      window.location.href = '/app/entity';
+      window.location.href = '/app/prompts';
     }
-    if (window.location.pathname.match(/app\/entity/)) {
+    if (window.location.pathname.match(/app\/prompts/)) {
       window.location.href = '/app/write';
     }
   },
