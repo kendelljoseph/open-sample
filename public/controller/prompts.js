@@ -102,12 +102,12 @@ const populateList = (records) => {
     subHeading.classList.add('fw-bold');
     promptContent.classList.add('my-2');
     writeButton.classList.add('btn', 'mx-1', 'btn-sm', 'btn-success');
-    tagButton.classList.add('btn', 'me-3', 'btn-sm', 'btn-outline-light');
-    deleteButton.classList.add('btn', 'btn-sm', 'btn-outline-danger');
+    tagButton.classList.add('btn', 'me-3', 'btn-sm', 'btn-outline-primary');
+    deleteButton.classList.add('btn', 'me-3', 'btn-sm', 'btn-outline-danger');
 
     writeButton.textContent = '📝';
     tagButton.textContent = '💛';
-    deleteButton.textContent = '❌';
+    deleteButton.textContent = '🗑';
 
     writeButton.onclick = () => {
       addPromptToWrite(record);
@@ -123,7 +123,7 @@ const populateList = (records) => {
 
     promptContent.setAttribute('readonly', true);
     promptContent.style.resize = 'none';
-    promptContent.style.width = 'calc(100vw - 160px)';
+    promptContent.style.width = 'calc(100vw - 180px)';
     promptContent.style.height = '100px';
 
     listItem.appendChild(liContainer);
