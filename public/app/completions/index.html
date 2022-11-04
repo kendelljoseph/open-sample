@@ -60,7 +60,7 @@
         bottom: 0;
         left: 0;
       }
-      #submit {
+      #title {
         position: absolute;
         top: 10px;
         right: 10px;
@@ -70,9 +70,6 @@
       }
       .rotate {
         transform: rotate(180deg)
-      }
-      #submit:disabled{
-        opacity: 0.25;
       }
       #loading {
         z-index: 9999;
@@ -88,7 +85,7 @@
 </head>
 <body>
   <button id="back" class="button rotate">&#10149;</button>
-  <button id="submit" class="btn btn-success btn-sm">💛 load completions</button>
+  <div id="title" class="badge bg-dark">completions</div>
   <img id="loading" src="../../assets/thinking.gif" alt="thinking">
   <div id="editor"></div>
 </body>

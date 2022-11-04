@@ -1,4 +1,3 @@
-const submit = document.querySelector('#submit');
 const back = document.querySelector('#back');
 const loading = document.querySelector('#loading');
 
@@ -24,18 +23,15 @@ editor.commands.addCommand({
   },
 });
 
-if (userAccessToken) {
-  submit.style.display = 'block';
-} else {
-  submit.style.display = 'none';
+if (!userAccessToken) {
+  window.location.href = '/';
 }
 
 back.onclick = () => {
   window.location = '/';
 };
 
-submit.onclick = async () => {
-  submit.disabled = true;
+const loadTags = async () => {
   loading.style.display = 'block';
 
   const url = `${window.location.protocol}//${window.location.host}/api/v1/tag`;
@@ -56,6 +52,7 @@ submit.onclick = async () => {
   );
 
   editor.setValue(text.join('\n'));
-  submit.disabled = false;
   loading.style.display = 'none';
 };
+
+loadTags();

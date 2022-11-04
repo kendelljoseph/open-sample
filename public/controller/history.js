@@ -1,4 +1,3 @@
-const submit = document.querySelector('#submit');
 const back = document.querySelector('#back');
 const loading = document.querySelector('#loading');
 
@@ -12,18 +11,15 @@ editor.getSession().setMode('ace/mode/yaml');
 editor.getSession().setTabSize(2);
 document.getElementById('editor').style.fontSize = '14px';
 
-if (userAccessToken) {
-  submit.style.display = 'block';
-} else {
-  submit.style.display = 'none';
+if (!userAccessToken) {
+  window.location.href = '/';
 }
 
 back.onclick = () => {
   window.location = '/';
 };
 
-submit.onclick = async () => {
-  submit.disabled = true;
+const loadHistory = async () => {
   loading.style.display = 'block';
 
   const url = `${window.location.protocol}//${window.location.host}/admin/v1/audit`;
@@ -41,6 +37,7 @@ submit.onclick = async () => {
   );
 
   editor.setValue(historyText.join('\n'));
-  submit.disabled = false;
   loading.style.display = 'none';
 };
+
+loadHistory();

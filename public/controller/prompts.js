@@ -4,8 +4,8 @@ const promptList = document.querySelector('#prompt-list');
 
 const userAccessToken = window.getCookie('userAccessToken');
 
-if (userAccessToken) {
-  window.href = '/';
+if (!userAccessToken) {
+  window.location.href = '/';
 }
 
 back.onclick = () => {
