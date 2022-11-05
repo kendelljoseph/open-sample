@@ -3,6 +3,34 @@ const back = document.querySelector('#back');
 const loading = document.querySelector('#loading');
 const animationGraphic = document.querySelector('#animation-graphic');
 const loadingBubble = document.querySelector('#loading-bubble');
+const waSave = document.querySelector('#wa-save');
+const waPrompts = document.querySelector('#wa-prompts');
+const waUndo = document.querySelector('#wa-undo');
+const waRedo = document.querySelector('#wa-redo');
+const waClear = document.querySelector('#wa-clear');
+const waText = document.querySelectorAll('.wa-text');
+const writeTip = document.querySelector('#write-tip');
+if (navigator.platform.indexOf('Win') !== -1) {
+  writeTip.innerHTML = 'Ctrl + Enter';
+} else if (navigator.platform.indexOf('Mac') !== -1) {
+  writeTip.innerHTML = 'Cmd + Enter';
+}
+
+const checkDisplay = () => {
+  if (window.screen.width <= 640) {
+    writeTip.style.display = 'none';
+    waText.forEach((text) => {
+      text.style.display = 'none';
+    });
+  } else {
+    writeTip.style.display = 'block';
+    waText.forEach((text) => {
+      text.style.display = '';
+    });
+  }
+};
+window.addEventListener('resize', checkDisplay);
+checkDisplay();
 
 const userAccessToken = window.getCookie('userAccessToken');
 
@@ -117,6 +145,47 @@ const submitFunction = async () => {
   }
 };
 
+const savePrompt = async (prompt) => {
+  // eslint-disable-next-line no-alert
+  const name = window.prompt('name:') || new Date().toDateString();
+  submit.disabled = true;
+  loading.style.display = 'block';
+  loadingBubble.style.display = 'block';
+  editor.setReadOnly(true);
+  try {
+    const url = `${window.location.protocol}//${window.location.host}/api/v1/entity`;
+    await axios.post(
+      url,
+      {
+        name,
+        prompt,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${userAccessToken}`,
+          'x-app-event': 'save-prompt',
+        },
+      },
+    );
+
+    submit.disabled = false;
+    loading.style.display = 'none';
+    loadingBubble.style.display = 'none';
+    editor.setReadOnly(false);
+    // eslint-disable-next-line no-alert
+    alert('saved OK!');
+  } catch (error) {
+    submit.disabled = false;
+    loading.style.display = 'none';
+    loadingBubble.style.display = 'none';
+    editor.setReadOnly(false);
+    // eslint-disable-next-line no-console
+    console.error(error);
+    // eslint-disable-next-line no-alert
+    alert(`${error.message}`);
+  }
+};
+
 editor.commands.addCommand({
   name: 'detectCommandEnter',
   bindKey: { win: 'Ctrl-Enter', mac: 'Command-Enter' },
@@ -165,4 +234,40 @@ editor.commands.addCommand({
   },
 });
 
+const getPromptText = () => {
+  const selectedText = editor.getSelectedText();
+  const allText = editor.session.getValue();
+  const text = selectedText.length ? selectedText : allText;
+  return text;
+};
+
+editor.commands.addCommand({
+  name: 'savePromptAsEntity',
+  bindKey: { win: 'Ctrl-Shift-S', mac: 'Command-Shift-S' },
+  exec() {
+    const prompt = getPromptText();
+    // eslint-disable-next-line no-restricted-globals, no-alert
+    if (!confirm('Save prompt?')) return;
+    savePrompt(prompt);
+  },
+});
+
 submit.onclick = submitFunction;
+waSave.onclick = () => {
+  const prompt = getPromptText();
+  // eslint-disable-next-line no-restricted-globals, no-alert
+  if (!confirm('Save prompt?')) return;
+  savePrompt(prompt);
+};
+waPrompts.onclick = () => {
+  window.location.href = '/app/prompts';
+};
+waClear.onclick = () => {
+  editor.setValue('');
+};
+waUndo.onclick = () => {
+  editor.session.getUndoManager().undo();
+};
+waRedo.onclick = () => {
+  editor.session.getUndoManager().redo();
+};

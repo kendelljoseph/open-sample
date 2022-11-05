@@ -141,6 +141,21 @@
         box-shadow: 0 15px 80px -8px #333, 0 3px 30px 1px #f0f;
         transform: scale(1.05);
       }
+      #write-tip {
+        position: absolute;
+        top: 17px;
+        right: 90px;
+        font-size: 0.7em;
+      }
+      #write-actions {
+        position: absolute;
+        top: 10px;
+        left: 60px;
+        font-size: 0.7em;
+      }
+      #write-actions > button {
+        height: 30px;
+      }
     </style>
 </head>
 <body>
@@ -150,7 +165,15 @@
   <div id="token-meter" class="meter progress">
     <div class="meter-bar token-meter-bar progress-bar progress-bar-striped progress-bar-animated bg-dark" role="progressbar" aria-label="Animated striped example" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" >tokens</div>
   </div>
+  <div id="write-tip"></div>
   <button id="back" class="button rotate">&#10149;</button>
+  <div id="write-actions" class="btn-group btn-group-sm" role="group" aria-label="write actions">
+    <button id="wa-save" type="button" class="btn btn-sm btn-outline-success">💾 save</button>
+    <button id="wa-prompts" type="button" class="btn btn-sm btn-dark"><span>📓 </span><span class="wa-text">prompts</span></button>
+    <button id="wa-undo" type="button" class="btn btn-sm btn-dark">↩ <span class="wa-text">undo</span></button>
+    <button id="wa-redo" type="button" class="btn btn-sm btn-dark">↪️ <span class="wa-text">redo</span></button>
+    <button id="wa-clear" type="button" class="btn btn-sm btn-dark">🗑 <span class="wa-text">clear</span></button>
+  </div>
   <button id="submit" class="btn btn-success btn-sm">📝 write</button>
   <iframe id="animation-graphic" class="hidden" src="https://cdpn.io/pen/debug/yLEyeYX/e780f8a9ee647338909cd8d3e969d432" frameborder="0"></iframe>
   <img id="loading" src="../../assets/thinking.gif" alt="thinking">
