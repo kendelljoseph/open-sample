@@ -3,6 +3,8 @@ const back = document.querySelector('#back');
 const loading = document.querySelector('#loading');
 const animationGraphic = document.querySelector('#animation-graphic');
 const loadingBubble = document.querySelector('#loading-bubble');
+const fileLink = document.querySelector('#file-link');
+const importFile = document.querySelector('#import-file');
 const waSave = document.querySelector('#wa-save');
 const waPrompts = document.querySelector('#wa-prompts');
 const waUndo = document.querySelector('#wa-undo');
@@ -270,4 +272,32 @@ waUndo.onclick = () => {
 };
 waRedo.onclick = () => {
   editor.session.getUndoManager().redo();
+};
+
+importFile.onclick = async () => {
+  const url = fileLink.value;
+
+  if (!url.length) return;
+  submit.disabled = true;
+  loading.style.display = 'block';
+  loadingBubble.style.display = 'block';
+  editor.setReadOnly(true);
+
+  try {
+    const { data } = await axios.get(url);
+    editor.setValue(data);
+    submit.disabled = false;
+    loading.style.display = 'none';
+    loadingBubble.style.display = 'none';
+    editor.setReadOnly(false);
+  } catch (error) {
+    submit.disabled = false;
+    loading.style.display = 'none';
+    loadingBubble.style.display = 'none';
+    editor.setReadOnly(false);
+    // eslint-disable-next-line no-console
+    console.error(error);
+    // eslint-disable-next-line no-alert
+    alert(`${error.message}`);
+  }
 };
