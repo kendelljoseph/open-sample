@@ -1,6 +1,7 @@
 const back = document.querySelector('#back');
 const loading = document.querySelector('#loading');
 const promptList = document.querySelector('#prompt-list');
+const notice = document.querySelector('#notice');
 
 const userAccessToken = window.getCookie('userAccessToken');
 
@@ -152,6 +153,8 @@ const loadPrompts = async () => {
       'x-app-event': 'load-prompt-entity-browser-app',
     },
   });
+
+  if (data && data.length) notice.style.display = 'none';
 
   populateList(data);
   loading.style.display = 'none';

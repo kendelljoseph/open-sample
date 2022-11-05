@@ -1,6 +1,7 @@
 const back = document.querySelector('#back');
 const loading = document.querySelector('#loading');
 const promptList = document.querySelector('#prompt-list');
+const notice = document.querySelector('#notice');
 
 const userAccessToken = window.getCookie('userAccessToken');
 
@@ -46,7 +47,12 @@ const loadTags = async () => {
       'x-app-event': 'tag-browser-app',
     },
   });
-  data.sort((a, b) => a.name.localeCompare(b.name));
+
+  if (data && data.length) {
+    notice.style.display = 'none';
+    data.sort((a, b) => a.name.localeCompare(b.name));
+  }
+
   populateList(data);
   loading.style.display = 'none';
 };
