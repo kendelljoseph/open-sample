@@ -46,7 +46,7 @@ const loadTags = async () => {
       'x-app-event': 'tag-browser-app',
     },
   });
-
+  data.sort((a, b) => a.name.localeCompare(b.name));
   populateList(data);
   loading.style.display = 'none';
 };
