@@ -3,7 +3,7 @@ const back = document.querySelector('#back');
 const loading = document.querySelector('#loading');
 const animationGraphic = document.querySelector('#animation-graphic');
 const loadingBubble = document.querySelector('#loading-bubble');
-const fileLink = document.querySelector('#file-link');
+const fileLink = document.querySelector('#url-file-link');
 const importFile = document.querySelector('#import-file');
 const waSave = document.querySelector('#wa-save');
 const waPrompts = document.querySelector('#wa-prompts');
@@ -81,15 +81,12 @@ const selectResponse = (rawText) => {
   editor.scrollToLine(startRow, true, true, () => {});
 };
 
-if (userAccessToken) {
-  back.style.display = 'block';
-  submit.style.display = 'block';
-} else {
-  submit.style.display = 'none';
+if (!userAccessToken) {
+  window.location.href = '/';
 }
 
 back.onclick = () => {
-  window.location = '/';
+  window.location.href = '/';
 };
 
 const submitFunction = async () => {
