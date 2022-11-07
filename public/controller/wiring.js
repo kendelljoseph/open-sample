@@ -35,45 +35,50 @@ if (!userAccessToken) {
   window.location.href = '/';
 }
 
-// create an array with nodes
-const nodes = new vis.DataSet([
-  { id: 1, label: 'Loading' },
-  { id: 2, label: 'Data' },
-]);
+const cachedNodeList = localStorage.getItem('wiringEditorNodeList');
+const cachedEdgeList = localStorage.getItem('wiringEditorEdgeList');
 
-// create an array with edges
-const edges = new vis.DataSet([
-  {
-    from: 1,
-    to: 2,
-    label: 'your',
-    font: { align: 'middle' },
-    arrows: { to: { enabled: true } },
-  },
-]);
+const nodes = cachedNodeList
+  ? new vis.DataSet(JSON.parse(cachedNodeList))
+  : new vis.DataSet([
+    { id: 1, label: 'Loading' },
+    { id: 2, label: 'Data' },
+  ]);
 
-// create a network
-const initNetworkData = {
-  nodes,
-  edges,
-};
-
-const networkOptions = {
-  nodes: {
-    shape: 'dot',
-    color: '#fff',
-    size: 10,
-    font: {
-      size: 12,
+const edges = cachedEdgeList
+  ? new vis.DataSet(JSON.parse(cachedEdgeList))
+  : new vis.DataSet([
+    {
+      from: 1,
+      to: 2,
+      label: 'your',
+      font: { align: 'middle' },
+      arrows: { to: { enabled: true } },
     },
-    borderWidth: 2,
-    shadow: true,
+  ]);
+
+const network = new vis.Network(
+  graph,
+  {
+    nodes,
+    edges,
   },
-  edges: {
-    width: 2,
+  {
+    nodes: {
+      shape: 'dot',
+      color: '#fff',
+      size: 10,
+      font: {
+        size: 12,
+      },
+      borderWidth: 2,
+      shadow: true,
+    },
+    edges: {
+      width: 2,
+    },
   },
-};
-const network = new vis.Network(graph, initNetworkData, networkOptions);
+);
 
 // eslint-disable-next-line no-undef
 const editor = ace.edit('editor');
@@ -127,11 +132,32 @@ back.onclick = () => {
 const populateGraph = (records, label) => {
   const nodeList = [];
   const edgeList = [];
-
-  nodeList.push({ id: userAccessToken, label: userDisplayName, color: '#eee' });
+  nodeList.push({
+    id: userAccessToken,
+    label: userDisplayName,
+    color: '#eae',
+    font: {
+      size: 10,
+      color: '#a3a',
+      face: 'courier',
+      strokeWidth: 3,
+      strokeColor: '#ffffff',
+    },
+  });
 
   records.forEach((record) => {
-    nodeList.push({ id: record.id, label: record.slug });
+    nodeList.push({
+      id: record.id,
+      label: record.slug,
+      color: '#ffd900',
+      font: {
+        size: 10,
+        color: '#000',
+        face: 'arial',
+        strokeWidth: 3,
+        strokeColor: '#ffffff',
+      },
+    });
     edgeList.push({
       to: record.id,
       from: userAccessToken,
@@ -145,10 +171,12 @@ const populateGraph = (records, label) => {
   if (nodeList.length) {
     nodes.clear();
     nodes.add(nodeList);
+    localStorage.setItem('wiringEditorNodeList', JSON.stringify(nodes.get()));
   }
   if (edgeList.length) {
     edges.clear();
     edges.add(edgeList);
+    localStorage.setItem('wiringEditorEdgeList', JSON.stringify(edges.get()));
   }
 };
 
@@ -215,6 +243,47 @@ const submitFunction = async () => {
     alert(`${error.message}`);
   }
 };
+
+const modes = ['text', 'javascript', 'json'];
+let modeIndex = 0;
+const nextMode = () => {
+  modeIndex += 1;
+  if (modeIndex > modes.length - 1) {
+    modeIndex = 0;
+  }
+  return modes[modeIndex];
+};
+
+editor.commands.addCommand({
+  name: 'detectCommandShiftEnter',
+  bindKey: { win: 'Ctrl-Shift-Enter', mac: 'Command-Shift-Enter' },
+  exec() {
+    const mode = `ace/mode/${nextMode()}`;
+    editor.getSession().setMode(mode);
+    localStorage.setItem('wiringEditorSessionMode', mode);
+  },
+});
+
+editor.commands.addCommand({
+  name: 'executeAsCode',
+  bindKey: { win: 'Alt-Shift-Enter', mac: 'Option-Shift-Enter' },
+  exec() {
+    const selectedText = editor.getSelectedText();
+    const allText = editor.session.getValue();
+    const value = selectedText.length ? selectedText : allText;
+    if (!value) return;
+
+    try {
+      // eslint-disable-next-line no-eval
+      window.eval(value);
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error(error);
+      // eslint-disable-next-line no-alert
+      alert(`${error.message}`);
+    }
+  },
+});
 
 editor.commands.addCommand({
   name: 'detectCommandEnter',
