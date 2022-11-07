@@ -89,29 +89,19 @@ network.on('click', (params) => {
   }
 });
 
-function clusterBy(category) {
-  const clusterOptionsByData = {
-    joinCondition(childOptions) {
-      return childOptions.category === category;
+network.once('beforeDrawing', () => {
+  network.focus(userAccessToken, {
+    scale: 5,
+  });
+});
+network.once('afterDrawing', () => {
+  network.fit({
+    animation: {
+      duration: 2500,
+      easingFunction: 'easeOutQuint',
     },
-    clusterNodeProperties: {
-      id: 'cidCluster',
-      borderWidth: 3,
-      shape: 'database',
-      label: category,
-      color: '#ffd900',
-      size: 13,
-      font: {
-        size: 10,
-        color: '#000',
-        face: 'arial',
-        strokeWidth: 3,
-        strokeColor: '#ffffff',
-      },
-    },
-  };
-  network.cluster(clusterOptionsByData);
-}
+  });
+});
 
 // eslint-disable-next-line no-undef
 const editor = ace.edit('editor');
@@ -162,68 +152,182 @@ back.onclick = () => {
   window.location = '/';
 };
 
-let userAdded = false;
-const populateGraph = (records, label, category, labelPrefix) => {
+const userNode = () => ({
+  id: userAccessToken,
+  shape: 'circularImage',
+  label: userDisplayName,
+  image: userPictureUrl,
+  size: 14,
+  font: {
+    size: 10,
+    color: '#a3a',
+    face: 'courier',
+    strokeWidth: 3,
+    strokeColor: '#ffffff',
+  },
+});
+
+const nodeStyles = {
+  completions: (record, category) => ({
+    id: record.id,
+    label: `💛 ${record.name}`,
+    category,
+    color: '#ffd900',
+    size: 12,
+    font: {
+      size: 10,
+      color: '#000',
+      face: 'arial',
+      strokeWidth: 3,
+      strokeColor: '#ffffff',
+    },
+  }),
+  prompts: (record, category) => ({
+    id: record.id,
+    label: `📓 ${record.name}`,
+    category,
+    color: '#ccc',
+    size: 12,
+    font: {
+      size: 10,
+      color: '#000',
+      face: 'arial',
+      strokeWidth: 3,
+      strokeColor: '#ffffff',
+    },
+  }),
+  problems: (record, category) => ({
+    id: record.id,
+    label: `🔥 ${record.event}`,
+    category,
+    color: '#fcc',
+    size: 12,
+    font: {
+      size: 10,
+      color: '#000',
+      face: 'arial',
+      strokeWidth: 3,
+      strokeColor: '#ffffff',
+    },
+  }),
+};
+
+const edgeStyles = {
+  completions: (record, label) => ({
+    to: record.id,
+    from: userAccessToken,
+    label,
+    font: { align: 'middle', size: 8 },
+    width: 1,
+    arrows: { to: { enabled: true, scaleFactor: 0.5 } },
+  }),
+  prompts: (record, label) => ({
+    to: record.id,
+    from: userAccessToken,
+    label,
+    font: { align: 'middle', size: 8 },
+    width: 1,
+    arrows: { to: { enabled: true, scaleFactor: 0.5 } },
+  }),
+  problems: (record, label) => ({
+    to: record.id,
+    from: userAccessToken,
+    label: `${label}:${record.statusCode}`,
+    font: { align: 'middle', size: 8 },
+    width: 1,
+    arrows: { to: { enabled: true, scaleFactor: 0.5 } },
+  }),
+};
+
+const clusterStyles = {
+  completions: (label) => ({
+    id: 'cidCluster',
+    borderWidth: 3,
+    shape: 'database',
+    label,
+    color: '#ffd900',
+    size: 5,
+    font: {
+      size: 13,
+      color: '#000',
+      face: 'arial',
+      strokeWidth: 3,
+      aligned: 'middle',
+      strokeColor: '#ffffff',
+    },
+  }),
+  prompts: (label) => ({
+    id: 'cidCluster',
+    borderWidth: 3,
+    shape: 'database',
+    label,
+    color: '#ccc',
+    size: 5,
+    font: {
+      size: 13,
+      color: '#000',
+      face: 'arial',
+      strokeWidth: 3,
+      aligned: 'middle',
+      strokeColor: '#ffffff',
+    },
+  }),
+  problems: (label) => ({
+    id: 'cidCluster',
+    borderWidth: 3,
+    shape: 'database',
+    label,
+    color: '#fcc',
+    size: 5,
+    font: {
+      size: 13,
+      color: '#000',
+      face: 'arial',
+      strokeWidth: 3,
+      aligned: 'middle',
+      strokeColor: '#ffffff',
+    },
+  }),
+};
+
+function clusterBy(category, label) {
+  const clusterOptionsByData = {
+    joinCondition(childOptions) {
+      return childOptions.category === category;
+    },
+    clusterNodeProperties: clusterStyles[category](label),
+  };
+  network.cluster(clusterOptionsByData);
+}
+
+const populateGraph = (records, label, category, clusterLabel, addUser) => {
   const nodeList = [];
   const edgeList = [];
 
-  if (!userAdded) {
-    userAdded = true;
-    nodeList.push({
-      id: userAccessToken,
-      shape: 'circularImage',
-      label: userDisplayName,
-      image: userPictureUrl,
-      size: 14,
-      font: {
-        size: 10,
-        color: '#a3a',
-        face: 'courier',
-        strokeWidth: 3,
-        strokeColor: '#ffffff',
-      },
-    });
+  if (addUser) {
+    nodeList.push(userNode());
   }
 
   records.forEach((record) => {
-    nodeList.push({
-      id: record.id,
-      label: `${labelPrefix || ''}${record.name}`,
-      category,
-      color: '#ffd900',
-      size: 12,
-      font: {
-        size: 10,
-        color: '#000',
-        face: 'arial',
-        strokeWidth: 3,
-        strokeColor: '#ffffff',
-      },
-    });
-    edgeList.push({
-      to: record.id,
-      from: userAccessToken,
-      label,
-      font: { align: 'middle', size: 8 },
-      width: 1,
-      arrows: { to: { enabled: true, scaleFactor: 0.5 } },
-    });
+    nodeList.push(nodeStyles[category](record, category));
+    edgeList.push(edgeStyles[category](record, label));
   });
 
   if (nodeList.length) {
     nodes.add(nodeList);
     localStorage.setItem('wiringEditorNodeList', JSON.stringify(nodes.get()));
+    network.fit({ nodes: nodes.get().map((node) => node.id) });
   }
   if (edgeList.length) {
     edges.add(edgeList);
     localStorage.setItem('wiringEditorEdgeList', JSON.stringify(edges.get()));
   }
   if (nodeList.length) {
-    clusterBy(category);
+    clusterBy(category, clusterLabel);
   }
 };
 
-const loadData = async () => {
+const loadCompletions = async () => {
   loading.style.display = 'block';
 
   const sortByName = (data) => {
@@ -238,7 +342,7 @@ const loadData = async () => {
     const { data } = await axios.get(url, {
       headers: {
         Authorization: `Bearer ${userAccessToken}`,
-        'x-app-event': 'wiring-load-data-browser-app',
+        'x-app-event': 'wiring-load-tagged-prompts-browser-app',
       },
     });
     return data;
@@ -252,11 +356,64 @@ const loadData = async () => {
   nodes.clear();
   edges.clear();
 
-  populateGraph(completionsData, 'CREATED', 'completions', '💛');
+  populateGraph(completionsData, 'CREATED', 'completions', '💛 completions', true);
   loading.style.display = 'none';
 };
 
-loadData();
+const loadPrompts = async () => {
+  loading.style.display = 'block';
+
+  const loadFromApi = async (url) => {
+    // eslint-disable-next-line no-undef
+    const { data } = await axios.get(url, {
+      headers: {
+        Authorization: `Bearer ${userAccessToken}`,
+        'x-app-event': 'wiring-load-tagged-prompts-browser-app',
+      },
+    });
+    return data;
+  };
+
+  const completionsData = await loadFromApi(
+    `${window.location.protocol}//${window.location.host}/api/v1/entity`,
+  );
+
+  nodes.clear();
+  edges.clear();
+
+  populateGraph(completionsData, 'CREATED', 'prompts', '📓 prompts', true);
+  loading.style.display = 'none';
+};
+
+const loadErrors = async () => {
+  loading.style.display = 'block';
+
+  const loadFromApi = async (url) => {
+    // eslint-disable-next-line no-undef
+    const { data } = await axios.get(url, {
+      headers: {
+        Authorization: `Bearer ${userAccessToken}`,
+        'x-app-event': 'wiring-load-errors-browser-app',
+      },
+    });
+    return data;
+  };
+
+  const errorData = await loadFromApi(
+    `${window.location.protocol}//${window.location.host}/admin/v1/route-error`,
+  );
+
+  const data = errorData.map((record, i) => ({
+    id: `${i}-${Math.ceil(Math.random() * 1000000)}`,
+    ...record,
+  }));
+
+  nodes.clear();
+  edges.clear();
+
+  populateGraph(data, 'STATUS_CODE', 'problems', '🔥 problems', true);
+  loading.style.display = 'none';
+};
 
 const submitFunction = async () => {
   editor.setReadOnly(true);
@@ -349,12 +506,18 @@ editor.commands.addCommand({
   },
 });
 
-toPrompts.onclick = () => {
-  window.location.href = '/app/prompts';
+toPrompts.onclick = async () => {
+  toPrompts.disabled = true;
+  await loadPrompts();
+  toPrompts.disabled = false;
 };
-toCompletions.onclick = () => {
-  window.location.href = '/app/completions';
+toCompletions.onclick = async () => {
+  toCompletions.disabled = true;
+  await loadCompletions();
+  toCompletions.disabled = false;
 };
-toProblems.onclick = () => {
-  window.location.href = '/app/admin';
+toProblems.onclick = async () => {
+  toProblems.disabled = true;
+  await loadErrors();
+  toProblems.disabled = false;
 };

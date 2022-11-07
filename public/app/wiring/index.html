@@ -163,12 +163,15 @@
   </div>
   <div id="write-tip"></div>
   <button id="back" class="button rotate">&#10149;</button>
-  <div id="write-actions" class="btn-group btn-group-sm" role="group" aria-label="write actions">
-    <button disabled type="button" class="btn btn-sm btn-outline-dark">graph</button>
-    <button id="to-alerts" type="button" class="btn btn-sm btn-dark">🚨 <span class="wa-text">alerts</span></button>
-    <button id="to-problems" type="button" class="btn btn-sm btn-dark">🔥 <span class="wa-text">problems</span></button>
-    <button id="to-completions" type="button" class="btn btn-sm btn-dark">💛 <span class="wa-text">competions</span></button>
-    <button id="to-prompts" type="button" class="btn btn-sm btn-dark"><span>📓 </span><span class="wa-text">prompts</span></button>
+  <div id="write-actions" class="btn-group btn-group-sm" role="group" aria-label="write actions radio toggle button group">
+    <input type="radio" class="btn-check" name="btnradio" id="to-completions" autocomplete="off">
+    <label class="btn btn-outline-dark" for="to-completions"><span>💛 </span><span class="wa-text">competions</span></label>
+    <input type="radio" class="btn-check" name="btnradio" id="to-prompts" autocomplete="off">
+    <label class="btn btn-outline-dark" for="to-prompts"><span>📓 </span><span class="wa-text">prompts</span></label>
+    <input type="radio" class="btn-check" name="btnradio" id="to-problems" autocomplete="off">
+    <label class="btn btn-outline-dark" for="to-problems"><span>🔥 </span><span class="wa-text">problems</span></label>
+    <input type="radio" class="btn-check" name="btnradio" id="to-alerts" autocomplete="off" disabled>
+    <label class="btn btn-outline-dark" for="to-alerts"><span>🚨 </span><span class="wa-text">alerts</span></label>
   </div>
   <title id="title" class="badge bg-dark btn-sm">wiring</title>
   <img id="loading" src="../../assets/thinking.gif" alt="thinking">
