@@ -89,16 +89,16 @@ network.on('click', (params) => {
   }
 });
 
-function clusterBy(clusterLabel) {
+function clusterBy(category) {
   const clusterOptionsByData = {
     joinCondition(childOptions) {
-      return childOptions.cluster === clusterLabel;
+      return childOptions.category === category;
     },
     clusterNodeProperties: {
       id: 'cidCluster',
       borderWidth: 3,
       shape: 'database',
-      label: 'completions',
+      label: category,
       color: '#ffd900',
       size: 13,
       font: {
@@ -162,29 +162,34 @@ back.onclick = () => {
   window.location = '/';
 };
 
-const populateGraph = (records, label) => {
+let userAdded = false;
+const populateGraph = (records, label, category) => {
   const nodeList = [];
   const edgeList = [];
-  nodeList.push({
-    id: userAccessToken,
-    shape: 'circularImage',
-    label: userDisplayName,
-    image: userPictureUrl,
-    size: 14,
-    font: {
-      size: 10,
-      color: '#a3a',
-      face: 'courier',
-      strokeWidth: 3,
-      strokeColor: '#ffffff',
-    },
-  });
+
+  if (!userAdded) {
+    userAdded = true;
+    nodeList.push({
+      id: userAccessToken,
+      shape: 'circularImage',
+      label: userDisplayName,
+      image: userPictureUrl,
+      size: 14,
+      font: {
+        size: 10,
+        color: '#a3a',
+        face: 'courier',
+        strokeWidth: 3,
+        strokeColor: '#ffffff',
+      },
+    });
+  }
 
   records.forEach((record) => {
     nodeList.push({
       id: record.id,
-      label: record.slug,
-      cluster: label,
+      label: record.name,
+      category,
       color: '#ffd900',
       size: 12,
       font: {
@@ -206,41 +211,52 @@ const populateGraph = (records, label) => {
   });
 
   if (nodeList.length) {
-    nodes.clear();
     nodes.add(nodeList);
     localStorage.setItem('wiringEditorNodeList', JSON.stringify(nodes.get()));
   }
   if (edgeList.length) {
-    edges.clear();
     edges.add(edgeList);
     localStorage.setItem('wiringEditorEdgeList', JSON.stringify(edges.get()));
   }
   if (nodeList.length) {
-    clusterBy(label);
+    clusterBy(category);
   }
 };
 
-const loadTags = async () => {
+const loadData = async () => {
   loading.style.display = 'block';
 
-  const url = `${window.location.protocol}//${window.location.host}/api/v1/tag`;
-  // eslint-disable-next-line no-undef
-  const { data } = await axios.get(url, {
-    headers: {
-      Authorization: `Bearer ${userAccessToken}`,
-      'x-app-event': 'tag-browser-app',
-    },
-  });
+  const sortByName = (data) => {
+    if (data && data.length) {
+      data.sort((a, b) => a.name.localeCompare(b.name));
+    }
+    return data;
+  };
 
-  if (data && data.length) {
-    data.sort((a, b) => a.name.localeCompare(b.name));
-  }
+  const loadFromApi = async (url) => {
+    // eslint-disable-next-line no-undef
+    const { data } = await axios.get(url, {
+      headers: {
+        Authorization: `Bearer ${userAccessToken}`,
+        'x-app-event': 'wiring-load-data-browser-app',
+      },
+    });
+    return data;
+  };
 
-  populateGraph(data, 'CREATED');
+  const completionsData = await loadFromApi(
+    `${window.location.protocol}//${window.location.host}/api/v1/tag`,
+  );
+  sortByName(completionsData);
+
+  nodes.clear();
+  edges.clear();
+
+  populateGraph(completionsData, 'CREATED', 'completions');
   loading.style.display = 'none';
 };
 
-loadTags();
+loadData();
 
 const submitFunction = async () => {
   editor.setReadOnly(true);
