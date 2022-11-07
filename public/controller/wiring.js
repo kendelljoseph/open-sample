@@ -163,7 +163,7 @@ back.onclick = () => {
 };
 
 let userAdded = false;
-const populateGraph = (records, label, category) => {
+const populateGraph = (records, label, category, labelPrefix) => {
   const nodeList = [];
   const edgeList = [];
 
@@ -188,7 +188,7 @@ const populateGraph = (records, label, category) => {
   records.forEach((record) => {
     nodeList.push({
       id: record.id,
-      label: record.name,
+      label: `${labelPrefix || ''}${record.name}`,
       category,
       color: '#ffd900',
       size: 12,
@@ -252,7 +252,7 @@ const loadData = async () => {
   nodes.clear();
   edges.clear();
 
-  populateGraph(completionsData, 'CREATED', 'completions');
+  populateGraph(completionsData, 'CREATED', 'completions', '💛');
   loading.style.display = 'none';
 };
 
