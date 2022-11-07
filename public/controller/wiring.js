@@ -30,6 +30,7 @@ checkDisplay();
 
 const userAccessToken = window.getCookie('userAccessToken');
 const userDisplayName = window.getCookie('userDisplayName');
+const userPictureUrl = window.getCookie('userPicture');
 
 if (!userAccessToken) {
   window.location.href = '/';
@@ -79,6 +80,38 @@ const network = new vis.Network(
     },
   },
 );
+
+network.on('click', (params) => {
+  if (params.nodes.length === 1) {
+    if (network.isCluster(params.nodes[0]) === true) {
+      network.openCluster(params.nodes[0]);
+    }
+  }
+});
+
+function clusterBy(clusterLabel) {
+  const clusterOptionsByData = {
+    joinCondition(childOptions) {
+      return childOptions.cluster === clusterLabel;
+    },
+    clusterNodeProperties: {
+      id: 'cidCluster',
+      borderWidth: 3,
+      shape: 'database',
+      label: 'completions',
+      color: '#ffd900',
+      size: 13,
+      font: {
+        size: 10,
+        color: '#000',
+        face: 'arial',
+        strokeWidth: 3,
+        strokeColor: '#ffffff',
+      },
+    },
+  };
+  network.cluster(clusterOptionsByData);
+}
 
 // eslint-disable-next-line no-undef
 const editor = ace.edit('editor');
@@ -134,8 +167,10 @@ const populateGraph = (records, label) => {
   const edgeList = [];
   nodeList.push({
     id: userAccessToken,
+    shape: 'circularImage',
     label: userDisplayName,
-    color: '#eae',
+    image: userPictureUrl,
+    size: 14,
     font: {
       size: 10,
       color: '#a3a',
@@ -149,7 +184,9 @@ const populateGraph = (records, label) => {
     nodeList.push({
       id: record.id,
       label: record.slug,
+      cluster: label,
       color: '#ffd900',
+      size: 12,
       font: {
         size: 10,
         color: '#000',
@@ -178,6 +215,9 @@ const populateGraph = (records, label) => {
     edges.add(edgeList);
     localStorage.setItem('wiringEditorEdgeList', JSON.stringify(edges.get()));
   }
+  if (nodeList.length) {
+    clusterBy(label);
+  }
 };
 
 const loadTags = async () => {
@@ -196,7 +236,7 @@ const loadTags = async () => {
     data.sort((a, b) => a.name.localeCompare(b.name));
   }
 
-  populateGraph(data, 'CREATED TAG');
+  populateGraph(data, 'CREATED');
   loading.style.display = 'none';
 };
 
