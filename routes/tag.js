@@ -8,7 +8,7 @@ import enqueue from '../lib/enqueue.js';
 
 const router = express.Router();
 
-const { isTag } = validation;
+const { isTag, isLocation } = validation;
 
 router.use(authn());
 router.use(audit());
@@ -103,6 +103,101 @@ router.get('/', async (req, res, exit) => {
     exit,
     appEvent,
   );
+});
+
+// Get All Tag Locations
+router.get('/locate', async (req, res, exit) => {
+  const appEvent = req.appAuditEvent;
+  enqueue(
+    req.authz.token,
+    async () => {
+      const cacheKey = req.localCache.generateRequestKey(req);
+
+      if (req.localCache.has(cacheKey)) {
+        const cache = req.localCache.get(cacheKey);
+        return res.json(cache);
+      }
+
+      // Graph
+      const graph = new Neo4jDatabaseConnection();
+      const { response, error: graphErr } = await graph.read(
+        `
+          MATCH (authn:Authn {accessToken: $accessToken})
+          MATCH (authn)-[:ASSOCIATED_TAG]->(tag:Tag)
+          MATCH (tag)-[:LOCATED]->(location)
+          RETURN {id: toString(id(tag)), name: tag.name, slug: tag.slug} as tag, {id: toString(id(location)), name: location.name} as location
+        `,
+        {
+          accessToken: req.authz && req.authz.token,
+        },
+      );
+      await graph.disconnect();
+
+      if (graphErr) {
+        return exit({ statusCode: 400, message: graphErr });
+      }
+
+      const records = response.map((record) => [record.get('location'), record.get('tag')]);
+
+      req.localCache.set(cacheKey, records);
+      return res.json(records);
+    },
+    exit,
+    appEvent,
+  );
+});
+
+// Locate Tag
+router.post('/locate/:id', async (req, res, exit) => {
+  const { id } = req.params;
+  const { body } = req;
+
+  // Validation
+  const errors = isLocation(body);
+  if (errors.length) {
+    return exit({ statusCode: 400, message: errors });
+  }
+
+  const appEvent = req.appAuditEvent;
+  enqueue(
+    req.authz.token,
+    async () => {
+      // Graph
+      const graph = new Neo4jDatabaseConnection();
+      const graphErr = await graph.write(
+        `
+          MATCH (authn:Authn {accessToken: $accessToken})
+          MATCH (tag:Tag)
+          WHERE toString(id(tag)) = $tagId
+          WITH authn, tag
+          
+          MERGE (location:Location {
+            name: $name
+          })
+
+          MERGE (tag)-[:LOCATED]->(location)
+          MERGE (authn)-[:LOCATED_TAG]->(tag)
+          MERGE (authn)-[:DISCOVERED]->(location)
+        `,
+        {
+          accessToken: req.authz && req.authz.token,
+          tagId: id,
+          name: body.name,
+        },
+      );
+      await graph.disconnect();
+
+      if (graphErr) {
+        return exit({ statusCode: 400, message: graphErr });
+      }
+
+      res.json(body);
+      return null;
+    },
+    exit,
+    appEvent,
+  );
+  return null;
 });
 
 export default router;
