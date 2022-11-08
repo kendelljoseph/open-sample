@@ -148,6 +148,7 @@ const savePrompt = async (prompt) => {
   // eslint-disable-next-line no-alert
   const name = window.prompt('name:') || new Date().toDateString();
   submit.disabled = true;
+  submit.style.display = 'none';
   loading.style.display = 'block';
   loadingBubble.style.display = 'block';
   editor.setReadOnly(true);
@@ -168,6 +169,7 @@ const savePrompt = async (prompt) => {
     );
 
     submit.disabled = false;
+    submit.style.display = 'block';
     loading.style.display = 'none';
     loadingBubble.style.display = 'none';
     editor.setReadOnly(false);
@@ -175,6 +177,7 @@ const savePrompt = async (prompt) => {
     alert('saved OK!');
   } catch (error) {
     submit.disabled = false;
+    submit.style.display = 'block';
     loading.style.display = 'none';
     loadingBubble.style.display = 'none';
     editor.setReadOnly(false);
@@ -276,6 +279,7 @@ importFile.onclick = async () => {
 
   if (!url.length) return;
   submit.disabled = true;
+  submit.style.display = 'none';
   loading.style.display = 'block';
   loadingBubble.style.display = 'block';
   editor.setReadOnly(true);
@@ -284,11 +288,13 @@ importFile.onclick = async () => {
     const { data } = await axios.get(url);
     editor.setValue(data);
     submit.disabled = false;
+    submit.style.display = 'block';
     loading.style.display = 'none';
     loadingBubble.style.display = 'none';
     editor.setReadOnly(false);
   } catch (error) {
     submit.disabled = false;
+    submit.style.display = 'block';
     loading.style.display = 'none';
     loadingBubble.style.display = 'none';
     editor.setReadOnly(false);
