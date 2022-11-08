@@ -27,6 +27,17 @@ export default {
 
     return validator.run();
   },
+  isLocation: (data) => {
+    const validator = new Validator();
+    validator(data)
+      .required()
+      .isObject((obj) => {
+        obj('name').required().isString();
+        obj().strict();
+      });
+
+    return validator.run();
+  },
   isEntity: (data) => {
     const validator = new Validator();
     validator(data)
