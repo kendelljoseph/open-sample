@@ -231,6 +231,15 @@ const edgeStyles = {
     width: 1,
     arrows: { to: { enabled: true, scaleFactor: 0.5 } },
   }),
+  tags: (record, label) => ({
+    to: record.id,
+    // eslint-disable-next-line no-undef
+    from: record.entityId,
+    label,
+    font: { align: 'middle', size: 8 },
+    width: 1,
+    arrows: { to: { enabled: true, scaleFactor: 0.5 } },
+  }),
   problems: (record, label) => ({
     to: record.id,
     // eslint-disable-next-line no-undef
@@ -303,6 +312,11 @@ function clusterBy(category, label) {
   network.cluster(clusterOptionsByData);
 }
 
+function clearGraph() {
+  nodes.clear();
+  edges.clear();
+}
+
 const populateGraph = (records, label, category, clusterLabel, addUser) => {
   const nodeList = [];
   const edgeList = [];
@@ -340,13 +354,31 @@ const loadCompletions = async () => {
     return data;
   };
 
-  const completionsData = await api.tag.getAll();
-  sortByName(completionsData);
+  // eslint-disable-next-line no-undef
+  const completionTags = await api.tag.getAll();
+  sortByName(completionTags);
 
-  nodes.clear();
-  edges.clear();
+  clearGraph();
 
-  populateGraph(completionsData, 'CREATED', 'completions', '💛 completions', true);
+  populateGraph(completionTags, 'CREATED', 'completions', '💛 completions', true);
+
+  const nodeList = [];
+  const edgeList = [];
+  completionTags.forEach((tag) => {
+    nodeList.push(nodeStyles.prompts({ id: tag.entityId, name: tag.entityName }, 'prompts'));
+    edgeList.push(edgeStyles.tags(tag, 'PROMPT_FOR'));
+  });
+
+  if (nodeList.length) {
+    nodes.add(nodeList);
+    localStorage.setItem('wiringEditorNodeList', JSON.stringify(nodes.get()));
+    network.fit({ nodes: nodes.get().map((node) => node.id) });
+  }
+  if (edgeList.length) {
+    edges.add(edgeList);
+    localStorage.setItem('wiringEditorEdgeList', JSON.stringify(edges.get()));
+  }
+
   loading.style.display = 'none';
 };
 
