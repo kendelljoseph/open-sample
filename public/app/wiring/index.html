@@ -54,10 +54,6 @@
       }
       #editor { 
         position: absolute;
-        bottom: 0;
-        right: 0;
-        left: 0;
-        height: 300px;
       }
       #title {
         position: absolute;
@@ -143,15 +139,44 @@
         left: 10px;
         width: calc(100vw - 20px);
       }
+      .leftEditor {
+        bottom: 0;
+        right: 0;
+        left: 0;
+        height: 300px;
+      }
+      .bottomEditor {
+        bottom: 0;
+        right: 0;
+        left: 0;
+        height: 300px;
+      }
+      .leftEditor {
+        bottom: 0;
+        right: 0;
+        left: 0;
+        width: 50vw;
+        height: calc(100vh - 50px);
+      }
       #graph {
         position: fixed;
+        background-image: linear-gradient(#ffffff, #f1f1f1);
+      }
+      .rightGraph {
+        top: 50px;
+        right: 0;
+        width: 50vw;
+        height: calc(100vh - 50px);
+        max-height: calc(100vh - 50px);
+        min-height: calc(100vh - 50px);
+      }
+      .topGraph {
         left: 0px;
         top: 50px;
         right: 0;
         height: calc(100vh - 350px);
         max-height: calc(100vh - 350px);
         min-height: calc(100vh - 350px);
-        background-image: linear-gradient(#ffffff, #f1f1f1);
       }
     </style>
 </head>
@@ -176,8 +201,8 @@
   </div>
   <div id="title" class="badge bg-dark btn-sm">wiring</div>
   <img id="loading" src="../../assets/thinking.gif" alt="thinking">
-  <div id="graph"></div>
-  <div id="editor">What is one plus one?</div>
+  <div id="graph" class="rightGraph"></div>
+  <div id="editor" class="leftEditor">What is one plus one?</div>
 </body>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.1.3/axios.min.js" integrity="sha512-0qU9M9jfqPw6FKkPafM3gy2CBAvUWnYVOfNPDYKVuRTel1PrciTj+a9P3loJB+j0QmN2Y0JYQmkBBS8W+mbezg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>

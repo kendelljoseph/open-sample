@@ -12,17 +12,48 @@ if (navigator.platform.indexOf('Win') !== -1) {
   writeTip.innerHTML = 'Cmd + Enter';
 }
 
+// eslint-disable-next-line no-undef
+const editor = ace.edit('editor');
+editor.setOption('wrap', true);
+editor.setTheme('ace/theme/chrome');
+editor.getSession().setMode('ace/mode/text');
+editor.getSession().setTabSize(2);
+document.getElementById('editor').style.fontSize = '14px';
+
+const lastMode = localStorage.getItem('wiringEditorSessionMode');
+if (lastMode) {
+  editor.getSession().setMode(lastMode);
+}
+
+const lastValue = localStorage.getItem('wiringEditorSessionValue');
+if (lastValue && lastValue.length) {
+  editor.setValue(lastValue);
+}
+
+editor.on('change', () => {
+  localStorage.setItem('wiringEditorSessionValue', editor.getValue());
+});
+
 const checkDisplay = () => {
+  const editorElement = document.getElementById('editor');
   if (window.screen.width <= 640) {
     writeTip.style.display = 'none';
     waText.forEach((text) => {
       text.style.display = 'none';
     });
+    graph.classList.remove('rightGraph');
+    graph.classList.add('topGraph');
+    editorElement.classList.remove('leftEditor');
+    editorElement.classList.add('bottomEditor');
   } else {
     writeTip.style.display = 'block';
     waText.forEach((text) => {
       text.style.display = '';
     });
+    graph.classList.remove('topGraph');
+    graph.classList.add('rightGraph');
+    editorElement.classList.remove('bottomEditor');
+    editorElement.classList.add('leftEditor');
   }
 };
 window.addEventListener('resize', checkDisplay);
@@ -98,28 +129,6 @@ network.once('afterDrawing', () => {
       easingFunction: 'easeOutQuint',
     },
   });
-});
-
-// eslint-disable-next-line no-undef
-const editor = ace.edit('editor');
-editor.setOption('wrap', true);
-editor.setTheme('ace/theme/chrome');
-editor.getSession().setMode('ace/mode/text');
-editor.getSession().setTabSize(2);
-document.getElementById('editor').style.fontSize = '14px';
-
-const lastMode = localStorage.getItem('wiringEditorSessionMode');
-if (lastMode) {
-  editor.getSession().setMode(lastMode);
-}
-
-const lastValue = localStorage.getItem('wiringEditorSessionValue');
-if (lastValue && lastValue.length) {
-  editor.setValue(lastValue);
-}
-
-editor.on('change', () => {
-  localStorage.setItem('wiringEditorSessionValue', editor.getValue());
 });
 
 // A controller that selects response text
