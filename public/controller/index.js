@@ -8,27 +8,22 @@ const build = document.querySelector('#build');
 const github = document.querySelector('#github');
 const donate = document.querySelector('#donate');
 const interactionOptions = document.querySelector('#interaction-options');
-const displayName = window.getCookie('userDisplayName');
-const userPictureUrl = window.getCookie('userPicture');
 
-if (displayName) {
+// eslint-disable-next-line no-undef
+if (userAccessToken) {
   profile.style.display = 'flex';
   interactionOptions.style.display = 'flex';
+  // eslint-disable-next-line no-undef
   user.innerHTML = displayName;
   logout.style.display = 'block';
-
   login.style.display = 'none';
+  // eslint-disable-next-line no-undef
+  userPicture.src = userPictureUrl;
 } else {
   profile.style.display = 'none';
   interactionOptions.style.display = 'none';
   logout.style.display = 'none';
-
   login.style.display = 'block';
-}
-
-if (userPictureUrl) {
-  userPicture.src = userPictureUrl;
-} else {
   userPicture.remove();
 }
 

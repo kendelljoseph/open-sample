@@ -1,8 +1,6 @@
 const back = document.querySelector('#back');
 const loading = document.querySelector('#loading');
 
-const userAccessToken = window.getCookie('userAccessToken');
-
 // eslint-disable-next-line no-undef
 const editor = ace.edit('editor');
 editor.setOption('wrap', true);
@@ -10,10 +8,6 @@ editor.setTheme('ace/theme/chrome');
 editor.getSession().setMode('ace/mode/yaml');
 editor.getSession().setTabSize(2);
 document.getElementById('editor').style.fontSize = '14px';
-
-if (!userAccessToken) {
-  window.location.href = '/';
-}
 
 back.onclick = () => {
   window.location = '/';
@@ -26,6 +20,7 @@ const loadHistory = async () => {
   // eslint-disable-next-line no-undef
   const { data } = await axios.get(url, {
     headers: {
+      // eslint-disable-next-line no-undef
       Authorization: `Bearer ${userAccessToken}`,
       'x-app-event': 'history-browser-app',
     },

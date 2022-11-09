@@ -3,12 +3,6 @@ const loading = document.querySelector('#loading');
 const promptList = document.querySelector('#prompt-list');
 const notice = document.querySelector('#notice');
 
-const userAccessToken = window.getCookie('userAccessToken');
-
-if (!userAccessToken) {
-  window.location.href = '/';
-}
-
 back.onclick = () => {
   window.location = '/';
 };
@@ -43,6 +37,7 @@ const loadTags = async () => {
   // eslint-disable-next-line no-undef
   const { data } = await axios.get(url, {
     headers: {
+      // eslint-disable-next-line no-undef
       Authorization: `Bearer ${userAccessToken}`,
       'x-app-event': 'tag-browser-app',
     },

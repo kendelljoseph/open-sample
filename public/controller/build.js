@@ -3,8 +3,6 @@ const back = document.querySelector('#back');
 const loading = document.querySelector('#loading');
 const loadingBubble = document.querySelector('#loading-bubble');
 
-const userAccessToken = window.getCookie('userAccessToken');
-
 // eslint-disable-next-line no-undef
 const editor = ace.edit('editor');
 editor.setOption('wrap', true);
@@ -82,6 +80,7 @@ const submitFunction = async () => {
       },
       {
         headers: {
+          // eslint-disable-next-line no-undef
           Authorization: `Bearer ${userAccessToken}`,
           'x-app-event': 'build-browser-app',
         },

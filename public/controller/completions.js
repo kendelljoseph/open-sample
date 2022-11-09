@@ -1,8 +1,5 @@
 const submit = document.querySelector('#edit-sample');
 
-const activeTag = window.getCookie('activeTag');
-const userAccessToken = window.getCookie('userAccessToken');
-
 // eslint-disable-next-line no-undef
 const editor = ace.edit('editor');
 editor.setReadOnly(true);
@@ -32,6 +29,7 @@ const getTagByName = async (tagName) => {
     // eslint-disable-next-line no-undef
     const { data } = await axios.get(url, {
       headers: {
+        // eslint-disable-next-line no-undef
         Authorization: `Bearer ${userAccessToken}`,
         'x-app-event': 'completion-get-tag-browser-app',
       },
@@ -65,6 +63,7 @@ const submitFunction = async () => {
   let templateText = '';
   let renderedText = '';
   try {
+    // eslint-disable-next-line no-undef
     templateText = await getTagByName(activeTag);
     const templateData = await getTemplateArgumentText();
     if (Object.keys(templateData).length) {
@@ -83,14 +82,10 @@ const submitFunction = async () => {
   }
 };
 
-if (userAccessToken) {
-  submitFunction();
-} else {
-  window.location.href = '/auth';
-}
-
 submit.onclick = () => {
   const newWriteEditorValue = localStorage.getItem('tagCompletionText');
   localStorage.setItem('writeEditorSessionValue', newWriteEditorValue);
   window.location.href = '/app/write';
 };
+
+submitFunction();

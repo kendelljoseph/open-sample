@@ -7,24 +7,18 @@ const phoneNumberInput = document.querySelector('#phoneNumber');
 const validationCodeInput = document.querySelector('#validationCode');
 const validationError = document.querySelector('#validationError');
 
-const userAccessToken = window.getCookie('userAccessToken');
-const appPhoneNumber = window.getCookie('appPhoneNumber');
-const displayName = window.getCookie('userDisplayName');
-const userPhoneNumber = window.getCookie('userPhoneNumber');
-
-if (userAccessToken) {
-  back.style.display = 'block';
-  submit.style.display = 'block';
-  validationCodeInput.style.display = 'none';
-  validationError.style.display = 'none';
-  appPhoneNumberSpan.innerHTML = appPhoneNumber;
-  phoneNumberInput.placeholder = userPhoneNumber === 'null' ? 'enter phone number' : userPhoneNumber;
-  if (userPhoneNumber !== 'null') {
-    validationError.innerHTML = '🔒 profile is already validated OK.';
-    validationError.style.display = 'block';
-  }
-} else {
-  submit.style.display = 'none';
+back.style.display = 'block';
+submit.style.display = 'block';
+validationCodeInput.style.display = 'none';
+validationError.style.display = 'none';
+// eslint-disable-next-line no-undef
+appPhoneNumberSpan.innerHTML = appPhoneNumber;
+// eslint-disable-next-line no-undef
+phoneNumberInput.placeholder = userPhoneNumber === 'null' ? 'enter phone number' : userPhoneNumber;
+// eslint-disable-next-line no-undef
+if (userPhoneNumber !== 'null') {
+  validationError.innerHTML = '🔒 profile is already validated OK.';
+  validationError.style.display = 'block';
 }
 
 back.onclick = () => {
@@ -39,6 +33,7 @@ submit.onclick = async () => {
   validationCodeInput.value = '';
 
   const user = {
+    // eslint-disable-next-line no-undef
     friendlyName: displayName,
     phoneNumber: phoneNumberInput.value,
   };
@@ -48,6 +43,7 @@ submit.onclick = async () => {
     // eslint-disable-next-line no-undef
     const { data } = await axios.post(url, user, {
       headers: {
+        // eslint-disable-next-line no-undef
         Authorization: `Bearer ${userAccessToken}`,
         'x-app-event': 'user-web-profile',
       },

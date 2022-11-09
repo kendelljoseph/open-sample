@@ -20,3 +20,17 @@ function getCookie(name) {
 function eraseCookie(name) {
   document.cookie = `${name}=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;`;
 }
+
+// Auth
+const userAccessToken = getCookie('userAccessToken');
+if (!userAccessToken) {
+  window.location.href = '/';
+}
+// User
+const displayName = getCookie('userDisplayName');
+const userPictureUrl = getCookie('userPicture');
+const appPhoneNumber = getCookie('appPhoneNumber');
+const userPhoneNumber = getCookie('userPhoneNumber');
+
+// App
+const activeTag = getCookie('activeTag');

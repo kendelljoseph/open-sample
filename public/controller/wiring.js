@@ -28,14 +28,6 @@ const checkDisplay = () => {
 window.addEventListener('resize', checkDisplay);
 checkDisplay();
 
-const userAccessToken = window.getCookie('userAccessToken');
-const userDisplayName = window.getCookie('userDisplayName');
-const userPictureUrl = window.getCookie('userPicture');
-
-if (!userAccessToken) {
-  window.location.href = '/';
-}
-
 const cachedNodeList = localStorage.getItem('wiringEditorNodeList');
 const cachedEdgeList = localStorage.getItem('wiringEditorEdgeList');
 
@@ -90,6 +82,7 @@ network.on('click', (params) => {
 });
 
 network.once('beforeDrawing', () => {
+  // eslint-disable-next-line no-undef
   network.focus(userAccessToken, {
     scale: 5,
   });
@@ -153,9 +146,12 @@ back.onclick = () => {
 };
 
 const userNode = () => ({
+  // eslint-disable-next-line no-undef
   id: userAccessToken,
   shape: 'circularImage',
+  // eslint-disable-next-line no-undef
   label: userDisplayName,
+  // eslint-disable-next-line no-undef
   image: userPictureUrl,
   size: 14,
   font: {
@@ -215,6 +211,7 @@ const nodeStyles = {
 const edgeStyles = {
   completions: (record, label) => ({
     to: record.id,
+    // eslint-disable-next-line no-undef
     from: userAccessToken,
     label,
     font: { align: 'middle', size: 8 },
@@ -223,6 +220,7 @@ const edgeStyles = {
   }),
   prompts: (record, label) => ({
     to: record.id,
+    // eslint-disable-next-line no-undef
     from: userAccessToken,
     label,
     font: { align: 'middle', size: 8 },
@@ -231,6 +229,7 @@ const edgeStyles = {
   }),
   problems: (record, label) => ({
     to: record.id,
+    // eslint-disable-next-line no-undef
     from: userAccessToken,
     label: `${label}:${record.statusCode}`,
     font: { align: 'middle', size: 8 },
@@ -325,6 +324,32 @@ const populateGraph = (records, label, category, clusterLabel, addUser) => {
   if (nodeList.length) {
     clusterBy(category, clusterLabel);
   }
+};
+
+// WIP:
+const loadTagLocations = async () => {
+  loading.style.display = 'block';
+
+  const loadFromApi = async (url) => {
+    // eslint-disable-next-line no-undef
+    const { data } = await axios.get(url, {
+      headers: {
+        Authorization: `Bearer ${userAccessToken}`,
+        'x-app-event': 'wiring-load-tag-locations-browser-app',
+      },
+    });
+    return data;
+  };
+
+  const data = await loadFromApi(
+    `${window.location.protocol}//${window.location.host}/api/v1/tag/locate`,
+  );
+
+  // WIP: ----------------------------------------------------------------------
+  const [locations, tags] = data;
+
+  populateGraph(completionsData, 'CREATED', 'completions', '💛 completions', true);
+  loading.style.display = 'none';
 };
 
 const loadCompletions = async () => {
