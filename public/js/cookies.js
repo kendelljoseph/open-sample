@@ -23,7 +23,10 @@ function eraseCookie(name) {
 
 // Auth
 const userAccessToken = getCookie('userAccessToken');
-if (!userAccessToken) {
+const isAuthPath = window.location.pathname === '/auth/callback'
+    || window.location.pathname === '/auth/'
+    || window.location.pathname === '/';
+if (!userAccessToken && !isAuthPath) {
   window.location.href = '/';
 }
 // User
