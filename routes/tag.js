@@ -83,7 +83,8 @@ router.get('/', async (req, res, exit) => {
         `
           MATCH (authn:Authn {accessToken: $accessToken})
           MATCH (authn)-[:ASSOCIATED_TAG]->(tag:Tag)
-          RETURN {id: toString(id(tag)), name: tag.name, slug: tag.slug} as tag
+          MATCH (entity:Entity)-[:TAGGED]->(tag)
+          RETURN {id: toString(id(tag)), name: tag.name, slug: tag.slug, entityName: entity.name, entityId: toString(id(entity))} as tag
         `,
         {
           accessToken: req.authz && req.authz.token,
