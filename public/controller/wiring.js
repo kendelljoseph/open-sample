@@ -34,7 +34,7 @@ const cachedEdgeList = localStorage.getItem('wiringEditorEdgeList');
 const nodes = cachedNodeList
   ? new vis.DataSet(JSON.parse(cachedNodeList))
   : new vis.DataSet([
-    { id: 1, label: 'Loading' },
+    { id: 1, label: 'Model' },
     { id: 2, label: 'Data' },
   ]);
 
@@ -82,8 +82,9 @@ network.on('click', (params) => {
 });
 
 network.once('beforeDrawing', () => {
-  // WIP:
-  if (userAccessToken) {
+  // eslint-disable-next-line no-undef
+  const hasUser = nodes.get(userAccessToken);
+  if (hasUser) {
     // eslint-disable-next-line no-undef
     network.focus(userAccessToken, {
       scale: 5,
@@ -153,7 +154,7 @@ const userNode = () => ({
   id: userAccessToken,
   shape: 'circularImage',
   // eslint-disable-next-line no-undef
-  label: userDisplayName,
+  label: displayName,
   // eslint-disable-next-line no-undef
   image: userPictureUrl,
   size: 14,
