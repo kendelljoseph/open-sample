@@ -82,10 +82,13 @@ network.on('click', (params) => {
 });
 
 network.once('beforeDrawing', () => {
-  // eslint-disable-next-line no-undef
-  network.focus(userAccessToken, {
-    scale: 5,
-  });
+  // WIP:
+  if (userAccessToken) {
+    // eslint-disable-next-line no-undef
+    network.focus(userAccessToken, {
+      scale: 5,
+    });
+  }
 });
 network.once('afterDrawing', () => {
   network.fit({
@@ -326,32 +329,6 @@ const populateGraph = (records, label, category, clusterLabel, addUser) => {
   }
 };
 
-// WIP:
-const loadTagLocations = async () => {
-  loading.style.display = 'block';
-
-  const loadFromApi = async (url) => {
-    // eslint-disable-next-line no-undef
-    const { data } = await axios.get(url, {
-      headers: {
-        Authorization: `Bearer ${userAccessToken}`,
-        'x-app-event': 'wiring-load-tag-locations-browser-app',
-      },
-    });
-    return data;
-  };
-
-  const data = await loadFromApi(
-    `${window.location.protocol}//${window.location.host}/api/v1/tag/locate`,
-  );
-
-  // WIP: ----------------------------------------------------------------------
-  const [locations, tags] = data;
-
-  populateGraph(completionsData, 'CREATED', 'completions', '💛 completions', true);
-  loading.style.display = 'none';
-};
-
 const loadCompletions = async () => {
   loading.style.display = 'block';
 
@@ -362,20 +339,7 @@ const loadCompletions = async () => {
     return data;
   };
 
-  const loadFromApi = async (url) => {
-    // eslint-disable-next-line no-undef
-    const { data } = await axios.get(url, {
-      headers: {
-        Authorization: `Bearer ${userAccessToken}`,
-        'x-app-event': 'wiring-load-tagged-prompts-browser-app',
-      },
-    });
-    return data;
-  };
-
-  const completionsData = await loadFromApi(
-    `${window.location.protocol}//${window.location.host}/api/v1/tag`,
-  );
+  const completionsData = await api.tag.getAll();
   sortByName(completionsData);
 
   nodes.clear();
@@ -388,20 +352,8 @@ const loadCompletions = async () => {
 const loadPrompts = async () => {
   loading.style.display = 'block';
 
-  const loadFromApi = async (url) => {
-    // eslint-disable-next-line no-undef
-    const { data } = await axios.get(url, {
-      headers: {
-        Authorization: `Bearer ${userAccessToken}`,
-        'x-app-event': 'wiring-load-tagged-prompts-browser-app',
-      },
-    });
-    return data;
-  };
-
-  const completionsData = await loadFromApi(
-    `${window.location.protocol}//${window.location.host}/api/v1/entity`,
-  );
+  // eslint-disable-next-line no-undef
+  const completionsData = await api.entity.getAll();
 
   nodes.clear();
   edges.clear();
@@ -413,20 +365,8 @@ const loadPrompts = async () => {
 const loadErrors = async () => {
   loading.style.display = 'block';
 
-  const loadFromApi = async (url) => {
-    // eslint-disable-next-line no-undef
-    const { data } = await axios.get(url, {
-      headers: {
-        Authorization: `Bearer ${userAccessToken}`,
-        'x-app-event': 'wiring-load-errors-browser-app',
-      },
-    });
-    return data;
-  };
-
-  const errorData = await loadFromApi(
-    `${window.location.protocol}//${window.location.host}/admin/v1/route-error`,
-  );
+  // eslint-disable-next-line no-undef
+  const errorData = await api.admin.routeError();
 
   const data = errorData.map((record, i) => ({
     id: `${i}-${Math.ceil(Math.random() * 1000000)}`,
@@ -452,33 +392,17 @@ const submitFunction = async () => {
     prompt = editor.getValue();
   }
 
-  try {
-    const url = `${window.location.protocol}//${window.location.host}/api/v1/ai/prompt`;
-    // eslint-disable-next-line no-undef
-    const { data } = await axios.post(
-      url,
-      {
-        prompt,
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${userAccessToken}`,
-          'x-app-event': 'write-ai-prompt-browser-app',
-        },
-      },
-    );
+  // eslint-disable-next-line no-undef
+  const data = await api.ai.prompt({ prompt });
 
+  if (data) {
     editor.setValue(`${data.prompt || ''}${data.response || ''}`);
     selectResponse(data.response);
     loading.style.display = 'none';
     editor.setReadOnly(false);
-  } catch (error) {
+  } else {
     loading.style.display = 'none';
     editor.setReadOnly(false);
-    // eslint-disable-next-line no-console
-    console.error(error);
-    // eslint-disable-next-line no-alert
-    alert(`${error.message}`);
   }
 };
 

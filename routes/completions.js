@@ -117,8 +117,9 @@ const html = (tag) => `
 <script src="https://unpkg.com/mustache@latest"></script>
 <script src='../js/cookies.js'></script>
 <script>
-  setCookie('activeTag', '${tag}', 1);
+setCookie('activeTag', '${tag}', 1);
 </script>
+<script src='../../plugin/api.v1.js'></script>
 <script src='../controller/completions.js'></script>
 <script>
 var circle = document.createElement('div');

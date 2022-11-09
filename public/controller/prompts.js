@@ -13,25 +13,9 @@ const deleteEntity = async (record) => {
   if (!confirm(`DELETE\n\n ${record.name}?`)) return;
   loading.style.display = 'block';
 
-  const url = `${window.location.protocol}//${window.location.host}/api/v1/entity/${record.id}`;
-  try {
-    // eslint-disable-next-line no-undef
-    await axios.delete(url, {
-      headers: {
-        // eslint-disable-next-line no-undef
-        Authorization: `Bearer ${userAccessToken}`,
-        'x-app-event': 'entity-browser-app',
-      },
-    });
-    // eslint-disable-next-line no-alert
-    alert(`${record.name} deleted.`);
-    window.location.reload();
-  } catch (error) {
-    // eslint-disable-next-line no-alert
-    alert(error.message);
-  }
-
-  loading.style.display = 'none';
+  // eslint-disable-next-line no-undef
+  await api.entity.remove(record.id);
+  window.location.reload();
 };
 
 const addTag = async (record) => {
@@ -44,22 +28,11 @@ const addTag = async (record) => {
 
   loading.style.display = 'block';
 
-  const url = `${window.location.protocol}//${window.location.host}/api/v1/tag`;
   // eslint-disable-next-line no-undef
-  await axios.post(
-    url,
-    {
-      name,
-      entityId: record.id,
-    },
-    {
-      headers: {
-        // eslint-disable-next-line no-undef
-        Authorization: `Bearer ${userAccessToken}`,
-        'x-app-event': 'tagged-prompts-browser-app',
-      },
-    },
-  );
+  await api.tag.create({
+    name,
+    entityId: record.id,
+  });
 
   loading.style.display = 'none';
 
@@ -141,16 +114,8 @@ const populateList = (records) => {
 const loadPrompts = async () => {
   loading.style.display = 'block';
 
-  const url = `${window.location.protocol}//${window.location.host}/api/v1/entity`;
   // eslint-disable-next-line no-undef
-  const { data } = await axios.get(url, {
-    headers: {
-      // eslint-disable-next-line no-undef
-      Authorization: `Bearer ${userAccessToken}`,
-      'x-app-event': 'load-prompt-entity-browser-app',
-    },
-  });
-
+  const data = await api.entity.getAll();
   if (data && data.length) notice.style.display = 'none';
 
   populateList(data);

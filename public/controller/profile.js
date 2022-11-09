@@ -38,30 +38,18 @@ submit.onclick = async () => {
     phoneNumber: phoneNumberInput.value,
   };
 
-  const url = `${window.location.protocol}//${window.location.host}/api/v1/verify`;
-  try {
-    // eslint-disable-next-line no-undef
-    const { data } = await axios.post(url, user, {
-      headers: {
-        // eslint-disable-next-line no-undef
-        Authorization: `Bearer ${userAccessToken}`,
-        'x-app-event': 'user-web-profile',
-      },
-    });
+  // eslint-disable-next-line no-undef
+  const data = await api.verify.profile(user);
+  if (data.message) {
+    validationError.innerHTML = data.message;
+    validationError.style.display = 'block';
+  } else {
+    validationCodeInput.style.display = 'block';
+    validationCodeInput.value = data.validationCode;
+    phoneNumberInput.placeholder = data.phoneNumber;
+    phoneNumberInput.value = data.phoneNumber;
 
-    if (data.message) {
-      validationError.innerHTML = data.message;
-      validationError.style.display = 'block';
-    } else {
-      validationCodeInput.style.display = 'block';
-      validationCodeInput.value = data.validationCode;
-      phoneNumberInput.placeholder = data.phoneNumber;
-      phoneNumberInput.value = data.phoneNumber;
-
-      window.setCookie('userPhoneNumber', `${data.phoneNumber}`, 1);
-    }
-  } catch (error) {
-    validationError.innerHTML = error.message;
+    window.setCookie('userPhoneNumber', `${data.phoneNumber}`, 1);
   }
 
   submit.disabled = false;

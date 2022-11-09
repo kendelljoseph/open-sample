@@ -8,7 +8,7 @@ back.onclick = () => {
 };
 
 const populateList = (records) => {
-  records.forEach((record) => {
+  records.forEach((record, index) => {
     const writeButton = document.createElement('button');
 
     writeButton.classList.add(
@@ -19,7 +19,7 @@ const populateList = (records) => {
       'btn-outline-light',
     );
 
-    writeButton.textContent = `💛 ${record.slug}`;
+    writeButton.textContent = `${index + 1}. 💛 ${record.slug}`;
 
     writeButton.onclick = () => {
       const tagUrl = `${window.location.protocol}//${window.location.host}/completions/${record.slug}`;
@@ -33,15 +33,8 @@ const populateList = (records) => {
 const loadTags = async () => {
   loading.style.display = 'block';
 
-  const url = `${window.location.protocol}//${window.location.host}/api/v1/tag`;
   // eslint-disable-next-line no-undef
-  const { data } = await axios.get(url, {
-    headers: {
-      // eslint-disable-next-line no-undef
-      Authorization: `Bearer ${userAccessToken}`,
-      'x-app-event': 'tag-browser-app',
-    },
-  });
+  const data = await api.tag.getAll();
 
   if (data && data.length) {
     notice.style.display = 'none';

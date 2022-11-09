@@ -16,16 +16,8 @@ back.onclick = () => {
 const loadHistory = async () => {
   loading.style.display = 'block';
 
-  const url = `${window.location.protocol}//${window.location.host}/admin/v1/audit`;
   // eslint-disable-next-line no-undef
-  const { data } = await axios.get(url, {
-    headers: {
-      // eslint-disable-next-line no-undef
-      Authorization: `Bearer ${userAccessToken}`,
-      'x-app-event': 'history-browser-app',
-    },
-  });
-
+  const data = await api.admin.audit();
   const historyText = data.map(
     // eslint-disable-next-line no-undef
     (record) => `${record.event} - ⏱️ ${moment(record.createdAt).format('MMM Do YY, h:mm:ss a')}`,

@@ -34,8 +34,6 @@ const checkDisplay = () => {
 window.addEventListener('resize', checkDisplay);
 checkDisplay();
 
-const userAccessToken = window.getCookie('userAccessToken');
-
 // eslint-disable-next-line no-undef
 const editor = ace.edit('editor');
 editor.setOption('wrap', true);
@@ -81,10 +79,6 @@ const selectResponse = (rawText) => {
   editor.scrollToLine(startRow, true, true, () => {});
 };
 
-if (!userAccessToken) {
-  window.location.href = '/';
-}
-
 back.onclick = () => {
   window.location.href = '/';
 };
@@ -106,22 +100,10 @@ const submitFunction = async () => {
     prompt = editor.getValue();
   }
 
-  try {
-    const url = `${window.location.protocol}//${window.location.host}/api/v1/ai/prompt`;
-    // eslint-disable-next-line no-undef
-    const { data } = await axios.post(
-      url,
-      {
-        prompt,
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${userAccessToken}`,
-          'x-app-event': 'write-ai-prompt-browser-app',
-        },
-      },
-    );
+  // eslint-disable-next-line no-undef
+  const data = await api.ai.prompt({ prompt });
 
+  if (data) {
     editor.setValue(`${data.prompt || ''}${data.response || ''}`);
     selectResponse(data.response);
     submit.disabled = false;
@@ -130,17 +112,13 @@ const submitFunction = async () => {
     loadingBubble.style.display = 'none';
     animationGraphic.classList.add('hidden');
     editor.setReadOnly(false);
-  } catch (error) {
+  } else {
     submit.disabled = false;
     submit.style.display = 'block';
     loading.style.display = 'none';
     loadingBubble.style.display = 'none';
     animationGraphic.classList.add('hidden');
     editor.setReadOnly(false);
-    // eslint-disable-next-line no-console
-    console.error(error);
-    // eslint-disable-next-line no-alert
-    alert(`${error.message}`);
   }
 };
 
@@ -152,22 +130,14 @@ const savePrompt = async (prompt) => {
   loading.style.display = 'block';
   loadingBubble.style.display = 'block';
   editor.setReadOnly(true);
-  try {
-    const url = `${window.location.protocol}//${window.location.host}/api/v1/entity`;
-    await axios.post(
-      url,
-      {
-        name,
-        prompt,
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${userAccessToken}`,
-          'x-app-event': 'save-prompt',
-        },
-      },
-    );
 
+  // eslint-disable-next-line no-undef
+  const success = await api.entity.create({
+    name,
+    prompt,
+  });
+
+  if (success) {
     submit.disabled = false;
     submit.style.display = 'block';
     loading.style.display = 'none';
@@ -175,16 +145,12 @@ const savePrompt = async (prompt) => {
     editor.setReadOnly(false);
     // eslint-disable-next-line no-alert
     alert('saved OK!');
-  } catch (error) {
+  } else {
     submit.disabled = false;
     submit.style.display = 'block';
     loading.style.display = 'none';
     loadingBubble.style.display = 'none';
     editor.setReadOnly(false);
-    // eslint-disable-next-line no-console
-    console.error(error);
-    // eslint-disable-next-line no-alert
-    alert(`${error.message}`);
   }
 };
 

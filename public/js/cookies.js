@@ -34,6 +34,3 @@ const displayName = getCookie('userDisplayName');
 const userPictureUrl = getCookie('userPicture');
 const appPhoneNumber = getCookie('appPhoneNumber');
 const userPhoneNumber = getCookie('userPhoneNumber');
-
-// App
-const activeTag = getCookie('activeTag');

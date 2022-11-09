@@ -45,12 +45,6 @@ const selectResponse = (rawText) => {
   editor.scrollToLine(startRow, true, true, () => {});
 };
 
-if (userAccessToken) {
-  submit.style.display = 'block';
-} else {
-  submit.style.display = 'none';
-}
-
 back.onclick = () => {
   window.location = '/';
 };
@@ -70,40 +64,16 @@ const submitFunction = async () => {
     prompt = editor.getValue();
   }
 
-  try {
-    const url = `${window.location.protocol}//${window.location.host}/api/v1/ai/code`;
-    // eslint-disable-next-line no-undef
-    const { data } = await axios.post(
-      url,
-      {
-        prompt,
-      },
-      {
-        headers: {
-          // eslint-disable-next-line no-undef
-          Authorization: `Bearer ${userAccessToken}`,
-          'x-app-event': 'build-browser-app',
-        },
-      },
-    );
-    editor.setValue(`${data.prompt || ''}${data.response || ''}`);
-    selectResponse(data.response);
-    submit.disabled = false;
-    submit.style.display = 'block';
-    loading.style.display = 'none';
-    loadingBubble.style.display = 'none';
-    editor.setReadOnly(false);
-  } catch (error) {
-    submit.disabled = false;
-    submit.style.display = 'block';
-    loading.style.display = 'none';
-    loadingBubble.style.display = 'none';
-    editor.setReadOnly(false);
-    // eslint-disable-next-line no-console
-    console.error(error);
-    // eslint-disable-next-line no-alert
-    alert(`${error.message}`);
-  }
+  // eslint-disable-next-line no-undef
+  const data = await api.ai.code({ prompt });
+
+  editor.setValue(`${data.prompt || ''}${data.response || ''}`);
+  selectResponse(data.response);
+  submit.disabled = false;
+  submit.style.display = 'block';
+  loading.style.display = 'none';
+  loadingBubble.style.display = 'none';
+  editor.setReadOnly(false);
 };
 
 editor.commands.addCommand({

@@ -15,17 +15,8 @@ back.onclick = () => {
 
 const loadAdminEvents = async () => {
   loading.style.display = 'block';
-
-  const url = `${window.location.protocol}//${window.location.host}/admin/v1/route-error`;
   // eslint-disable-next-line no-undef
-  const { data } = await axios.get(url, {
-    headers: {
-      // eslint-disable-next-line no-undef
-      Authorization: `Bearer ${userAccessToken}`,
-      'x-app-event': 'admin-browser-app',
-    },
-  });
-
+  const data = await api.admin.routeError();
   const text = data.map(
     // eslint-disable-next-line no-undef
     (record) => `${record.statusCode}: ${record.event} - ${record.message}`,
