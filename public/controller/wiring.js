@@ -145,6 +145,7 @@ network.on('click', (params) => {
         selectingTargetNode = false;
         setTargetEdge.to = firstNode.id;
         edges.add(setTargetEdge);
+        localStorage.setItem('wiringEditorEdgeList', JSON.stringify(edges.get()));
         showModalOpeners();
         graph.classList.remove('select-bkg');
       }
