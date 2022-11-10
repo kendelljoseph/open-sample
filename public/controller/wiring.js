@@ -9,8 +9,10 @@ const cancelNodeTarget = document.querySelector('#cancel-node-target');
 const targetTooltip = document.querySelector('#target-tooltip');
 const withinArea = document.querySelector('#within-area-name');
 const withinFunction = document.querySelector('#within-function-name');
+const triggerEvent = document.querySelector('#trigger-event-name');
 const selectArea = document.querySelector('#indicate-done-within-area');
 const selectFunction = document.querySelector('#indicate-done-within-function');
+const selectEvent = document.querySelector('#indicate-done-trigger-event');
 const targetModalOpener = document.querySelectorAll('.target-modal-opener');
 const toPrompts = document.querySelector('#to-prompts');
 const toCompletions = document.querySelector('#to-completions');
@@ -280,6 +282,47 @@ selectFunction.onclick = () => {
     const edge = {
       id: `${Math.ceil(Math.random() * 1000000)}`,
       label: '💡 WITHIN_FUNCTION',
+      from: activeNode.id,
+      to: node.id,
+      font: { align: 'middle', size: 8 },
+      width: 1,
+      arrows: { to: { enabled: true, scaleFactor: 0.5 } },
+    };
+
+    if (newNode) {
+      nodes.add(node);
+    }
+    edges.add(edge);
+
+    localStorage.setItem('wiringEditorNodeList', JSON.stringify(nodes.get()));
+    localStorage.setItem('wiringEditorEdgeList', JSON.stringify(edges.get()));
+  }
+};
+
+// eslint-disable-next-line no-undef
+triggerEvent.placeholder = `${displayName}'s Event`;
+selectEvent.onclick = () => {
+  const eventName = triggerEvent.value;
+  if (eventName && eventName.length) {
+    const newNode = !nodes.get(`event-${eventName}`);
+
+    const node = nodes.get(`event-${eventName}`) || {
+      id: `event-${eventName}`,
+      label: eventName,
+      color: '#00aa00',
+      size: 8,
+      font: {
+        size: 10,
+        color: '#000',
+        face: 'arial',
+        strokeWidth: 3,
+        strokeColor: '#ffffff',
+      },
+    };
+
+    const edge = {
+      id: `${Math.ceil(Math.random() * 1000000)}`,
+      label: '💥 TRIGGERS_EVENT',
       from: activeNode.id,
       to: node.id,
       font: { align: 'middle', size: 8 },
