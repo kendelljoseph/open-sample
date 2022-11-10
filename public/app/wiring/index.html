@@ -306,29 +306,34 @@
       <ol id="interaction-options" class="dropdown-menu">
         <li>
           <div class="target-modal-opener btn dropdown-option graph-option" data-bs-toggle="modal" data-bs-target="#output-to-modal">
-            🔌 OUTPUT TO
+            🔌 OUTPUT
           </div>
         </li>
         <li>
           <div class="target-modal-opener btn dropdown-option graph-option" data-bs-toggle="modal" data-bs-target="#message-to-modal">
-            💬 MESSAGE TO
+            💬 MESSAGE
           </div>
         </li>
         <hr>
         <li>
           <div class="target-modal-opener btn dropdown-option graph-option" data-bs-toggle="modal" data-bs-target="#within-area-modal">
-            📍 WITHIN AREA
+            📍 AREA
           </div>
         </li>
         <li>
           <div class="target-modal-opener btn dropdown-option graph-option" data-bs-toggle="modal" data-bs-target="#within-function-modal">
-            💡 WITHIN FUNCTION
+            💡 FUNCTION
+          </div>
+        </li>
+        <li>
+          <div class="target-modal-opener btn dropdown-option graph-option" data-bs-toggle="modal" data-bs-target="#within-role-modal">
+            👤 ROLE
           </div>
         </li>
         <hr>
         <li>
           <div class="target-modal-opener btn dropdown-option graph-option" data-bs-toggle="modal" data-bs-target="#trigger-event-modal">
-            💥 TRIGGER EVENT
+            💥 EVENT
           </div>
         </li>
       </ol>
@@ -397,11 +402,11 @@
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
-            <h1 class="modal-title fs-5" id="exampleModalLabel">📍 WITHIN AREA</h1>
+            <h1 class="modal-title fs-5" id="exampleModalLabel">📍 AREA</h1>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
-            Indicate an area to relate this node to.
+            Name an area to relate this node to.
           </div>
           <div class="message-modal-type-options">
           
@@ -422,11 +427,11 @@
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
-            <h1 class="modal-title fs-5" id="exampleModalLabel">💡 WITHIN FUNCTION</h1>
+            <h1 class="modal-title fs-5" id="exampleModalLabel">💡 FUNCTION</h1>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
-            Indicate a function to relate this node to.
+            Name a function to relate this node to.
           </div>
           <div class="message-modal-type-options">
           
@@ -443,15 +448,40 @@
       </div>
     </div>
 
+    <div class="modal fade" id="within-role-modal" tabindex="-1" aria-labelledby="within-role-label" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 class="modal-title fs-5" id="exampleModalLabel">👤 ROLE</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            Name a role to relate this node to.
+          </div>
+          <div class="message-modal-type-options">
+          
+          <div class="input-group mb-3">
+            <span class="input-group-text" id="basic-addon1">👤</span>
+            <input id="within-role-name" type="text" class="form-control" placeholder="..." aria-label="area-name" aria-describedby="basic-addon1">
+          </div>
+        </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+            <button id="indicate-done-within-role" type="button" class="btn btn-success" data-bs-dismiss="modal">Done</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    
     <div class="modal fade" id="trigger-event-modal" tabindex="-1" aria-labelledby="within-area-label" aria-hidden="true">
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
-            <h1 class="modal-title fs-5" id="exampleModalLabel">💥 TRIGGER EVENT</h1>
+            <h1 class="modal-title fs-5" id="exampleModalLabel">💥 EVENT</h1>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
-            Indicate an event that is triggered by this node.
+            Name an event that is triggered by this node.
           </div>
           <div class="message-modal-type-options">
           
