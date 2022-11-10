@@ -6,6 +6,9 @@ const targetNode = document.querySelector('#target-node');
 const selectOutputNode = document.querySelector('#select-node-output-to');
 const selectMessageNode = document.querySelector('#select-node-message-to');
 const cancelNodeTarget = document.querySelector('#cancel-node-target');
+const viewBoth = document.querySelector('#view-both');
+const viewGraphOnly = document.querySelector('#view-graph-only');
+const viewEditorOnly = document.querySelector('#view-editor-only');
 const targetTooltip = document.querySelector('#target-tooltip');
 const withinArea = document.querySelector('#within-area-name');
 const withinFunction = document.querySelector('#within-function-name');
@@ -734,6 +737,26 @@ editor.commands.addCommand({
     submitFunction();
   },
 });
+
+const editorElement = document.getElementById('editor');
+viewBoth.onclick = () => {
+  graph.style.display = 'block';
+  graph.classList.remove('fullGraph');
+  editorElement.style.display = 'block';
+  editorElement.classList.remove('fullEditor');
+};
+viewGraphOnly.onclick = () => {
+  graph.style.display = 'block';
+  graph.classList.add('fullGraph');
+  editorElement.style.display = 'none';
+  editorElement.classList.remove('fullEditor');
+};
+viewEditorOnly.onclick = () => {
+  editorElement.style.display = 'block';
+  editorElement.classList.add('fullEditor');
+  graph.style.display = 'none';
+  graph.classList.remove('fullGraph');
+};
 
 toPrompts.onclick = async () => {
   hideGraphOptions();

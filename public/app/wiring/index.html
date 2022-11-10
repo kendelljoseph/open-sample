@@ -139,12 +139,6 @@
         left: 10px;
         width: calc(100vw - 20px);
       }
-      .leftEditor {
-        bottom: 0;
-        right: 0;
-        left: 0;
-        height: 300px;
-      }
       .bottomEditor {
         bottom: 0;
         right: 0;
@@ -156,6 +150,13 @@
         right: 0;
         left: 0;
         width: 50vw;
+        height: calc(100vh - 50px);
+      }
+      .fullEditor {
+        bottom: 0;
+        right: 0;
+        left: 0;
+        width: 100vw;
         height: calc(100vh - 50px);
       }
       #graph {
@@ -177,6 +178,15 @@
         height: calc(100vh - 350px);
         max-height: calc(100vh - 350px);
         min-height: calc(100vh - 350px);
+      }
+      .fullGraph {
+        top: 50px;
+        left: 0px;
+        right: 0;
+        width: 100vw;
+        height: calc(100vh - 50px);
+        max-height: calc(100vh - 50px);
+        min-height: calc(100vh - 50px);
       }
       #graph-options-menu {
         z-index: 9999999;
@@ -239,6 +249,16 @@
         max-width: 100px;
         width: 200px;
       }
+      #view-mode {
+        position: absolute;
+        top: 10px;
+        right: 80px;
+        height: 20px;
+      }
+      .view-input-option {
+        font-size: 0.5em;
+        padding-top: 3px;
+      }
       @keyframes bounce {
         0%, 20%, 50%, 80%, 100% {transform: translateX(0);} 
         40% {transform: translateX(-10px);} 
@@ -264,6 +284,16 @@
     <label class="btn btn-outline-dark" for="to-problems"><span>🔥 </span><span class="wa-text">problems</span></label>
   </div>
   <div id="title" class="badge bg-dark btn-sm">wiring</div>
+  <div id="view-mode" class="btn-group btn-group-sm" role="group" aria-label="Basic radio toggle button group">
+    <input type="radio" class="btn-check" name="btnradio" id="view-both" autocomplete="off" checked>
+    <label class="btn btn-sm btn-outline-secondary view-input-option" for="view-both">1</label>
+  
+    <input type="radio" class="btn-check" name="btnradio" id="view-editor-only" autocomplete="off">
+    <label class="btn btn-sm btn-outline-secondary view-input-option" for="view-editor-only">2</label>
+  
+    <input type="radio" class="btn-check" name="btnradio" id="view-graph-only" autocomplete="off">
+    <label class="btn btn-sm btn-outline-secondary view-input-option" for="view-graph-only">3</label>
+  </div>
   <img id="loading" src="../../assets/thinking.gif" alt="thinking">
 
   <div id="graph-options-menu">
