@@ -209,6 +209,31 @@
         max-width: 150px;
         transform: translateY(-18px);
       }
+      #cancel-node-target {
+        display: none;
+        animation: bounce 2s ease-in-out infinite;
+      }
+      #target-tooltip {
+        display: none;
+        position: absolute;
+        align-items: center;
+        justify-content: flex-end;
+        top: 0px;
+        right: 0;
+        font-size: 0.75em;
+        width: 200px;
+        border-radius: 5px;
+        background: rgba(255, 255, 255, 0.5);
+        animation: bounce 3s ease-out infinite;
+      }
+      .select-bkg {
+        background-image: linear-gradient( #e1f1ff, #ffffff) !important;
+      }
+      @keyframes bounce {
+        0%, 20%, 50%, 80%, 100% {transform: translateX(0);} 
+        40% {transform: translateX(-10px);} 
+        60% {transform: translateX(-5px);} 
+      } 
     </style>
 </head>
 <body>
@@ -227,20 +252,20 @@
     <label class="btn btn-outline-dark" for="to-prompts"><span>📓 </span><span class="wa-text">prompts</span></label>
     <input type="radio" class="btn-check" name="btnradio" id="to-problems" autocomplete="off">
     <label class="btn btn-outline-dark" for="to-problems"><span>🔥 </span><span class="wa-text">problems</span></label>
-    <input type="radio" class="btn-check" name="btnradio" id="to-alerts" autocomplete="off" disabled>
-    <label class="btn btn-outline-dark" for="to-alerts"><span>🚨 </span><span class="wa-text">alerts</span></label>
   </div>
   <div id="title" class="badge bg-dark btn-sm">wiring</div>
   <img id="loading" src="../../assets/thinking.gif" alt="thinking">
 
   <div id="graph-options-menu">
+    <div id="target-tooltip">test</div>
     <div id="target-node" class="badge bg-secondary text-truncate"></div>
-    <button type="button" class="btn btn-dark shadow-sm graph-option" data-bs-toggle="modal" data-bs-target="#output-to-modal">
+    <button type="button" class="target-modal-opener btn btn-dark shadow-sm graph-option" data-bs-toggle="modal" data-bs-target="#output-to-modal">
       🔌 OUTPUT TO
     </button>
-    <button type="button" class="btn btn-dark shadow-sm graph-option" data-bs-toggle="modal" data-bs-target="#message-to-modal">
+    <button type="button" class="target-modal-opener btn btn-dark shadow-sm graph-option" data-bs-toggle="modal" data-bs-target="#message-to-modal">
       💬 MESSAGE TO
     </button>
+    <button id="cancel-node-target" type="button" class="btn btn-sm mt-2 btn-danger">Cancel</button>
 
     <!-- Modals -->
     <div class="modal fade" id="output-to-modal" tabindex="-1" aria-labelledby="output-to-label" aria-hidden="true">
@@ -255,7 +280,7 @@
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-            <button type="button" class="btn btn-success" disabled>Select Node</button>
+            <button id="select-node-output-to" type="button" class="btn btn-success" data-bs-dismiss="modal">Select Node</button>
           </div>
         </div>
       </div>
@@ -294,7 +319,7 @@
         </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-            <button type="button" class="btn btn-success" disabled>Select Node</button>
+            <button id="select-node-message-to" type="button" class="btn btn-success" data-bs-dismiss="modal">Select Node</button>
           </div>
         </div>
       </div>

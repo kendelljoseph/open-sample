@@ -3,6 +3,11 @@ const loading = document.querySelector('#loading');
 const graph = document.querySelector('#graph');
 const graphOptionsMenu = document.querySelector('#graph-options-menu');
 const targetNode = document.querySelector('#target-node');
+const selectOutputNode = document.querySelector('#select-node-output-to');
+const selectMessageNode = document.querySelector('#select-node-message-to');
+const cancelNodeTarget = document.querySelector('#cancel-node-target');
+const targetTooltip = document.querySelector('#target-tooltip');
+const targetModalOpener = document.querySelectorAll('.target-modal-opener');
 const toPrompts = document.querySelector('#to-prompts');
 const toCompletions = document.querySelector('#to-completions');
 const toProblems = document.querySelector('#to-problems');
@@ -111,6 +116,20 @@ const clearGraphData = () => {
   edges.clear();
 };
 
+const hideModalOpeners = () => {
+  targetModalOpener.forEach((element) => {
+    element.style.display = 'none';
+  });
+};
+const showModalOpeners = () => {
+  targetModalOpener.forEach((element) => {
+    element.style.display = 'block';
+  });
+};
+
+let activeNode = null;
+let setTargetEdge = null;
+let selectingTargetNode = false;
 network.on('click', (params) => {
   if (params.nodes.length === 1) {
     if (network.isCluster(params.nodes[0]) === true) {
@@ -120,15 +139,74 @@ network.on('click', (params) => {
     const firstNode = nodes.get(params.nodes[0]);
 
     if (firstNode && firstNode.label) {
+      if (selectingTargetNode) {
+        cancelNodeTarget.style.display = 'none';
+        targetTooltip.style.display = 'none';
+        selectingTargetNode = false;
+        setTargetEdge.to = firstNode.id;
+        edges.add(setTargetEdge);
+        showModalOpeners();
+        graph.classList.remove('select-bkg');
+      }
       graphOptionsMenu.style.display = 'flex';
       targetNode.style.display = 'flex';
       targetNode.innerHTML = nodes.get(params.nodes[0]).label;
     }
+    activeNode = firstNode;
   } else {
     graphOptionsMenu.style.display = 'none';
     targetNode.style.display = 'none';
+    cancelNodeTarget.style.display = 'none';
+    targetTooltip.style.display = 'none';
+    selectingTargetNode = false;
+    graph.classList.remove('select-bkg');
+    showModalOpeners();
   }
 });
+
+selectOutputNode.onclick = () => {
+  selectingTargetNode = true;
+  targetTooltip.style.display = 'flex';
+  targetTooltip.innerHTML = 'Select Node to 🔌 OUTPUT TO';
+  cancelNodeTarget.style.display = 'block';
+  hideModalOpeners();
+  graph.classList.add('select-bkg');
+
+  setTargetEdge = {
+    id: `${Math.ceil(Math.random() * 1000000)}`,
+    label: '🔌 OUTPUTS_TO',
+    from: activeNode.id,
+    font: { align: 'middle', size: 8 },
+    width: 1,
+    arrows: { to: { enabled: true, scaleFactor: 0.5 } },
+  };
+};
+
+selectMessageNode.onclick = () => {
+  selectingTargetNode = true;
+  targetTooltip.style.display = 'flex';
+  targetTooltip.innerHTML = 'Select Node to 💬 MESSAGE TO';
+  cancelNodeTarget.style.display = 'block';
+  hideModalOpeners();
+  graph.classList.add('select-bkg');
+
+  setTargetEdge = {
+    id: `${Math.ceil(Math.random() * 1000000)}`,
+    label: '💬 SENDS_MESSAGE_TO',
+    from: activeNode.id,
+    font: { align: 'middle', size: 8 },
+    width: 1,
+    arrows: { to: { enabled: true, scaleFactor: 0.5 } },
+  };
+};
+
+cancelNodeTarget.onclick = () => {
+  selectingTargetNode = false;
+  targetTooltip.style.display = 'none';
+  cancelNodeTarget.style.display = 'none';
+  showModalOpeners();
+  graph.classList.remove('select-bkg');
+};
 
 const hideGraphOptions = () => {
   graphOptionsMenu.style.display = 'none';
