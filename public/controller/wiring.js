@@ -1,6 +1,8 @@
 const back = document.querySelector('#back');
 const loading = document.querySelector('#loading');
 const graph = document.querySelector('#graph');
+const graphOptionsMenu = document.querySelector('#graph-options-menu');
+const targetNode = document.querySelector('#target-node');
 const toPrompts = document.querySelector('#to-prompts');
 const toCompletions = document.querySelector('#to-completions');
 const toProblems = document.querySelector('#to-problems');
@@ -104,13 +106,34 @@ const network = new vis.Network(
   },
 );
 
+const clearGraphData = () => {
+  nodes.clear();
+  edges.clear();
+};
+
 network.on('click', (params) => {
   if (params.nodes.length === 1) {
     if (network.isCluster(params.nodes[0]) === true) {
       network.openCluster(params.nodes[0]);
     }
+
+    const firstNode = nodes.get(params.nodes[0]);
+
+    if (firstNode && firstNode.label) {
+      graphOptionsMenu.style.display = 'flex';
+      targetNode.style.display = 'flex';
+      targetNode.innerHTML = nodes.get(params.nodes[0]).label;
+    }
+  } else {
+    graphOptionsMenu.style.display = 'none';
+    targetNode.style.display = 'none';
   }
 });
+
+const hideGraphOptions = () => {
+  graphOptionsMenu.style.display = 'none';
+  targetNode.style.display = 'none';
+};
 
 network.once('beforeDrawing', () => {
   // eslint-disable-next-line no-undef
@@ -369,7 +392,7 @@ const loadCompletions = async () => {
 
   clearGraph();
 
-  populateGraph(completionTags, 'CREATED', 'completions', '💛 completions', true);
+  populateGraph(completionTags, 'CREATED_COMPLETION', 'completions', '💛 completions', true);
 
   const nodeList = [];
   const edgeList = [];
@@ -400,7 +423,7 @@ const loadPrompts = async () => {
   nodes.clear();
   edges.clear();
 
-  populateGraph(completionsData, 'CREATED', 'prompts', '📓 prompts', true);
+  populateGraph(completionsData, 'CREATED_PROMPT', 'prompts', '📓 prompts', true);
   loading.style.display = 'none';
 };
 
@@ -498,16 +521,24 @@ editor.commands.addCommand({
 });
 
 toPrompts.onclick = async () => {
+  hideGraphOptions();
+  clearGraphData();
+
   toPrompts.disabled = true;
   await loadPrompts();
   toPrompts.disabled = false;
 };
 toCompletions.onclick = async () => {
+  hideGraphOptions();
+  clearGraphData();
+
   toCompletions.disabled = true;
   await loadCompletions();
   toCompletions.disabled = false;
 };
 toProblems.onclick = async () => {
+  clearGraphData();
+  hideGraphOptions();
   toProblems.disabled = true;
   await loadErrors();
   toProblems.disabled = false;

@@ -178,6 +178,37 @@
         max-height: calc(100vh - 350px);
         min-height: calc(100vh - 350px);
       }
+      #graph-options-menu {
+        z-index: 9999999;
+        position: absolute;
+        display: none;
+        flex-flow: column;
+        top: 50px;
+        right: 10px;
+        border-radius: 5px;
+        align-items: flex-end;
+      }
+      .graph-option {
+        font-size: 0.5em;
+        margin-top: 10px;
+        width: 100px;
+        height: 30px;
+      }
+      .message-modal-type-options {
+        padding-left: 30px;
+        margin-bottom: 10px;
+      }
+      .show-graph-options {
+        display: flex;
+      }
+      #target-node {
+        font-size: 0.5em;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        max-width: 150px;
+        transform: translateY(-18px);
+      }
     </style>
 </head>
 <body>
@@ -201,6 +232,75 @@
   </div>
   <div id="title" class="badge bg-dark btn-sm">wiring</div>
   <img id="loading" src="../../assets/thinking.gif" alt="thinking">
+
+  <div id="graph-options-menu">
+    <div id="target-node" class="badge bg-secondary text-truncate"></div>
+    <button type="button" class="btn btn-dark shadow-sm graph-option" data-bs-toggle="modal" data-bs-target="#output-to-modal">
+      🔌 OUTPUT TO
+    </button>
+    <button type="button" class="btn btn-dark shadow-sm graph-option" data-bs-toggle="modal" data-bs-target="#message-to-modal">
+      💬 MESSAGE TO
+    </button>
+
+    <!-- Modals -->
+    <div class="modal fade" id="output-to-modal" tabindex="-1" aria-labelledby="output-to-label" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 class="modal-title fs-5" id="exampleModalLabel">🔌 Output</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            Select another node to pass results to.
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+            <button type="button" class="btn btn-success" disabled>Select Node</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal fade" id="message-to-modal" tabindex="-1" aria-labelledby="output-to-label" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 class="modal-title fs-5" id="exampleModalLabel">💬 Message</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            Select a user or group to send results as a message to.
+          </div>
+          <div class="message-modal-type-options">
+
+          <div class="form-check">
+            <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1" disabled>
+            <label class="form-check-label" for="flexRadioDefault1">
+              Hook
+            </label>
+          </div>
+          <div class="form-check">
+            <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1" disabled>
+            <label class="form-check-label" for="flexRadioDefault1">
+              Email
+            </label>
+          </div>
+          <div class="form-check">
+            <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2" checked>
+            <label class="form-check-label" for="flexRadioDefault2">
+              SMS Text
+            </label>
+          </div>
+        </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+            <button type="button" class="btn btn-success" disabled>Select Node</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <div id="graph" class="rightGraph"></div>
   <div id="editor" class="leftEditor">What is one plus one?</div>
 </body>
