@@ -7,6 +7,8 @@ const selectOutputNode = document.querySelector('#select-node-output-to');
 const selectMessageNode = document.querySelector('#select-node-message-to');
 const cancelNodeTarget = document.querySelector('#cancel-node-target');
 const targetTooltip = document.querySelector('#target-tooltip');
+const withinArea = document.querySelector('#within-area-name');
+const selectArea = document.querySelector('#indicate-done-within-area');
 const targetModalOpener = document.querySelectorAll('.target-modal-opener');
 const toPrompts = document.querySelector('#to-prompts');
 const toCompletions = document.querySelector('#to-completions');
@@ -209,6 +211,47 @@ cancelNodeTarget.onclick = () => {
   cancelNodeTarget.style.display = 'none';
   showModalOpeners();
   graph.classList.remove('select-bkg');
+};
+
+// eslint-disable-next-line no-undef
+withinArea.placeholder = `${displayName}'s Area`;
+selectArea.onclick = () => {
+  const areaName = withinArea.value;
+  if (areaName && areaName.length) {
+    const newNode = !nodes.get(`area-${areaName}`);
+
+    const node = nodes.get(`area-${areaName}`) || {
+      id: `area-${areaName}`,
+      label: areaName,
+      color: '#aa0000',
+      size: 8,
+      font: {
+        size: 10,
+        color: '#000',
+        face: 'arial',
+        strokeWidth: 3,
+        strokeColor: '#ffffff',
+      },
+    };
+
+    const edge = {
+      id: `${Math.ceil(Math.random() * 1000000)}`,
+      label: '📍 WITHIN_AREA',
+      from: activeNode.id,
+      to: node.id,
+      font: { align: 'middle', size: 8 },
+      width: 1,
+      arrows: { to: { enabled: true, scaleFactor: 0.5 } },
+    };
+
+    if (newNode) {
+      nodes.add(node);
+    }
+    edges.add(edge);
+
+    localStorage.setItem('wiringEditorNodeList', JSON.stringify(nodes.get()));
+    localStorage.setItem('wiringEditorEdgeList', JSON.stringify(edges.get()));
+  }
 };
 
 const hideGraphOptions = () => {
