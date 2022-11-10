@@ -8,7 +8,9 @@ const selectMessageNode = document.querySelector('#select-node-message-to');
 const cancelNodeTarget = document.querySelector('#cancel-node-target');
 const targetTooltip = document.querySelector('#target-tooltip');
 const withinArea = document.querySelector('#within-area-name');
+const withinFunction = document.querySelector('#within-function-name');
 const selectArea = document.querySelector('#indicate-done-within-area');
+const selectFunction = document.querySelector('#indicate-done-within-function');
 const targetModalOpener = document.querySelectorAll('.target-modal-opener');
 const toPrompts = document.querySelector('#to-prompts');
 const toCompletions = document.querySelector('#to-completions');
@@ -237,6 +239,47 @@ selectArea.onclick = () => {
     const edge = {
       id: `${Math.ceil(Math.random() * 1000000)}`,
       label: '📍 WITHIN_AREA',
+      from: activeNode.id,
+      to: node.id,
+      font: { align: 'middle', size: 8 },
+      width: 1,
+      arrows: { to: { enabled: true, scaleFactor: 0.5 } },
+    };
+
+    if (newNode) {
+      nodes.add(node);
+    }
+    edges.add(edge);
+
+    localStorage.setItem('wiringEditorNodeList', JSON.stringify(nodes.get()));
+    localStorage.setItem('wiringEditorEdgeList', JSON.stringify(edges.get()));
+  }
+};
+
+// eslint-disable-next-line no-undef
+withinFunction.placeholder = `${displayName}'s Function`;
+selectFunction.onclick = () => {
+  const functionName = withinFunction.value;
+  if (functionName && functionName.length) {
+    const newNode = !nodes.get(`function-${functionName}`);
+
+    const node = nodes.get(`function-${functionName}`) || {
+      id: `function-${functionName}`,
+      label: functionName,
+      color: '#00ffff',
+      size: 8,
+      font: {
+        size: 10,
+        color: '#000',
+        face: 'arial',
+        strokeWidth: 3,
+        strokeColor: '#ffffff',
+      },
+    };
+
+    const edge = {
+      id: `${Math.ceil(Math.random() * 1000000)}`,
+      label: '💡 WITHIN_FUNCTION',
       from: activeNode.id,
       to: node.id,
       font: { align: 'middle', size: 8 },

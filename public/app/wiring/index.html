@@ -290,6 +290,11 @@
             📍 WITHIN AREA
           </div>
         </li>
+        <li>
+          <div class="target-modal-opener btn dropdown-option graph-option" data-bs-toggle="modal" data-bs-target="#within-function-modal">
+            💡 WITHIN FUNCTION
+          </div>
+        </li>
       </ol>
     </div>
     <button id="cancel-node-target" type="button" class="btn btn-sm mt-2 btn-danger">Cancel</button>
@@ -372,6 +377,31 @@
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
             <button id="indicate-done-within-area" type="button" class="btn btn-success" data-bs-dismiss="modal">Done</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal fade" id="within-function-modal" tabindex="-1" aria-labelledby="within-area-label" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 class="modal-title fs-5" id="exampleModalLabel">💡 WITHIN FUNCTION</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            Indicate a function to relate this node to.
+          </div>
+          <div class="message-modal-type-options">
+          
+          <div class="input-group mb-3">
+            <span class="input-group-text" id="basic-addon1">💡</span>
+            <input id="within-function-name" type="text" class="form-control" placeholder="..." aria-label="area-name" aria-describedby="basic-addon1">
+          </div>
+        </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+            <button id="indicate-done-within-function" type="button" class="btn btn-success" data-bs-dismiss="modal">Done</button>
           </div>
         </div>
       </div>
