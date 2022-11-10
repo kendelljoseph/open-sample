@@ -141,7 +141,7 @@ const showModalOpeners = () => {
 let activeNode = null;
 let setTargetEdge = null;
 let selectingTargetNode = false;
-network.on('click', (params) => {
+const networkInteractionAction = (params) => {
   if (params.nodes.length === 1) {
     if (network.isCluster(params.nodes[0]) === true) {
       network.openCluster(params.nodes[0]);
@@ -156,6 +156,7 @@ network.on('click', (params) => {
         selectingTargetNode = false;
         setTargetEdge.to = firstNode.id;
         edges.add(setTargetEdge);
+
         localStorage.setItem('wiringEditorEdgeList', JSON.stringify(edges.get()));
         showModalOpeners();
         graph.classList.remove('select-bkg');
@@ -176,7 +177,9 @@ network.on('click', (params) => {
     graph.classList.remove('select-bkg');
     showModalOpeners();
   }
-});
+};
+
+network.on('click', networkInteractionAction);
 
 selectOutputNode.onclick = () => {
   selectingTargetNode = true;
@@ -261,6 +264,8 @@ selectArea.onclick = () => {
     }
     edges.add(edge);
 
+    network.setSelection({ nodes: [node.id] });
+    networkInteractionAction({ nodes: [node.id] });
     localStorage.setItem('wiringEditorNodeList', JSON.stringify(nodes.get()));
     localStorage.setItem('wiringEditorEdgeList', JSON.stringify(edges.get()));
   }
@@ -303,6 +308,8 @@ selectFunction.onclick = () => {
     }
     edges.add(edge);
 
+    network.setSelection({ nodes: [node.id] });
+    networkInteractionAction({ nodes: [node.id] });
     localStorage.setItem('wiringEditorNodeList', JSON.stringify(nodes.get()));
     localStorage.setItem('wiringEditorEdgeList', JSON.stringify(edges.get()));
   }
@@ -345,6 +352,8 @@ selectRole.onclick = () => {
     }
     edges.add(edge);
 
+    network.setSelection({ nodes: [node.id] });
+    networkInteractionAction({ nodes: [node.id] });
     localStorage.setItem('wiringEditorNodeList', JSON.stringify(nodes.get()));
     localStorage.setItem('wiringEditorEdgeList', JSON.stringify(edges.get()));
   }
@@ -386,7 +395,8 @@ selectEvent.onclick = () => {
       nodes.add(node);
     }
     edges.add(edge);
-
+    network.setSelection({ nodes: [node.id] });
+    networkInteractionAction({ nodes: [node.id] });
     localStorage.setItem('wiringEditorNodeList', JSON.stringify(nodes.get()));
     localStorage.setItem('wiringEditorEdgeList', JSON.stringify(edges.get()));
   }
