@@ -190,9 +190,8 @@
       }
       .graph-option {
         font-size: 0.5em;
-        margin-top: 10px;
-        width: 100px;
-        height: 30px;
+        margin-top: 3px;
+        width: 100%;
       }
       .message-modal-type-options {
         padding-left: 30px;
@@ -229,6 +228,15 @@
       .select-bkg {
         background-image: linear-gradient( #e1f1ff, #ffffff) !important;
       }
+      .small-btn {
+        font-size: 0.5em;
+      }
+      #interaction-options {
+        align-items: center;
+        justify-content: center;
+        max-width: 100px;
+        width: 200px;
+      }
       @keyframes bounce {
         0%, 20%, 50%, 80%, 100% {transform: translateX(0);} 
         40% {transform: translateX(-10px);} 
@@ -259,12 +267,23 @@
   <div id="graph-options-menu">
     <div id="target-tooltip">test</div>
     <div id="target-node" class="badge bg-secondary text-truncate"></div>
-    <button type="button" class="target-modal-opener btn btn-dark shadow-sm graph-option" data-bs-toggle="modal" data-bs-target="#output-to-modal">
-      🔌 OUTPUT TO
-    </button>
-    <button type="button" class="target-modal-opener btn btn-dark shadow-sm graph-option" data-bs-toggle="modal" data-bs-target="#message-to-modal">
-      💬 MESSAGE TO
-    </button>
+    <div class="btn-group mt-2 target-modal-opener" role="group">
+      <button type="button" class="small-btn btn btn-sm btn-success dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+        interact
+      </button>
+      <ol id="interaction-options" class="dropdown-menu">
+        <li>
+          <div class="target-modal-opener btn dropdown-option graph-option" data-bs-toggle="modal" data-bs-target="#output-to-modal">
+            🔌 OUTPUT TO
+          </div>
+        </li>
+        <li>
+          <div class="target-modal-opener btn dropdown-option graph-option" data-bs-toggle="modal" data-bs-target="#message-to-modal">
+            💬 MESSAGE TO
+          </div>
+        </li>
+      </ol>
+    </div>
     <button id="cancel-node-target" type="button" class="btn btn-sm mt-2 btn-danger">Cancel</button>
 
     <!-- Modals -->
@@ -280,7 +299,7 @@
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-            <button id="select-node-output-to" type="button" class="btn btn-success" data-bs-dismiss="modal">Select Node</button>
+            <button id="select-node-output-to" type="button" class="btn btn-success" data-bs-dismiss="modal">Select</button>
           </div>
         </div>
       </div>
@@ -319,7 +338,7 @@
         </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-            <button id="select-node-message-to" type="button" class="btn btn-success" data-bs-dismiss="modal">Select Node</button>
+            <button id="select-node-message-to" type="button" class="btn btn-success" data-bs-dismiss="modal">Select</button>
           </div>
         </div>
       </div>

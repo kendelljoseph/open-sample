@@ -152,6 +152,8 @@ network.on('click', (params) => {
       graphOptionsMenu.style.display = 'flex';
       targetNode.style.display = 'flex';
       targetNode.innerHTML = nodes.get(params.nodes[0]).label;
+      targetTooltip.style.display = 'flex';
+      targetTooltip.innerHTML = 'Node Selected';
     }
     activeNode = firstNode;
   } else {
