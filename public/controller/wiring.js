@@ -220,14 +220,14 @@ network.once('beforeDrawing', () => {
   if (hasUser) {
     // eslint-disable-next-line no-undef
     network.focus(userAccessToken, {
-      scale: 5,
+      scale: 1.2,
     });
   }
 });
 network.once('afterDrawing', () => {
   network.fit({
     animation: {
-      duration: 2500,
+      duration: 1300,
       easingFunction: 'easeOutQuint',
     },
   });
