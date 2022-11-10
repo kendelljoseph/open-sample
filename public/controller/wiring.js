@@ -57,6 +57,7 @@ const checkDisplay = () => {
   if (window.screen.width <= 640) {
     writeTip.style.display = 'none';
     waText.forEach((text) => {
+      // eslint-disable-next-line no-param-reassign
       text.style.display = 'none';
     });
     graph.classList.remove('rightGraph');
@@ -66,6 +67,7 @@ const checkDisplay = () => {
   } else {
     writeTip.style.display = 'block';
     waText.forEach((text) => {
+      // eslint-disable-next-line no-param-reassign
       text.style.display = '';
     });
     graph.classList.remove('topGraph');
@@ -99,6 +101,7 @@ const edges = cachedEdgeList
     },
   ]);
 
+// eslint-disable-next-line no-undef
 const network = new vis.Network(
   graph,
   {
@@ -129,11 +132,13 @@ const clearGraphData = () => {
 
 const hideModalOpeners = () => {
   targetModalOpener.forEach((element) => {
+    // eslint-disable-next-line no-param-reassign
     element.style.display = 'none';
   });
 };
 const showModalOpeners = () => {
   targetModalOpener.forEach((element) => {
+    // eslint-disable-next-line no-param-reassign
     element.style.display = 'block';
   });
 };
