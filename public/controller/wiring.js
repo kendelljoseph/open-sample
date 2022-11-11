@@ -24,6 +24,8 @@ const toCompletions = document.querySelector('#to-completions');
 const toProblems = document.querySelector('#to-problems');
 const waText = document.querySelectorAll('.wa-text');
 const writeTip = document.querySelector('#write-tip');
+const configContainer = document.querySelector('#config');
+const showConfig = document.querySelector('#show-config');
 if (navigator.platform.indexOf('Win') !== -1) {
   writeTip.innerHTML = 'Ctrl + Enter';
 } else if (navigator.platform.indexOf('Mac') !== -1) {
@@ -109,6 +111,19 @@ const network = new vis.Network(
     edges,
   },
   {
+    configure: {
+      filter(option, path) {
+        if (path.indexOf('physics') !== -1) {
+          return true;
+        }
+        if (path.indexOf('smooth') !== -1 || option === 'smooth') {
+          return true;
+        }
+        return false;
+      },
+      container: configContainer,
+    },
+    interaction: { hover: true },
     nodes: {
       shape: 'dot',
       color: '#fff',
@@ -124,6 +139,33 @@ const network = new vis.Network(
     },
   },
 );
+const networkCanvas = graph.getElementsByTagName('canvas')[0];
+function changeCursor(newCursorStyle) {
+  networkCanvas.style.cursor = newCursorStyle;
+}
+changeCursor('grab'); // Default
+network.on('hoverNode', () => {
+  changeCursor('pointer');
+});
+network.on('blurNode', () => {
+  changeCursor('grab');
+});
+network.on('hoverEdge', () => {
+  changeCursor('pointer');
+});
+network.on('blurEdge', () => {
+  changeCursor('grab');
+});
+network.on('dragStart', () => {
+  changeCursor('grabbing');
+  network.setOptions({ physics: { enabled: false } });
+});
+network.on('dragging', () => {
+  changeCursor('grabbing');
+});
+network.on('dragEnd', () => {
+  changeCursor('grab');
+});
 
 const clearGraphData = () => {
   nodes.clear();
@@ -267,6 +309,13 @@ selectArea.onclick = () => {
     if (newNode) {
       nodes.add(node);
     }
+    network.focus(node.id, {
+      scale: 1.4,
+      animation: {
+        duration: 300,
+        easingFunction: 'easeInOutQuad',
+      },
+    });
     edges.add(edge);
 
     network.setSelection({ nodes: [node.id] });
@@ -311,6 +360,14 @@ selectFunction.onclick = () => {
     if (newNode) {
       nodes.add(node);
     }
+
+    network.focus(node.id, {
+      scale: 1.4,
+      animation: {
+        duration: 300,
+        easingFunction: 'easeInOutQuad',
+      },
+    });
     edges.add(edge);
 
     network.setSelection({ nodes: [node.id] });
@@ -355,6 +412,14 @@ selectRole.onclick = () => {
     if (newNode) {
       nodes.add(node);
     }
+
+    network.focus(node.id, {
+      scale: 1.4,
+      animation: {
+        duration: 300,
+        easingFunction: 'easeInOutQuad',
+      },
+    });
     edges.add(edge);
 
     network.setSelection({ nodes: [node.id] });
@@ -399,7 +464,16 @@ selectEvent.onclick = () => {
     if (newNode) {
       nodes.add(node);
     }
+
+    network.focus(node.id, {
+      scale: 1.4,
+      animation: {
+        duration: 300,
+        easingFunction: 'easeInOutQuad',
+      },
+    });
     edges.add(edge);
+
     network.setSelection({ nodes: [node.id] });
     networkInteractionAction({ nodes: [node.id] });
     localStorage.setItem('wiringEditorNodeList', JSON.stringify(nodes.get()));
@@ -466,7 +540,7 @@ const userNode = () => ({
   label: displayName,
   // eslint-disable-next-line no-undef
   image: userPictureUrl,
-  size: 14,
+  size: 24,
   font: {
     size: 10,
     color: '#a3a',
@@ -496,9 +570,9 @@ const nodeStyles = {
     label: `📓 ${record.name}`,
     category,
     color: '#ccc',
-    size: 12,
+    size: 5,
     font: {
-      size: 10,
+      size: 8,
       color: '#000',
       face: 'arial',
       strokeWidth: 3,
@@ -803,18 +877,23 @@ viewBoth.onclick = () => {
   graph.classList.remove('fullGraph');
   editorElement.style.display = 'block';
   editorElement.classList.remove('fullEditor');
+  showConfig.style.display = 'block';
 };
 viewGraphOnly.onclick = () => {
   graph.style.display = 'block';
   graph.classList.add('fullGraph');
   editorElement.style.display = 'none';
   editorElement.classList.remove('fullEditor');
+  configContainer.style.display = 'none';
+  showConfig.style.display = 'none';
 };
 viewEditorOnly.onclick = () => {
   editorElement.style.display = 'block';
   editorElement.classList.add('fullEditor');
   graph.style.display = 'none';
   graph.classList.remove('fullGraph');
+  configContainer.style.display = 'none';
+  showConfig.style.display = 'none';
 };
 
 toPrompts.onclick = async () => {
@@ -839,4 +918,13 @@ toProblems.onclick = async () => {
   toProblems.disabled = true;
   await loadErrors();
   toProblems.disabled = false;
+};
+
+showConfig.onclick = () => {
+  const isShowing = configContainer.style.display === 'block';
+  if (isShowing) {
+    configContainer.style.display = 'none';
+    return;
+  }
+  configContainer.style.display = 'block';
 };
