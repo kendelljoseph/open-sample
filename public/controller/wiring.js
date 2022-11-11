@@ -239,6 +239,7 @@ selectOutputNode.onclick = () => {
   setTargetEdge = {
     id: `${Math.ceil(Math.random() * 1000000)}`,
     label: '🔌 OUTPUTS_TO',
+    category: 'drawing',
     from: activeNode.id,
     font: { align: 'middle', size: 8 },
     width: 1,
@@ -258,6 +259,7 @@ selectMessageNode.onclick = () => {
   setTargetEdge = {
     id: `${Math.ceil(Math.random() * 1000000)}`,
     label: '💬 SENDS_MESSAGE_TO',
+    category: 'drawing',
     from: activeNode.id,
     dashes: true,
     font: { align: 'middle', size: 8 },
@@ -284,6 +286,7 @@ selectArea.onclick = () => {
     const node = nodes.get(`area-${areaName}`) || {
       id: `area-${areaName}`,
       label: areaName,
+      category: 'drawing',
       color: '#aa0000',
       size: 8,
       font: {
@@ -298,6 +301,7 @@ selectArea.onclick = () => {
     const edge = {
       id: `${Math.ceil(Math.random() * 1000000)}`,
       label: '📍 WITHIN_AREA',
+      category: 'drawing',
       from: activeNode.id,
       to: node.id,
       dashes: true,
@@ -335,6 +339,7 @@ selectFunction.onclick = () => {
     const node = nodes.get(`function-${functionName}`) || {
       id: `function-${functionName}`,
       label: functionName,
+      category: 'drawing',
       color: '#00ffff',
       size: 8,
       font: {
@@ -349,6 +354,7 @@ selectFunction.onclick = () => {
     const edge = {
       id: `${Math.ceil(Math.random() * 1000000)}`,
       label: '💡 WITHIN_FUNCTION',
+      category: 'drawing',
       from: activeNode.id,
       to: node.id,
       dashes: true,
@@ -387,6 +393,7 @@ selectRole.onclick = () => {
     const node = nodes.get(`role-${roleName}`) || {
       id: `role-${roleName}`,
       label: roleName,
+      category: 'drawing',
       color: '#505',
       size: 8,
       font: {
@@ -401,6 +408,7 @@ selectRole.onclick = () => {
     const edge = {
       id: `${Math.ceil(Math.random() * 1000000)}`,
       label: '👤 WITHIN_ROLE',
+      category: 'drawing',
       from: activeNode.id,
       to: node.id,
       dashes: true,
@@ -439,6 +447,7 @@ selectEvent.onclick = () => {
     const node = nodes.get(`event-${eventName}`) || {
       id: `event-${eventName}`,
       label: eventName,
+      category: 'drawing',
       color: '#00aa00',
       size: 8,
       font: {
@@ -453,6 +462,7 @@ selectEvent.onclick = () => {
     const edge = {
       id: `${Math.ceil(Math.random() * 1000000)}`,
       label: '💥 TRIGGERS_EVENT',
+      category: 'drawing',
       from: activeNode.id,
       to: node.id,
       dashes: true,
@@ -499,7 +509,7 @@ network.once('beforeDrawing', () => {
 network.once('afterDrawing', () => {
   network.fit({
     animation: {
-      duration: 1300,
+      duration: 1000,
       easingFunction: 'easeOutQuint',
     },
   });
