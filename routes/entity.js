@@ -91,7 +91,7 @@ router.get('/', async (req, res, exit) => {
           OPTIONAL MATCH (authn)-[:USED_PHONE_NUMBER]->(phone:PhoneNumber)
           OPTIONAL MATCH (phone)<-[:USED_PHONE_NUMBER]-(prevAuth:Authn)
           OPTIONAL MATCH (e2:Entity)-[:CREATED_BY]->(prevAuth)
-          WITH collect(e1)+collect(e2) as entityList
+          WITH apoc.coll.union(collect(e1), collect(e2)) as entityList
           UNWIND entityList as e
           RETURN {id: toString(id(e)), name: e.name, prompt: e.prompt} as entity
         `,
