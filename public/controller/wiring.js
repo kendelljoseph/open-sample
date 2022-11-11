@@ -26,6 +26,7 @@ const waText = document.querySelectorAll('.wa-text');
 const writeTip = document.querySelector('#write-tip');
 const configContainer = document.querySelector('#config');
 const showConfig = document.querySelector('#show-config');
+const clearNetwork = document.querySelector('#clear-network');
 if (navigator.platform.indexOf('Win') !== -1) {
   writeTip.innerHTML = 'Ctrl + Enter';
 } else if (navigator.platform.indexOf('Mac') !== -1) {
@@ -937,4 +938,19 @@ showConfig.onclick = () => {
     return;
   }
   configContainer.style.display = 'block';
+};
+
+clearNetwork.onclick = () => {
+  const node = userNode();
+
+  nodes.clear();
+  edges.clear();
+  nodes.add([node]);
+  network.focus(node.id, {
+    scale: 1.4,
+    animation: {
+      duration: 300,
+      easingFunction: 'easeInOutQuad',
+    },
+  });
 };
