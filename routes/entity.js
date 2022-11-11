@@ -87,9 +87,12 @@ router.get('/', async (req, res, exit) => {
       const { response, error: graphErr } = await graph.read(
         `
           MATCH (authn:Authn {accessToken: $accessToken})
-          MATCH (authn)-[:USED_PHONE_NUMBER]->(phone:PhoneNumber)
-          MATCH (phone)<-[:USED_PHONE_NUMBER]-(allAuthnz:Authn)
-          MATCH (e:Entity)-[:CREATED_BY]->(allAuthnz)
+          MATCH (e1:Entity)-[:CREATED_BY]->(authn)
+          OPTIONAL MATCH (authn)-[:USED_PHONE_NUMBER]->(phone:PhoneNumber)
+          OPTIONAL MATCH (phone)<-[:USED_PHONE_NUMBER]-(prevAuth:Authn)
+          OPTIONAL MATCH (e2:Entity)-[:CREATED_BY]->(prevAuth)
+          WITH collect(e1)+collect(e2) as entityList
+          UNWIND entityList as e
           RETURN {id: toString(id(e)), name: e.name, prompt: e.prompt} as entity
         `,
         {
