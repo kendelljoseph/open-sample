@@ -978,7 +978,7 @@ runTargetNode.onclick = async () => {
   editor.setValue(`${editor.getValue()}\n\n${activeNode.label}\n\n${prompt}`);
   selectResponse(prompt);
   const { response } = await api.ai.prompt({ prompt });
-  editor.setValue(`${editor.getValue()}\n\n${response}`);
+  editor.setValue(`${editor.getValue()}\n\n${activeNode.label} - Response\n${response}`);
   selectResponse(response);
   editor.setReadOnly(false);
   runTargetNode.disabled = false;
