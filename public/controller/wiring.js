@@ -964,24 +964,36 @@ clearNetwork.onclick = () => {
   });
 };
 
-const getActiveNodeInputSlugs = () => edges
-  .get()
-  .filter((e) => e.to === activeNode.id && e.title === 'OUTPUTS_TO')
-  .map((e) => e && nodes.get(e.from).slug);
+const getOutputToEdgeByNode = (node) => edges.get().filter((e) => e.to === node.id && e.title === 'OUTPUTS_TO');
 
-const getTemplateArgumentText = async (slugs) => {
-  // eslint-disable-next-line no-undef
-  const tagValues = await Promise.all(slugs.map(api.entity.getTagByName));
-
+const renderTemplateText = async (node, list) => {
   const templateData = {};
-  tagValues.forEach((val, index) => {
-    templateData[slugs[index]] = val;
+  const renderedData = {};
+  await Promise.all(
+    list.map(async (item) => {
+      // eslint-disable-next-line no-undef
+      templateData[item.tag] = await api.entity.getTagByName(item.tag);
+    }),
+  );
+
+  list.forEach((item) => {
+    // eslint-disable-next-line no-undef
+    renderedData[item.tag] = Mustache.render(templateData[item.tag], templateData);
+    return renderedData[item.tag];
   });
-  return templateData;
+
+  // eslint-disable-next-line no-undef
+  const text = await api.entity.getTagByName(node.slug);
+  // eslint-disable-next-line no-undef
+  const renderedText = Mustache.render(text, renderedData);
+  return renderedText;
 };
 
 runTargetNode.onclick = async () => {
   if (!activeNode.slug) return;
+  const apiCallSlugList = [];
+  const runEdge = {};
+
   graph.style.display = 'block';
   graph.classList.remove('fullGraph');
   editorElement.style.display = 'block';
@@ -992,18 +1004,39 @@ runTargetNode.onclick = async () => {
   runTargetNode.disabled = true;
   editor.setReadOnly(true);
 
-  const slugs = getActiveNodeInputSlugs();
-  const templateData = await getTemplateArgumentText(slugs);
-  const tagName = activeNode.slug;
-  // eslint-disable-next-line no-undef
-  const templateText = await api.entity.getTagByName(tagName);
-  let renderedText = '';
-  if (Object.keys(templateData).length) {
-    // eslint-disable-next-line no-undef
-    renderedText = Mustache.render(templateText, templateData);
-  } else {
-    renderedText = templateText;
-  }
+  const outputToEdges = nodes
+    .get()
+    .map(getOutputToEdgeByNode)
+    .filter((a) => a.length);
+
+  const recur = (node) => {
+    if (runEdge[node.id]) return;
+    runEdge[node.id] = outputToEdges.filter((e) => {
+      const hasEdges = e.filter((edge) => edge.to === node.id);
+      return hasEdges.length;
+    });
+
+    const froms = runEdge[node.id].map((edgeList) => {
+      const fromIds = edgeList.map((e) => e.from);
+      const fromNodeList = nodes.get(fromIds);
+
+      return fromNodeList;
+    });
+
+    froms.forEach((fromNodeList) => {
+      fromNodeList.forEach(recur);
+      fromNodeList.forEach((fromNode) => {
+        apiCallSlugList.push({
+          tag: fromNode.slug,
+          templateId: node.id,
+          templateTag: node.slug,
+        });
+      });
+    });
+  };
+
+  recur(activeNode);
+  const renderedText = await renderTemplateText(activeNode, apiCallSlugList);
 
   editor.setValue(`${editor.getValue()}\n\n${activeNode.label}\n\n${renderedText}`);
   selectResponse(renderedText);
