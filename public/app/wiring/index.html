@@ -200,7 +200,9 @@
         align-items: flex-end;
       }
       .graph-option {
-        font-size: 0.5em;
+        cursor: pointer;
+        user-select: none;
+        font-size: 0.85em;
         margin-bottom: 3px;
         width: 100%;
       }
@@ -223,6 +225,14 @@
         display: none;
         animation: bounce 2s ease-in-out infinite;
       }
+      #run-target-node {
+        z-index: 99999;
+        position: absolute;
+        top: 22px;
+        right: 75px;
+        width: 80px;
+        font-size: 0.85em;
+      }
       #target-tooltip {
         display: none;
         position: absolute;
@@ -242,7 +252,7 @@
         background-image: linear-gradient( #e1f1ff, #ffffff) !important;
       }
       .small-btn {
-        font-size: 0.5em;
+        font-size: 0.85em;
       }
       #interaction-options {
         align-items: center;
@@ -302,10 +312,13 @@
         user-select: none;
       }
       @keyframes bounce {
-        0%, 20%, 50%, 80%, 100% {transform: translateX(0);} 
-        40% {transform: translateX(-10px);} 
-        60% {transform: translateX(-5px);} 
-      } 
+        0%, 20%, 50%, 80%, 100% {transform: translateX(0);}
+        40% {transform: translateX(-10px);}
+        60% {transform: translateX(-5px);}
+      }
+      .modal-input {
+        margin-right: 30px;
+      }
     </style>
 </head>
 <body>
@@ -325,11 +338,11 @@
       <ul class="dropdown-menu">
         <!-- <li id="commit-network"><div class="network-option dropdown-item">Commit</div></li>
         <hr> -->
-        <li id="clear-network"><div class="network-option dropdown-item">Clear</div></li>
+        <li id="clear-network"><div class="network-option dropdown-item">CLEAR</div></li>
       </ul>
     </div>
     <input type="radio" class="btn-check" name="btnradio" id="to-completions" autocomplete="off">
-    <label class="btn btn-outline-success" for="to-completions"><span>💛 </span><span class="wa-text">competions</span></label>
+    <label class="btn btn-outline-success" for="to-completions"><span>🖊 </span><span class="wa-text">competions</span></label>
     <input type="radio" class="btn-check" name="btnradio" id="to-prompts" autocomplete="off">
     <label class="btn btn-outline-success" for="to-prompts"><span>📓 </span><span class="wa-text">prompts</span></label>
     <input type="radio" class="btn-check" name="btnradio" id="to-problems" autocomplete="off">
@@ -347,45 +360,47 @@
     <label class="btn btn-sm btn-outline-secondary view-input-option" for="view-graph-only">3</label>
   </div>
   <img id="loading" src="../../assets/thinking.gif" alt="thinking">
-
   <div id="graph-options-menu">
     <div id="target-tooltip">test</div>
     <div id="target-node" class="badge bg-secondary text-truncate"></div>
+    <button id="run-target-node" type="button" class="small-btn btn btn-warning">
+      🏁 run
+    </button>
     <div class="btn-group mt-2 target-modal-opener" role="group">
-      <button type="button" class="small-btn btn btn-sm btn-success dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+      <button type="button" class="small-btn btn btn-success dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
         draw
       </button>
       <ol id="interaction-options" class="dropdown-menu">
         <li>
-          <div class="target-modal-opener btn dropdown-option graph-option" data-bs-toggle="modal" data-bs-target="#output-to-modal">
+          <div class="target-modal-opener dropdown-item graph-option" data-bs-toggle="modal" data-bs-target="#output-to-modal">
             🔌 OUTPUT
           </div>
         </li>
         <li>
-          <div class="target-modal-opener btn dropdown-option graph-option" data-bs-toggle="modal" data-bs-target="#message-to-modal">
+          <div class="target-modal-opener dropdown-item graph-option" data-bs-toggle="modal" data-bs-target="#message-to-modal">
             💬 MESSAGE
           </div>
         </li>
         <hr>
         <li>
-          <div class="target-modal-opener btn dropdown-option graph-option" data-bs-toggle="modal" data-bs-target="#within-area-modal">
+          <div class="target-modal-opener dropdown-item graph-option" data-bs-toggle="modal" data-bs-target="#within-area-modal">
             📍 AREA
           </div>
         </li>
         <li>
-          <div class="target-modal-opener btn dropdown-option graph-option" data-bs-toggle="modal" data-bs-target="#within-role-modal">
+          <div class="target-modal-opener dropdown-item graph-option" data-bs-toggle="modal" data-bs-target="#within-role-modal">
             👤 ROLE
           </div>
         </li>
         <hr>
         <li>
-          <div class="target-modal-opener btn dropdown-option graph-option" data-bs-toggle="modal" data-bs-target="#within-function-modal">
+          <div class="target-modal-opener dropdown-item graph-option" data-bs-toggle="modal" data-bs-target="#within-function-modal">
             💡 FUNCTION
           </div>
         </li>
         <hr>
         <li>
-          <div class="target-modal-opener btn dropdown-option graph-option" data-bs-toggle="modal" data-bs-target="#trigger-event-modal">
+          <div class="target-modal-opener dropdown-item graph-option" data-bs-toggle="modal" data-bs-target="#trigger-event-modal">
             💥 EVENT
           </div>
         </li>
@@ -458,6 +473,7 @@
             <h1 class="modal-title fs-5" id="exampleModalLabel">📍 AREA</h1>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
+          <div class="modal-target-node-label"></div>
           <div class="modal-body">
             Name an area to relate this node to.
           </div>
@@ -465,7 +481,7 @@
           
           <div class="input-group mb-3">
             <span class="input-group-text" id="basic-addon1">📍</span>
-            <input id="within-area-name" type="text" class="form-control" placeholder="..." aria-label="area-name" aria-describedby="basic-addon1">
+            <input id="within-area-name" type="text" class="form-control modal-input" placeholder="..." aria-label="area-name" aria-describedby="basic-addon1">
           </div>
         </div>
           <div class="modal-footer">
@@ -483,6 +499,7 @@
             <h1 class="modal-title fs-5" id="exampleModalLabel">💡 FUNCTION</h1>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
+          <div class="modal-target-node-label"></div>
           <div class="modal-body">
             Name a function to relate this node to.
           </div>
@@ -490,7 +507,7 @@
           
           <div class="input-group mb-3">
             <span class="input-group-text" id="basic-addon1">💡</span>
-            <input id="within-function-name" type="text" class="form-control" placeholder="..." aria-label="area-name" aria-describedby="basic-addon1">
+            <input id="within-function-name" type="text" class="form-control modal-input" placeholder="..." aria-label="area-name" aria-describedby="basic-addon1">
           </div>
         </div>
           <div class="modal-footer">
@@ -508,6 +525,7 @@
             <h1 class="modal-title fs-5" id="exampleModalLabel">👤 ROLE</h1>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
+          <div class="modal-target-node-label"></div>
           <div class="modal-body">
             Name a role to relate this node to.
           </div>
@@ -515,7 +533,7 @@
           
           <div class="input-group mb-3">
             <span class="input-group-text" id="basic-addon1">👤</span>
-            <input id="within-role-name" type="text" class="form-control" placeholder="..." aria-label="area-name" aria-describedby="basic-addon1">
+            <input id="within-role-name" type="text" class="form-control modal-input" placeholder="..." aria-label="area-name" aria-describedby="basic-addon1">
           </div>
         </div>
           <div class="modal-footer">
@@ -533,6 +551,7 @@
             <h1 class="modal-title fs-5" id="exampleModalLabel">💥 EVENT</h1>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
+          <div class="modal-target-node-label"></div>
           <div class="modal-body">
             Name an event that is triggered by this node.
           </div>
@@ -540,7 +559,7 @@
           
           <div class="input-group mb-3">
             <span class="input-group-text" id="basic-addon1">💥</span>
-            <input id="trigger-event-name" type="text" class="form-control" placeholder="..." aria-label="area-name" aria-describedby="basic-addon1">
+            <input id="trigger-event-name" type="text" class="form-control modal-input" placeholder="..." aria-label="area-name" aria-describedby="basic-addon1">
           </div>
         </div>
           <div class="modal-footer">

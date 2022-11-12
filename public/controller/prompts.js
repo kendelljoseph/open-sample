@@ -76,7 +76,7 @@ const populateList = (records) => {
     deleteButton.classList.add('btn', 'me-3', 'btn-sm', 'btn-outline-danger');
 
     writeButton.textContent = '📝';
-    tagButton.textContent = '💛';
+    tagButton.textContent = '🖊';
     deleteButton.textContent = '🗑';
 
     writeButton.onclick = () => {

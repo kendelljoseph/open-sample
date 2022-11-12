@@ -19,7 +19,7 @@ const populateList = (records) => {
       'btn-outline-light',
     );
 
-    writeButton.textContent = `${index + 1}. 💛 ${record.slug}`;
+    writeButton.textContent = `${index + 1}. 🖊 ${record.slug}`;
 
     writeButton.onclick = () => {
       const tagUrl = `${window.location.protocol}//${window.location.host}/completions/${record.slug}`;

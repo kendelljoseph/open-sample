@@ -27,6 +27,7 @@ const writeTip = document.querySelector('#write-tip');
 const configContainer = document.querySelector('#config');
 const showConfig = document.querySelector('#show-config');
 const clearNetwork = document.querySelector('#clear-network');
+const runTargetNode = document.querySelector('#run-target-node');
 if (navigator.platform.indexOf('Win') !== -1) {
   writeTip.innerHTML = 'Ctrl + Enter';
 } else if (navigator.platform.indexOf('Mac') !== -1) {
@@ -198,6 +199,11 @@ const networkInteractionAction = (params) => {
     const firstNode = nodes.get(params.nodes[0]);
 
     if (firstNode && firstNode.label) {
+      if (firstNode.slug) {
+        runTargetNode.style.display = 'block';
+      } else {
+        runTargetNode.style.display = 'none';
+      }
       if (selectingTargetNode) {
         cancelNodeTarget.style.display = 'none';
         targetTooltip.style.display = 'none';
@@ -564,7 +570,8 @@ const userNode = () => ({
 const nodeStyles = {
   completions: (record, category) => ({
     id: record.id,
-    label: `💛 ${record.name}`,
+    label: `🖊 ${record.name}`,
+    slug: record.slug,
     category,
     color: '#ffd900',
     size: 12,
@@ -754,7 +761,7 @@ const loadCompletions = async () => {
 
   clearGraph();
 
-  populateGraph(completionTags, 'CREATED_COMPLETION', 'completions', '💛 completions', true);
+  populateGraph(completionTags, 'CREATED_COMPLETION', 'completions', '🖊 completions', true);
 
   const nodeList = [];
   const edgeList = [];
@@ -953,4 +960,21 @@ clearNetwork.onclick = () => {
       easingFunction: 'easeInOutQuad',
     },
   });
+};
+
+runTargetNode.onclick = async () => {
+  if (!activeNode.slug) return;
+  loading.style.display = 'block';
+  runTargetNode.disabled = true;
+  editor.setReadOnly(true);
+  const tagName = activeNode.slug;
+  const prompt = await api.entity.getTagByName(tagName);
+  editor.setValue(`${editor.getValue()}\n\n${activeNode.label}\n\n${prompt}`);
+  selectResponse(prompt);
+  const { response } = await api.ai.prompt({ prompt });
+  editor.setValue(`${editor.getValue()}\n\n${response}`);
+  selectResponse(response);
+  editor.setReadOnly(false);
+  runTargetNode.disabled = false;
+  loading.style.display = 'none';
 };
