@@ -28,6 +28,7 @@ const configContainer = document.querySelector('#config');
 const showConfig = document.querySelector('#show-config');
 const clearNetwork = document.querySelector('#clear-network');
 const runTargetNode = document.querySelector('#run-target-node');
+const saveAsPrompt = document.querySelector('#save-prompt');
 if (navigator.platform.indexOf('Win') !== -1) {
   writeTip.innerHTML = 'Ctrl + Enter';
 } else if (navigator.platform.indexOf('Mac') !== -1) {
@@ -600,6 +601,7 @@ const nodeStyles = {
   completions: (record, category) => ({
     id: record.id,
     label: `🖊 ${record.name}`,
+    title: `${record.id}`,
     slug: record.slug,
     category,
     color: '#ffd900',
@@ -615,6 +617,7 @@ const nodeStyles = {
   prompts: (record, category) => ({
     id: record.id,
     label: `📓 ${record.name}`,
+    title: `${record.id}`,
     category,
     color: '#ccc',
     size: 5,
@@ -629,6 +632,7 @@ const nodeStyles = {
   problems: (record, category) => ({
     id: record.id,
     label: `🔥 ${record.event}`,
+    title: `${record.id}`,
     category,
     color: '#fcc',
     size: 12,
@@ -853,6 +857,28 @@ const loadErrors = async () => {
   loading.style.display = 'none';
 };
 
+const addTag = async (record) => {
+  if (!record.id) return;
+  // eslint-disable-next-line no-alert, no-restricted-globals
+  if (!confirm(`Add tag to:\n\n${record.name}`)) return;
+  // eslint-disable-next-line no-alert
+  const name = prompt('name:');
+  if (!name || name.length < 2) return;
+
+  loading.style.display = 'block';
+
+  // eslint-disable-next-line no-undef
+  await api.tag.create({
+    name,
+    entityId: record.id,
+  });
+
+  loading.style.display = 'none';
+
+  // eslint-disable-next-line no-alert
+  alert('Tag Saved!');
+};
+
 const submitFunction = async () => {
   editor.setReadOnly(true);
   loading.style.display = 'block';
@@ -921,12 +947,71 @@ editor.commands.addCommand({
 });
 
 editor.commands.addCommand({
+  name: 'tabBetweenWriteAndEntity',
+  bindKey: { win: 'Ctrl-Shift-E', mac: 'Command-Shift-E' },
+  exec() {
+    window.location.href = '/app/prompts';
+  },
+});
+
+editor.commands.addCommand({
   name: 'detectCommandEnter',
   bindKey: { win: 'Ctrl-Enter', mac: 'Command-Enter' },
   exec() {
     submitFunction();
   },
 });
+
+const getPromptText = () => {
+  const selectedText = editor.getSelectedText();
+  const allText = editor.session.getValue();
+  const text = selectedText.length ? selectedText : allText;
+  return text;
+};
+
+const savePrompt = async (prompt) => {
+  // eslint-disable-next-line no-alert
+  const name = window.prompt('name:') || new Date().toDateString();
+  saveAsPrompt.disabled = true;
+  loading.style.display = 'block';
+  editor.setReadOnly(true);
+
+  // eslint-disable-next-line no-undef
+  const success = await api.entity.create({
+    name,
+    prompt,
+  });
+
+  if (success) {
+    saveAsPrompt.disabled = false;
+    loading.style.display = 'none';
+    editor.setReadOnly(false);
+    // eslint-disable-next-line no-alert
+    alert('saved OK!');
+  } else {
+    saveAsPrompt.disabled = false;
+    loading.style.display = 'none';
+    editor.setReadOnly(false);
+  }
+};
+
+editor.commands.addCommand({
+  name: 'savePromptAsEntity',
+  bindKey: { win: 'Ctrl-Shift-S', mac: 'Command-Shift-S' },
+  exec() {
+    const prompt = getPromptText();
+    // eslint-disable-next-line no-restricted-globals, no-alert
+    if (!confirm('Save prompt?')) return;
+    savePrompt(prompt);
+  },
+});
+
+saveAsPrompt.onclick = () => {
+  const prompt = getPromptText();
+  // eslint-disable-next-line no-restricted-globals, no-alert
+  if (!confirm('Save prompt?')) return;
+  savePrompt(prompt);
+};
 
 const editorElement = document.getElementById('editor');
 viewBoth.onclick = () => {
