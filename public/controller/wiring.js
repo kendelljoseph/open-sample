@@ -964,6 +964,12 @@ clearNetwork.onclick = () => {
 
 runTargetNode.onclick = async () => {
   if (!activeNode.slug) return;
+  graph.style.display = 'block';
+  graph.classList.remove('fullGraph');
+  editorElement.style.display = 'block';
+  editorElement.classList.remove('fullEditor');
+  showConfig.style.display = 'block';
+
   loading.style.display = 'block';
   runTargetNode.disabled = true;
   editor.setReadOnly(true);
