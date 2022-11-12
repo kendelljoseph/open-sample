@@ -85,6 +85,8 @@ checkDisplay();
 
 const cachedNodeList = localStorage.getItem('wiringEditorNodeList');
 const cachedEdgeList = localStorage.getItem('wiringEditorEdgeList');
+const cachedDrawingNodeList = localStorage.getItem('wiringEditorDrawingNodeList');
+const cachedDrawingEdgeList = localStorage.getItem('wiringEditorDrawingEdgeList');
 
 const nodes = cachedNodeList
   ? new vis.DataSet(JSON.parse(cachedNodeList))
@@ -104,6 +106,14 @@ const edges = cachedEdgeList
       arrows: { to: { enabled: true } },
     },
   ]);
+
+const drawingNodes = cachedDrawingNodeList
+  ? new vis.DataSet(JSON.parse(cachedDrawingNodeList))
+  : new vis.DataSet([]);
+
+const drawingEdges = cachedDrawingEdgeList
+  ? new vis.DataSet(JSON.parse(cachedDrawingEdgeList))
+  : new vis.DataSet([]);
 
 // eslint-disable-next-line no-undef
 const network = new vis.Network(
@@ -210,6 +220,7 @@ const networkInteractionAction = (params) => {
         selectingTargetNode = false;
         setTargetEdge.to = firstNode.id;
         edges.add(setTargetEdge);
+        drawingEdges.add(setTargetEdge);
 
         localStorage.setItem('wiringEditorEdgeList', JSON.stringify(edges.get()));
         showModalOpeners();
@@ -321,6 +332,7 @@ selectArea.onclick = () => {
 
     if (newNode) {
       nodes.add(node);
+      drawingNodes.add(node);
     }
     network.focus(node.id, {
       scale: 1.4,
@@ -330,11 +342,14 @@ selectArea.onclick = () => {
       },
     });
     edges.add(edge);
+    drawingEdges.add(edge);
 
     network.setSelection({ nodes: [node.id] });
     networkInteractionAction({ nodes: [node.id] });
     localStorage.setItem('wiringEditorNodeList', JSON.stringify(nodes.get()));
     localStorage.setItem('wiringEditorEdgeList', JSON.stringify(edges.get()));
+    localStorage.setItem('wiringEditorDrawingNodeList', JSON.stringify(drawingNodes.get()));
+    localStorage.setItem('wiringEditorDrawingEdgeList', JSON.stringify(drawingEdges.get()));
   }
 };
 
@@ -374,6 +389,7 @@ selectFunction.onclick = () => {
 
     if (newNode) {
       nodes.add(node);
+      drawingNodes.add(node);
     }
 
     network.focus(node.id, {
@@ -384,11 +400,14 @@ selectFunction.onclick = () => {
       },
     });
     edges.add(edge);
+    drawingEdges.add(edge);
 
     network.setSelection({ nodes: [node.id] });
     networkInteractionAction({ nodes: [node.id] });
     localStorage.setItem('wiringEditorNodeList', JSON.stringify(nodes.get()));
     localStorage.setItem('wiringEditorEdgeList', JSON.stringify(edges.get()));
+    localStorage.setItem('wiringEditorDrawingNodeList', JSON.stringify(drawingNodes.get()));
+    localStorage.setItem('wiringEditorDrawingEdgeList', JSON.stringify(drawingEdges.get()));
   }
 };
 
@@ -428,6 +447,7 @@ selectRole.onclick = () => {
 
     if (newNode) {
       nodes.add(node);
+      drawingNodes.add(node);
     }
 
     network.focus(node.id, {
@@ -438,11 +458,14 @@ selectRole.onclick = () => {
       },
     });
     edges.add(edge);
+    drawingEdges.add(edge);
 
     network.setSelection({ nodes: [node.id] });
     networkInteractionAction({ nodes: [node.id] });
     localStorage.setItem('wiringEditorNodeList', JSON.stringify(nodes.get()));
     localStorage.setItem('wiringEditorEdgeList', JSON.stringify(edges.get()));
+    localStorage.setItem('wiringEditorDrawingNodeList', JSON.stringify(drawingNodes.get()));
+    localStorage.setItem('wiringEditorDrawingEdgeList', JSON.stringify(drawingEdges.get()));
   }
 };
 
@@ -482,6 +505,7 @@ selectEvent.onclick = () => {
 
     if (newNode) {
       nodes.add(node);
+      drawingNodes.add(node);
     }
 
     network.focus(node.id, {
@@ -492,11 +516,14 @@ selectEvent.onclick = () => {
       },
     });
     edges.add(edge);
+    drawingEdges.add(edge);
 
     network.setSelection({ nodes: [node.id] });
     networkInteractionAction({ nodes: [node.id] });
     localStorage.setItem('wiringEditorNodeList', JSON.stringify(nodes.get()));
     localStorage.setItem('wiringEditorEdgeList', JSON.stringify(edges.get()));
+    localStorage.setItem('wiringEditorDrawingNodeList', JSON.stringify(drawingNodes.get()));
+    localStorage.setItem('wiringEditorDrawingEdgeList', JSON.stringify(drawingEdges.get()));
   }
 };
 
@@ -720,6 +747,11 @@ function clearGraph() {
   edges.clear();
 }
 
+const populateDrawings = () => {
+  nodes.add(drawingNodes.get());
+  edges.add(drawingEdges.get());
+};
+
 const populateGraph = (records, label, category, clusterLabel, addUser) => {
   const nodeList = [];
   const edgeList = [];
@@ -764,6 +796,7 @@ const loadCompletions = async () => {
   clearGraph();
 
   populateGraph(completionTags, 'CREATED_COMPLETION', 'completions', '🖊 completions', true);
+  populateDrawings();
 
   const nodeList = [];
   const edgeList = [];
@@ -795,6 +828,8 @@ const loadPrompts = async () => {
   edges.clear();
 
   populateGraph(completionsData, 'CREATED_PROMPT', 'prompts', '📓 prompts', true);
+  populateDrawings();
+
   loading.style.display = 'none';
 };
 
@@ -813,6 +848,8 @@ const loadErrors = async () => {
   edges.clear();
 
   populateGraph(data, 'STATUS_CODE', 'problems', '🔥 problems', true);
+  populateDrawings();
+
   loading.style.display = 'none';
 };
 
