@@ -246,6 +246,7 @@ selectOutputNode.onclick = () => {
   setTargetEdge = {
     id: `${Math.ceil(Math.random() * 1000000)}`,
     label: '🔌 OUTPUTS_TO',
+    title: 'OUTPUTS_TO',
     category: 'drawing',
     from: activeNode.id,
     font: { align: 'middle', size: 8 },
@@ -266,6 +267,7 @@ selectMessageNode.onclick = () => {
   setTargetEdge = {
     id: `${Math.ceil(Math.random() * 1000000)}`,
     label: '💬 SENDS_MESSAGE_TO',
+    title: 'SENDS_MESSAGE_TO',
     category: 'drawing',
     from: activeNode.id,
     dashes: true,
@@ -962,6 +964,22 @@ clearNetwork.onclick = () => {
   });
 };
 
+const getActiveNodeInputSlugs = () => edges
+  .get()
+  .filter((e) => e.to === activeNode.id && e.title === 'OUTPUTS_TO')
+  .map((e) => e && nodes.get(e.from).slug);
+
+const getTemplateArgumentText = async (slugs) => {
+  // eslint-disable-next-line no-undef
+  const tagValues = await Promise.all(slugs.map(api.entity.getTagByName));
+
+  const templateData = {};
+  tagValues.forEach((val, index) => {
+    templateData[slugs[index]] = val;
+  });
+  return templateData;
+};
+
 runTargetNode.onclick = async () => {
   if (!activeNode.slug) return;
   graph.style.display = 'block';
@@ -973,11 +991,24 @@ runTargetNode.onclick = async () => {
   loading.style.display = 'block';
   runTargetNode.disabled = true;
   editor.setReadOnly(true);
+
+  const slugs = getActiveNodeInputSlugs();
+  const templateData = await getTemplateArgumentText(slugs);
   const tagName = activeNode.slug;
-  const prompt = await api.entity.getTagByName(tagName);
-  editor.setValue(`${editor.getValue()}\n\n${activeNode.label}\n\n${prompt}`);
-  selectResponse(prompt);
-  const { response } = await api.ai.prompt({ prompt });
+  // eslint-disable-next-line no-undef
+  const templateText = await api.entity.getTagByName(tagName);
+  let renderedText = '';
+  if (Object.keys(templateData).length) {
+    // eslint-disable-next-line no-undef
+    renderedText = Mustache.render(templateText, templateData);
+  } else {
+    renderedText = templateText;
+  }
+
+  editor.setValue(`${editor.getValue()}\n\n${activeNode.label}\n\n${renderedText}`);
+  selectResponse(renderedText);
+  // eslint-disable-next-line no-undef
+  const { response } = await api.ai.prompt({ prompt: renderedText });
   editor.setValue(`${editor.getValue()}\n\n${activeNode.label} - Response\n${response}`);
   selectResponse(response);
   editor.setReadOnly(false);
