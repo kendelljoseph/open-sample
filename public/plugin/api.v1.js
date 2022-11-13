@@ -230,6 +230,26 @@ const api = {
       }
       return undefined;
     },
+    remove: async (slug) => {
+      const url = `${window.location.protocol}//${window.location.host}/api/v1/tag/${slug}`;
+      try {
+        // eslint-disable-next-line no-undef
+        const result = await axios.delete(url, {
+          headers: {
+            // eslint-disable-next-line no-undef
+            Authorization: `Bearer ${userAccessToken}`,
+            'x-app-event': 'remove-tag-browser-app',
+          },
+        });
+        return result;
+      } catch (error) {
+        // eslint-disable-next-line no-console
+        console.error(error);
+        // eslint-disable-next-line no-alert
+        alert(`${error.message}`);
+        return false;
+      }
+    },
     getTagLocations: async () => {
       try {
         const url = `${window.location.protocol}//${window.location.host}/api/v1/tag/locate`;

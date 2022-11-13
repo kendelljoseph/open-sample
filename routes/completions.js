@@ -107,7 +107,8 @@ const html = (tag) => `
       <span class="visually-hidden">Toggle Dropdown</span>
     </button>
     <ul class="dropdown-menu">
-      <li><button id="edit-sample" type="button" class="dropdown-item">Edit</button></li>
+      <li><button id="edit-sample" type="button" class="dropdown-item">📝 Edit</button></li>
+      <li><button id="delete-sample" type="button" class="dropdown-item">🗑 Delete</button></li>
     </ul>
   </div>
 </body>

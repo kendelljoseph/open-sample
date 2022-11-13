@@ -148,6 +148,52 @@ router.get('/locate', async (req, res, exit) => {
   );
 });
 
+// Delete Tag
+router.delete('/:slug', async (req, res, exit) => {
+  const { slug } = req.params;
+  const appEvent = req.appAuditEvent;
+  enqueue(
+    req.authz.token,
+    async () => {
+      // Graph
+      const graph = new Neo4jDatabaseConnection();
+      const { response, error: graphErr } = await graph.read(
+        `
+          MATCH (authn:Authn {accessToken: $accessToken})
+          OPTIONAL MATCH (authn)-[:USED_PHONE_NUMBER]->(phone:PhoneNumber)
+          OPTIONAL MATCH (phone)<-[:USED_PHONE_NUMBER]-(allAuthn:Authn)
+          WITH allAuthn as authn
+          MATCH (authn)-[association:ASSOCIATED_TAG]->(tag:Tag {
+            slug: $slug
+          })
+          
+          DELETE association
+          RETURN true as success
+        `,
+        {
+          accessToken: req.authz && req.authz.token,
+          slug,
+        },
+      );
+      await graph.disconnect();
+      if (graphErr) {
+        return exit({ statusCode: 400, message: graphErr });
+      }
+
+      const records = response.map((record) => record.get('success'));
+      if (records.length) {
+        res.send(records[0]);
+      } else {
+        res.send(false);
+      }
+      return null;
+    },
+    exit,
+    appEvent,
+  );
+  return null;
+});
+
 // Locate Tag
 router.post('/locate/:id', async (req, res, exit) => {
   const { id } = req.params;

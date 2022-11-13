@@ -1,4 +1,5 @@
 const submit = document.querySelector('#edit-sample');
+const deleteSample = document.querySelector('#delete-sample');
 
 // eslint-disable-next-line no-undef
 const editor = ace.edit('editor');
@@ -67,6 +68,24 @@ submit.onclick = () => {
   const newWriteEditorValue = localStorage.getItem('tagCompletionText');
   localStorage.setItem('writeEditorSessionValue', newWriteEditorValue);
   window.location.href = '/app/write';
+};
+
+deleteSample.onclick = async () => {
+  try {
+    // eslint-disable-next-line no-undef
+    const { data } = await api.tag.remove(activeTag);
+
+    if (data) {
+      window.location.href = '/';
+    } else {
+      alert("You don't have permission to delete this tag");
+    }
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.error(error);
+    // eslint-disable-next-line no-alert
+    alert(`${error.message}`);
+  }
 };
 
 submitFunction();

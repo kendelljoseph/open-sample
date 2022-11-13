@@ -123,18 +123,13 @@ router.get('/:tag', async (req, res, exit) => {
   enqueue(
     req.authz.token,
     async () => {
-      // // Validation
-      // const errors = isRecord(req.params);
-      // if (errors.length) {
-      //   return exit({ statusCode: 400, message: errors });
-      // }
-
       // Graph
       const graph = new Neo4jDatabaseConnection();
       const { response, error: graphErr } = await graph.read(
         `
           MATCH (authn:Authn {accessToken: $accessToken})
           MATCH (tag:Tag {slug: $tag})
+          MATCH (authn)-[:ASSOCIATED_TAG]->(tag:Tag)
           MATCH (entity)-[:TAGGED]->(tag)
           RETURN {prompt: entity.prompt, entityName: entity.name, entityId: toString(id(entity))} as entity
         `,
