@@ -19,6 +19,7 @@ export const APP = {
   STRIPE_GIFT_URL: process.env.STRIPE_GIFT_URL,
   STRIPE_GRANT_URL: process.env.STRIPE_GRANT_URL,
   PUBLIC_OS_URL: process.env.PUBLIC_OS_URL,
+  MAPBOX_URL: process.env.MAPBOX_URL,
 };
 
 export const POSTGRESQL = {

@@ -2,7 +2,7 @@ import { Authn, User } from '../models/record/index.js';
 import enqueue from '../lib/enqueue.js';
 import { APP } from '../config/index.js';
 
-const html = (user, accessToken, reflectToken, appPhoneNumber, phoneNumber) => `
+const html = (user, accessToken, reflectToken, appPhoneNumber, phoneNumber, mapBoxUrl) => `
 <!DOCTYPE html>
 <html>
 <head>
@@ -67,6 +67,7 @@ const html = (user, accessToken, reflectToken, appPhoneNumber, phoneNumber) => `
   setCookie('userAccessToken', '${accessToken}', 1);
   setCookie('userRefectToken', '${reflectToken}', 1);
   setCookie('appPhoneNumber', '${appPhoneNumber}', 1);
+  setCookie('mapBoxUrl', '${mapBoxUrl}', 1);
   setTimeout(() => {
     window.location='../../'
   }, 3200);
@@ -118,6 +119,7 @@ export default () => async (req, res, next) => {
   const authnRecord = await Authn.findOne({ where: { googleId: user.id } });
   const userRecord = await User.findOne({ where: { googleId: user.id } });
 
+  const mapBoxUrl = APP.MAPBOX_URL;
   const reflectToken = APP.TWILIO_TWIML_SID;
   const appPhoneNumber = APP.TWILIO_NUMBER;
   const userAccessData = authnRecord.dataValues;
@@ -127,7 +129,7 @@ export default () => async (req, res, next) => {
   enqueue(
     'auth-callback',
     async () => {
-      res.send(html(user, accessToken, reflectToken, appPhoneNumber, phoneNumber));
+      res.send(html(user, accessToken, reflectToken, appPhoneNumber, phoneNumber, mapBoxUrl));
     },
     next,
     '(🔑):auth-callback',
