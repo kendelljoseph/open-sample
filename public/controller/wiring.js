@@ -1242,7 +1242,7 @@ downloadData.onclick = () => {
   const dlAnchorElem = document.createElement('a');
   dlAnchorElem.setAttribute('href', dataStr);
   // eslint-disable-next-line no-undef
-  dlAnchorElem.setAttribute('download', `${displayName} Data ${time}.json`);
+  dlAnchorElem.setAttribute('download', `${displayName}'s Sample ${time}.json`);
   dlAnchorElem.click();
   dlAnchorElem.remove();
 };
