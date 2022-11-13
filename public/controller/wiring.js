@@ -1175,3 +1175,32 @@ runTargetNode.onclick = async () => {
   runTargetNode.disabled = false;
   loading.style.display = 'none';
 };
+
+const homeCoords = [33.98054773154909, -84.00534408657629];
+const panCoords = [
+  homeCoords,
+  [33.976725, -84.004462],
+  [40.62984888914013, 14.483260250856471],
+  [1.3556019918588564, 103.87347329593669],
+  [31.005342, 47.440972],
+  [48.858599, 2.293849],
+];
+// eslint-disable-next-line no-undef
+const map = L.map('map', { zoomControl: false }).setView(homeCoords, 15);
+
+// eslint-disable-next-line no-undef
+L.tileLayer(mapBoxUrl, {
+  attribution: '',
+}).addTo(map);
+
+let current = 0;
+
+setInterval(() => {
+  current += 1;
+  if (current >= panCoords.length) {
+    current = 0;
+  }
+
+  const nextCoord = panCoords[current];
+  map.panTo(nextCoord);
+}, 10000);

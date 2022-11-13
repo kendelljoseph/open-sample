@@ -8,6 +8,7 @@
     <meta name="title" content="Open Sample">
     <meta name="description" content="An open-source AI assisted API">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.2/dist/leaflet.css" integrity="sha256-sA+zWATbFveLLNqWO2gtiw3HL/lh1giY/Inf1BJ0z14=" crossorigin="" />
     <style>
       @import url('https://fonts.googleapis.com/css2?family=Merriweather&display=swap');
       body {
@@ -162,7 +163,7 @@
       }
       #graph {
         position: fixed;
-        background-image: linear-gradient(#ffffff, #f1f1f1);
+        background-image: linear-gradient(rgba(255,255,255,1), rgba(255,255,255,0.95), rgba(255,255,255,0.5), #f1f1f1);
       }
       .rightGraph {
         top: 50px;
@@ -214,12 +215,12 @@
         display: flex;
       }
       #target-node {
-        font-size: 0.5em;
+        font-size: 0.9em;
         display: flex;
         align-items: center;
         justify-content: center;
-        max-width: 150px;
-        transform: translateY(-18px);
+        max-width: 50vw;
+        transform: translateY(-42px);
       }
       #cancel-node-target {
         display: none;
@@ -233,7 +234,7 @@
         position: absolute;
         align-items: center;
         justify-content: flex-end;
-        top: 0px;
+        top: -18px;
         right: 0;
         font-size: 0.75em;
         text-shadow: -2px 0px 3px rgba(0,0,0,0.25), 0 1px 2px #fff;
@@ -314,6 +315,23 @@
       .modal-input {
         margin-right: 30px;
       }
+      .menu-header {
+        font-size: 0.65em;
+        margin-left: 7px;
+      }
+      .run-button {
+        margin-left: 10px;
+        width: calc(100% - 20px);
+      }
+      #map {
+        z-index: -1;
+        position: absolute;
+        top: 50px;
+        left: 0;
+        width: 100vw;
+        height: calc(100vh - 50px);
+        opacity: 0.5;
+      } 
     </style>
 </head>
 <body>
@@ -328,22 +346,26 @@
   <div id="write-actions" class="btn-group btn-group-sm" role="group" aria-label="write actions radio toggle button group">
     <div class="btn-group btn-group-sm" role="group">
       <button type="button" class="btn btn-dark dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-        wiring
+        📁
       </button>
       <ul class="dropdown-menu">
-        <li id="run-target-node"><div class="network-option dropdown-item bg-warning">🏁 run</div></li>
+        <li id="run-target-node"><button class="btn btn-small network-option run-button btn-success">🏁 run</button></li>
+        <div class="menu-header">wiring options</div>
         <hr>
-        <li id="view-editor-only"><div class="network-option dropdown-item">👁 writer</div></li>
-        <li id="view-graph-only"><div class="network-option dropdown-item">👁 network</div></li>
-        <li id="view-both"><div class="network-option dropdown-item">👀 both</div></li>
+        <div class="menu-header">👁 view </div>
+        <li id="view-editor-only"><div class="network-option dropdown-item">show writer</div></li>
+        <li id="view-graph-only"><div class="network-option dropdown-item">show network</div></li>
+        <li id="view-both"><div class="network-option dropdown-item">show both</div></li>
         <hr>
+        <div class="menu-header">🔌 network</div>
         <li id="clear-network"><div class="network-option dropdown-item">🗑 clear</div></li>
         <hr>
-        <li id="save-prompt"><div class="network-option dropdown-item">📓 save</div></li>
+        <div class="menu-header">📓  prompt</div>
+        <li id="save-prompt"><div class="network-option dropdown-item">💾 save</div></li>
       </ul>
     </div>
     <input type="radio" class="btn-check" name="btnradio" id="to-completions" autocomplete="off">
-    <label class="btn btn-outline-success" for="to-completions"><span>🖊 </span><span class="wa-text">competions</span></label>
+    <label class="btn btn-success" for="to-completions">open<span class="wa-text"></span></label>
     <!-- <input type="radio" class="btn-check" name="btnradio" id="to-prompts" autocomplete="off">
     <label class="btn btn-outline-success" for="to-prompts"><span>📓 </span><span class="wa-text">prompts</span></label>
     <input type="radio" class="btn-check" name="btnradio" id="to-problems" autocomplete="off">
@@ -352,7 +374,7 @@
   <img id="loading" src="../../assets/thinking.gif" alt="thinking">
   <div id="graph-options-menu">
     <div id="target-tooltip">test</div>
-    <div id="target-node" class="badge bg-info text-truncate"></div>
+    <div id="target-node" class="badge bg-dark text-truncate shadow"></div>
     <!-- <button id="run-target-node" type="button" class="small-btn btn btn-warning">
       🏁 run
     </button> -->
@@ -361,6 +383,7 @@
         draw
       </button>
       <ol id="interaction-options" class="dropdown-menu">
+        <div class="menu-header">connect </div>
         <li>
           <div class="target-modal-opener dropdown-item graph-option" data-bs-toggle="modal" data-bs-target="#output-to-modal">
             🔌 OUTPUT
@@ -372,6 +395,7 @@
           </div>
         </li>
         <hr>
+        <div class="menu-header">name </div>
         <li>
           <div class="target-modal-opener dropdown-item graph-option" data-bs-toggle="modal" data-bs-target="#within-area-modal">
             📍 AREA
@@ -383,12 +407,14 @@
           </div>
         </li>
         <hr>
+        <div class="menu-header">describe</div>
         <li>
           <div class="target-modal-opener dropdown-item graph-option" data-bs-toggle="modal" data-bs-target="#within-function-modal">
             💡 FUNCTION
           </div>
         </li>
         <hr>
+        <div class="menu-header">alert</div>
         <li>
           <div class="target-modal-opener dropdown-item graph-option" data-bs-toggle="modal" data-bs-target="#trigger-event-modal">
             💥 EVENT
@@ -568,11 +594,13 @@
   </div>
   <div id="graph" class="rightGraph"></div>
   <div id="editor" class="leftEditor">What is one plus one?</div>
+  <div id="map"></div>
 </body>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.1.3/axios.min.js" integrity="sha512-0qU9M9jfqPw6FKkPafM3gy2CBAvUWnYVOfNPDYKVuRTel1PrciTj+a9P3loJB+j0QmN2Y0JYQmkBBS8W+mbezg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.1.3/ace.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/neo4j-driver"></script>
+<script src="https://unpkg.com/leaflet@1.9.2/dist/leaflet.js" integrity="sha256-o9N1jGDZrf5tS+Ft4gbIK7mYMipq9lqpVJ91xHSyKhg=" crossorigin=""></script>
 <script type="text/javascript" src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
 <script src="https://unpkg.com/mustache@latest"></script>
 <script src='../../js/cookies.js'></script>
