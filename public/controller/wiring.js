@@ -1263,11 +1263,10 @@ importData.onclick = () => {
       try {
         const data = JSON.parse(contents);
 
-        if (
-          !confirm(
-            `Import data from ${data.meta.displayName}?\n\n This will replace your current data!`,
-          )
-        ) return;
+        const message = `Import data from ${data.meta.displayName}?\n\n This will replace your current data!`;
+        // eslint-disable-next-line no-restricted-globals, no-alert
+        if (!confirm(message)) return;
+
         if (data.nodes) {
           nodes.clear();
           nodes.add(data.nodes);
