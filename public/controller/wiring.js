@@ -182,11 +182,6 @@ network.on('dragEnd', () => {
   changeCursor('grab');
 });
 
-const clearGraphData = () => {
-  nodes.clear();
-  edges.clear();
-};
-
 const hideModalOpeners = () => {
   targetModalOpener.forEach((element) => {
     // eslint-disable-next-line no-param-reassign
@@ -757,9 +752,28 @@ function clusterBy(category, label) {
   network.cluster(clusterOptionsByData);
 }
 
-function clearGraph() {
+function clearGraph(addUser = false) {
   nodes.clear();
   edges.clear();
+  drawingNodes.clear();
+  drawingEdges.clear();
+
+  if (addUser) {
+    const node = userNode();
+    nodes.add([node]);
+    network.focus(node.id, {
+      scale: 1.4,
+      animation: {
+        duration: 300,
+        easingFunction: 'easeInOutQuad',
+      },
+    });
+  }
+
+  localStorage.setItem('wiringEditorNodeList', JSON.stringify(nodes.get()));
+  localStorage.setItem('wiringEditorEdgeList', JSON.stringify(edges.get()));
+  localStorage.setItem('wiringEditorDrawingNodeList', JSON.stringify(drawingNodes.get()));
+  localStorage.setItem('wiringEditorDrawingEdgeList', JSON.stringify(drawingEdges.get()));
 }
 
 const populateDrawings = () => {
@@ -1107,7 +1121,7 @@ editor.commands.addCommand({
 // };
 toCompletions.onclick = async () => {
   hideGraphOptions();
-  clearGraphData();
+  clearGraph();
 
   toCompletions.disabled = true;
   await loadCompletions();
@@ -1131,18 +1145,8 @@ showConfig.onclick = () => {
 };
 
 clearNetwork.onclick = () => {
-  const node = userNode();
-
-  nodes.clear();
-  edges.clear();
-  nodes.add([node]);
-  network.focus(node.id, {
-    scale: 1.4,
-    animation: {
-      duration: 300,
-      easingFunction: 'easeInOutQuad',
-    },
-  });
+  clearGraph(true);
+  editor.setValue('');
 };
 
 const getOutputToEdgeByNode = (node) => edges.get().filter((e) => e.to === node.id && e.title === 'OUTPUTS_TO');

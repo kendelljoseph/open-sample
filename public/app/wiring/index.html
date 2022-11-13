@@ -206,6 +206,9 @@
         font-size: 0.85em;
         margin-bottom: 3px;
         width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
       }
       .message-modal-type-options {
         padding-left: 30px;
@@ -308,6 +311,10 @@
       .network-option {
         cursor: pointer;
         user-select: none;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-flow: row;
       }
       .modal-input {
         margin-right: 30px;
@@ -329,6 +336,10 @@
         width: 100vw;
         height: calc(100vh - 50px);
         opacity: 0;
+      }
+      .caption {
+        font-size: 0.45em;
+        transform: translateY(3px);
       }
       .fadeInOut {
         animation: fadeInOut 13s ease-in-out infinite;
@@ -367,16 +378,16 @@
       <ul class="dropdown-menu shadow">
         <li id="run-target-node"><button class="btn btn-small shadow-sm network-option run-button btn-danger">🏁 run</button></li>
         <hr>
-        <div class="menu-header">👁 view </div>
-        <li id="view-editor-only"><div class="network-option dropdown-item">show writer</div></li>
-        <li id="view-graph-only"><div class="network-option dropdown-item">show network</div></li>
-        <li id="view-both"><div class="network-option dropdown-item">show both</div></li>
-        <hr>
-        <div class="menu-header">🔌 network</div>
+        <div class="menu-header">🔬 sample</div>
         <li id="clear-network"><div class="network-option dropdown-item">clear</div></li>
         <hr>
+        <div class="menu-header">👁 view </div>
+        <li id="view-both"><div class="network-option dropdown-item">both<span class="caption">Ctrl + 1</span></div></li>
+        <li id="view-graph-only"><div class="network-option dropdown-item">network<span class="caption">Ctrl + 2</span></div></li>
+        <li id="view-editor-only"><div class="network-option dropdown-item">writer<span class="caption">Ctrl + 3</span></div><span></span></li>
+        <hr>
         <div class="menu-header">📓  prompt</div>
-        <li id="save-prompt"><div class="network-option dropdown-item">save</div></li>
+        <li id="save-prompt"><div class="network-option dropdown-item">save<span class="caption">Ctrl/Cmd + Shift + S</span></div></li>
         <hr>
         <div class="menu-header">📊 data</div>
         <li id="download-data"><div class="network-option dropdown-item">download</div></li>
@@ -402,38 +413,38 @@
         <div class="menu-header">connect </div>
         <li>
           <div class="target-modal-opener dropdown-item graph-option" data-bs-toggle="modal" data-bs-target="#output-to-modal">
-            🔌 OUTPUT
+            🔌 Output
           </div>
         </li>
         <li>
           <div class="target-modal-opener dropdown-item graph-option" data-bs-toggle="modal" data-bs-target="#message-to-modal">
-            💬 MESSAGE
+            💬 Message
           </div>
         </li>
         <hr>
         <div class="menu-header">name </div>
         <li>
           <div class="target-modal-opener dropdown-item graph-option" data-bs-toggle="modal" data-bs-target="#within-area-modal">
-            📍 AREA
+            📍 Area
           </div>
         </li>
         <li>
           <div class="target-modal-opener dropdown-item graph-option" data-bs-toggle="modal" data-bs-target="#within-role-modal">
-            👤 ROLE
+            👤 Role
           </div>
         </li>
         <hr>
         <div class="menu-header">describe</div>
         <li>
           <div class="target-modal-opener dropdown-item graph-option" data-bs-toggle="modal" data-bs-target="#within-function-modal">
-            💡 FUNCTION
+            💡 Function
           </div>
         </li>
         <hr>
         <div class="menu-header">alert</div>
         <li>
           <div class="target-modal-opener dropdown-item graph-option" data-bs-toggle="modal" data-bs-target="#trigger-event-modal">
-            💥 EVENT
+            💥 Event
           </div>
         </li>
       </ol>
