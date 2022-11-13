@@ -1240,7 +1240,7 @@ downloadData.onclick = () => {
   const dataStr = `data:text/json;charset=utf-8,${encodeURIComponent(JSON.stringify(data))}`;
   const dlAnchorElem = document.createElement('a');
   dlAnchorElem.setAttribute('href', dataStr);
-  dlAnchorElem.setAttribute('download', `${displayName} Wiring ${time}.json`);
+  dlAnchorElem.setAttribute('download', `${displayName} Data ${time}.json`);
   dlAnchorElem.click();
   dlAnchorElem.remove();
 };
