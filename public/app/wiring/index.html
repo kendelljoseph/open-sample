@@ -221,6 +221,7 @@
         justify-content: center;
         max-width: 50vw;
         transform: translateY(-42px);
+        animation: bounce-glow 1s ease-in-out infinite;
       }
       #cancel-node-target {
         display: none;
@@ -228,6 +229,7 @@
       }
       #run-target-node {
         display: none;
+        animation: bounce 1s ease-in-out infinite;
       }
       #target-tooltip {
         display: none;
@@ -336,6 +338,11 @@
         40% {transform: translateX(-10px);}
         60% {transform: translateX(-5px);}
       }
+      @keyframes bounce-glow {
+        0%, 20%, 50%, 80%, 100% {opacity: 1;}
+        40% {opacity: 0.9;}
+        60% {opacity: 0.75;}
+      }
       @keyframes fadeInOut {
         0% {opacity: 0;}
         50% {opacity: 0.5;}
@@ -352,14 +359,13 @@
   </div>
   <div id="write-tip"></div>
   <button id="back" class="button rotate">&#10149;</button>
-  <div id="write-actions" class="btn-group btn-group-sm" role="group" aria-label="write actions radio toggle button group">
-    <div class="btn-group btn-group-sm" role="group">
-      <button type="button" class="btn btn-dark dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+  <div id="write-actions" class="btn-group shadow-sm btn-group-sm" role="group" aria-label="write actions radio toggle button group">
+    <div class="btn-group btn-group-sm shadow-sm" role="group">
+      <button type="button" class="btn shadow-sm btn-dark dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
         📁
       </button>
-      <ul class="dropdown-menu">
-        <li id="run-target-node"><button class="btn btn-small network-option run-button btn-success">🏁 run</button></li>
-        <div class="menu-header">wiring options</div>
+      <ul class="dropdown-menu shadow">
+        <li id="run-target-node"><button class="btn btn-small shadow-sm network-option run-button btn-danger">🏁 run</button></li>
         <hr>
         <div class="menu-header">👁 view </div>
         <li id="view-editor-only"><div class="network-option dropdown-item">show writer</div></li>
@@ -367,10 +373,13 @@
         <li id="view-both"><div class="network-option dropdown-item">show both</div></li>
         <hr>
         <div class="menu-header">🔌 network</div>
-        <li id="clear-network"><div class="network-option dropdown-item">🗑 clear</div></li>
+        <li id="clear-network"><div class="network-option dropdown-item">clear</div></li>
         <hr>
         <div class="menu-header">📓  prompt</div>
-        <li id="save-prompt"><div class="network-option dropdown-item">💾 save</div></li>
+        <li id="save-prompt"><div class="network-option dropdown-item">save</div></li>
+        <hr>
+        <div class="menu-header">📊 data</div>
+        <li id="save-prompt"><div class="network-option dropdown-item">download</div></li>
       </ul>
     </div>
     <input type="radio" class="btn-check" name="btnradio" id="to-completions" autocomplete="off">
@@ -385,10 +394,10 @@
     <div id="target-tooltip">test</div>
     <div id="target-node" class="badge bg-dark text-truncate shadow"></div>
     <div class="btn-group mt-2 target-modal-opener" role="group">
-      <button type="button" class="small-btn btn btn-success dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+      <button type="button" class="small-btn btn btn-success shadow dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
         draw
       </button>
-      <ol id="interaction-options" class="dropdown-menu">
+      <ol id="interaction-options" class="dropdown-menu shadow-lg">
         <div class="menu-header">connect </div>
         <li>
           <div class="target-modal-opener dropdown-item graph-option" data-bs-toggle="modal" data-bs-target="#output-to-modal">

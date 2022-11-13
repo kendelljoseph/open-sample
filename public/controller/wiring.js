@@ -1019,14 +1019,14 @@ saveAsPrompt.onclick = () => {
 };
 
 const editorElement = document.getElementById('editor');
-viewBoth.onclick = () => {
+const showBothUX = () => {
   graph.style.display = 'block';
   graph.classList.remove('fullGraph');
   editorElement.style.display = 'block';
   editorElement.classList.remove('fullEditor');
   showConfig.style.display = 'block';
 };
-viewGraphOnly.onclick = () => {
+const showGraphUX = () => {
   graph.style.display = 'block';
   graph.classList.add('fullGraph');
   editorElement.style.display = 'none';
@@ -1034,7 +1034,7 @@ viewGraphOnly.onclick = () => {
   configContainer.style.display = 'none';
   showConfig.style.display = 'none';
 };
-viewEditorOnly.onclick = () => {
+const showEditorUx = () => {
   editorElement.style.display = 'block';
   editorElement.classList.add('fullEditor');
   graph.style.display = 'none';
@@ -1042,7 +1042,55 @@ viewEditorOnly.onclick = () => {
   configContainer.style.display = 'none';
   showConfig.style.display = 'none';
 };
+viewBoth.onclick = showBothUX;
+viewGraphOnly.onclick = showGraphUX;
+viewEditorOnly.onclick = showEditorUx;
 
+editor.commands.addCommand({
+  name: 'showBothUX',
+  bindKey: {
+    win: window.addEventListener('keydown', (event) => {
+      if (event.ctrlKey && event.keyCode === 49) {
+        showBothUX();
+      }
+    }),
+    mac: 'Ctrl-1',
+  },
+  exec() {
+    showBothUX();
+    return false;
+  },
+});
+editor.commands.addCommand({
+  name: 'showGraphUX',
+  bindKey: {
+    win: window.addEventListener('keydown', (event) => {
+      if (event.ctrlKey && event.keyCode === 50) {
+        showGraphUX();
+      }
+    }),
+    mac: 'Ctrl-2',
+  },
+  exec() {
+    showGraphUX();
+    return false;
+  },
+});
+editor.commands.addCommand({
+  name: 'showEditorUx',
+  bindKey: {
+    win: window.addEventListener('keydown', (event) => {
+      if (event.ctrlKey && event.keyCode === 51) {
+        showEditorUx();
+      }
+    }),
+    mac: 'Ctrl-3',
+  },
+  exec() {
+    showEditorUx();
+    return false;
+  },
+});
 // toPrompts.onclick = async () => {
 //   hideGraphOptions();
 //   clearGraphData();
