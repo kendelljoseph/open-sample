@@ -29,6 +29,7 @@ const showConfig = document.querySelector('#show-config');
 const clearNetwork = document.querySelector('#clear-network');
 const runTargetNode = document.querySelector('#run-target-node');
 const saveAsPrompt = document.querySelector('#save-prompt');
+const downloadData = document.querySelector('#download-data');
 if (navigator.platform.indexOf('Win') !== -1) {
   writeTip.innerHTML = 'Ctrl + Enter';
 } else if (navigator.platform.indexOf('Mac') !== -1) {
@@ -1222,6 +1223,26 @@ runTargetNode.onclick = async () => {
   editor.setReadOnly(false);
   runTargetNode.disabled = false;
   loading.style.display = 'none';
+};
+
+downloadData.onclick = () => {
+  const time = new Date().getTime();
+  const data = {
+    meta: {
+      time,
+      displayName,
+      version: '0.0.1',
+    },
+    nodes: nodes.get(),
+    edges: edges.get(),
+    prompt: editor.getValue(),
+  };
+  const dataStr = `data:text/json;charset=utf-8,${encodeURIComponent(JSON.stringify(data))}`;
+  const dlAnchorElem = document.createElement('a');
+  dlAnchorElem.setAttribute('href', dataStr);
+  dlAnchorElem.setAttribute('download', `${displayName} Wiring ${time}.json`);
+  dlAnchorElem.click();
+  dlAnchorElem.remove();
 };
 
 const homeCoords = [33.98054773154909, -84.00534408657629];
