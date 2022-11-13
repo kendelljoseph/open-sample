@@ -1180,8 +1180,10 @@ const homeCoords = [33.98054773154909, -84.00534408657629];
 const panCoords = [
   homeCoords,
   [33.976725, -84.004462],
+  [8.4787440301627, -13.200289649660585],
   [40.62984888914013, 14.483260250856471],
   [1.3556019918588564, 103.87347329593669],
+  [30.12662754343121, 31.203049582043974],
   [31.005342, 47.440972],
   [48.858599, 2.293849],
 ];
@@ -1194,13 +1196,12 @@ L.tileLayer(mapBoxUrl, {
 }).addTo(map);
 
 let current = 0;
-
-setInterval(() => {
+// eslint-disable-next-line no-unused-vars
+const fadeInOutInterval = setInterval(() => {
   current += 1;
   if (current >= panCoords.length) {
     current = 0;
   }
-
   const nextCoord = panCoords[current];
   map.panTo(nextCoord);
-}, 10000);
+}, 13000);
