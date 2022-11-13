@@ -226,12 +226,7 @@
         animation: bounce 2s ease-in-out infinite;
       }
       #run-target-node {
-        z-index: 99999;
-        position: absolute;
-        top: 22px;
-        right: 75px;
-        width: 80px;
-        font-size: 0.85em;
+        display: none;
       }
       #target-tooltip {
         display: none;
@@ -263,7 +258,7 @@
       #view-mode {
         position: absolute;
         top: 10px;
-        right: 80px;
+        right: 10px;
         height: 20px;
       }
       .view-input-option {
@@ -332,42 +327,35 @@
   <button id="back" class="button rotate">&#10149;</button>
   <div id="write-actions" class="btn-group btn-group-sm" role="group" aria-label="write actions radio toggle button group">
     <div class="btn-group btn-group-sm" role="group">
-      <button type="button" class="btn btn-success dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-        network
+      <button type="button" class="btn btn-dark dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+        wiring
       </button>
       <ul class="dropdown-menu">
-        <!-- <li id="commit-network"><div class="network-option dropdown-item">Commit</div></li>
-        <hr> -->
-        <li id="clear-network"><div class="network-option dropdown-item">CLEAR</div></li>
+        <li id="run-target-node"><div class="network-option dropdown-item bg-warning">🏁 run</div></li>
         <hr>
-        <li id="save-prompt"><div class="network-option dropdown-item">📓 SAVE</div></li>
+        <li id="view-editor-only"><div class="network-option dropdown-item">👁 writer</div></li>
+        <li id="view-graph-only"><div class="network-option dropdown-item">👁 network</div></li>
+        <li id="view-both"><div class="network-option dropdown-item">👀 both</div></li>
+        <hr>
+        <li id="clear-network"><div class="network-option dropdown-item">🗑 clear</div></li>
+        <hr>
+        <li id="save-prompt"><div class="network-option dropdown-item">📓 save</div></li>
       </ul>
     </div>
     <input type="radio" class="btn-check" name="btnradio" id="to-completions" autocomplete="off">
     <label class="btn btn-outline-success" for="to-completions"><span>🖊 </span><span class="wa-text">competions</span></label>
-    <input type="radio" class="btn-check" name="btnradio" id="to-prompts" autocomplete="off">
+    <!-- <input type="radio" class="btn-check" name="btnradio" id="to-prompts" autocomplete="off">
     <label class="btn btn-outline-success" for="to-prompts"><span>📓 </span><span class="wa-text">prompts</span></label>
     <input type="radio" class="btn-check" name="btnradio" id="to-problems" autocomplete="off">
-    <label class="btn btn-outline-success" for="to-problems"><span>🔥 </span><span class="wa-text">problems</span></label>
-  </div>
-  <div id="title" class="badge bg-dark btn-sm">wiring</div>
-  <div id="view-mode" class="btn-group btn-group-sm" role="group" aria-label="Basic radio toggle button group">
-    <input type="radio" class="btn-check" name="btnradio" id="view-both" autocomplete="off" checked>
-    <label class="btn btn-sm btn-outline-secondary view-input-option" for="view-both">1</label>
-  
-    <input type="radio" class="btn-check" name="btnradio" id="view-editor-only" autocomplete="off">
-    <label class="btn btn-sm btn-outline-secondary view-input-option" for="view-editor-only">2</label>
-  
-    <input type="radio" class="btn-check" name="btnradio" id="view-graph-only" autocomplete="off">
-    <label class="btn btn-sm btn-outline-secondary view-input-option" for="view-graph-only">3</label>
+    <label class="btn btn-outline-success" for="to-problems"><span>🔥 </span><span class="wa-text">problems</span></label> -->
   </div>
   <img id="loading" src="../../assets/thinking.gif" alt="thinking">
   <div id="graph-options-menu">
     <div id="target-tooltip">test</div>
     <div id="target-node" class="badge bg-info text-truncate"></div>
-    <button id="run-target-node" type="button" class="small-btn btn btn-warning">
+    <!-- <button id="run-target-node" type="button" class="small-btn btn btn-warning">
       🏁 run
-    </button>
+    </button> -->
     <div class="btn-group mt-2 target-modal-opener" role="group">
       <button type="button" class="small-btn btn btn-success dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
         draw

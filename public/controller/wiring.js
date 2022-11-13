@@ -224,6 +224,10 @@ const networkInteractionAction = (params) => {
         drawingEdges.add(setTargetEdge);
 
         localStorage.setItem('wiringEditorEdgeList', JSON.stringify(edges.get()));
+        localStorage.setItem(
+          'wiringEditorDrawingEdgeList',
+          JSON.stringify(drawingEdges.get()),
+        );
         showModalOpeners();
         graph.classList.remove('select-bkg');
       }
@@ -235,6 +239,7 @@ const networkInteractionAction = (params) => {
     }
     activeNode = firstNode;
   } else {
+    runTargetNode.style.display = 'none';
     graphOptionsMenu.style.display = 'none';
     targetNode.style.display = 'none';
     cancelNodeTarget.style.display = 'none';
@@ -1038,14 +1043,14 @@ viewEditorOnly.onclick = () => {
   showConfig.style.display = 'none';
 };
 
-toPrompts.onclick = async () => {
-  hideGraphOptions();
-  clearGraphData();
+// toPrompts.onclick = async () => {
+//   hideGraphOptions();
+//   clearGraphData();
 
-  toPrompts.disabled = true;
-  await loadPrompts();
-  toPrompts.disabled = false;
-};
+//   toPrompts.disabled = true;
+//   await loadPrompts();
+//   toPrompts.disabled = false;
+// };
 toCompletions.onclick = async () => {
   hideGraphOptions();
   clearGraphData();
@@ -1054,13 +1059,13 @@ toCompletions.onclick = async () => {
   await loadCompletions();
   toCompletions.disabled = false;
 };
-toProblems.onclick = async () => {
-  clearGraphData();
-  hideGraphOptions();
-  toProblems.disabled = true;
-  await loadErrors();
-  toProblems.disabled = false;
-};
+// toProblems.onclick = async () => {
+//   clearGraphData();
+//   hideGraphOptions();
+//   toProblems.disabled = true;
+//   await loadErrors();
+//   toProblems.disabled = false;
+// };
 
 showConfig.onclick = () => {
   const isShowing = configContainer.style.display === 'block';
