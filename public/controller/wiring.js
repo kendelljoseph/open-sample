@@ -315,6 +315,7 @@ selectArea.onclick = () => {
       id: `area-${areaName}`,
       label: areaName,
       category: 'drawing',
+      title: 'Area',
       color: '#aa0000',
       size: 8,
       font: {
@@ -371,6 +372,7 @@ selectFunction.onclick = () => {
     const node = nodes.get(`function-${functionName}`) || {
       id: `function-${functionName}`,
       label: functionName,
+      title: 'Function',
       category: 'drawing',
       color: '#00ffff',
       size: 8,
@@ -429,6 +431,7 @@ selectRole.onclick = () => {
     const node = nodes.get(`role-${roleName}`) || {
       id: `role-${roleName}`,
       label: roleName,
+      title: 'Role',
       category: 'drawing',
       color: '#505',
       size: 8,
@@ -487,6 +490,7 @@ selectEvent.onclick = () => {
     const node = nodes.get(`event-${eventName}`) || {
       id: `event-${eventName}`,
       label: eventName,
+      title: 'Event',
       category: 'drawing',
       color: '#00aa00',
       size: 8,
