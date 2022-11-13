@@ -30,6 +30,7 @@ const clearNetwork = document.querySelector('#clear-network');
 const runTargetNode = document.querySelector('#run-target-node');
 const saveAsPrompt = document.querySelector('#save-prompt');
 const downloadData = document.querySelector('#download-data');
+const importData = document.querySelector('#import-data');
 if (navigator.platform.indexOf('Win') !== -1) {
   writeTip.innerHTML = 'Ctrl + Enter';
 } else if (navigator.platform.indexOf('Mac') !== -1) {
@@ -1240,9 +1241,59 @@ downloadData.onclick = () => {
   const dataStr = `data:text/json;charset=utf-8,${encodeURIComponent(JSON.stringify(data))}`;
   const dlAnchorElem = document.createElement('a');
   dlAnchorElem.setAttribute('href', dataStr);
+  // eslint-disable-next-line no-undef
   dlAnchorElem.setAttribute('download', `${displayName} Data ${time}.json`);
   dlAnchorElem.click();
   dlAnchorElem.remove();
+};
+
+importData.onclick = () => {
+  const fileInputElem = document.createElement('input');
+  fileInputElem.setAttribute('type', 'file');
+  fileInputElem.onchange = () => {
+    const fileList = fileInputElem.files;
+    if (fileList.length && fileList[0].type !== 'application/json') return alert('Unsupported file type');
+
+    // Create a FileReader
+    const reader = new FileReader();
+
+    // Set up an event handler that will be called when the file has been read
+    reader.onload = (event) => {
+      const contents = event.target.result;
+      try {
+        const data = JSON.parse(contents);
+
+        if (
+          !confirm(
+            `Import data from ${data.meta.displayName}?\n\n This will replace your current data!`,
+          )
+        ) return;
+        if (data.nodes) {
+          nodes.clear();
+          nodes.add(data.nodes);
+          localStorage.setItem('wiringEditorNodeList', JSON.stringify(nodes.get()));
+        }
+        if (data.edges) {
+          edges.clear();
+          edges.add(data.edges);
+          localStorage.setItem('wiringEditorEdgeList', JSON.stringify(edges.get()));
+        }
+        if (data.prompt) {
+          editor.setValue(data.prompt);
+        }
+      } catch (error) {
+        console.log(error);
+        alert(`Could not read file\n\n${error.message}`);
+      }
+
+      fileInputElem.remove();
+    };
+
+    // Read the file
+    reader.readAsText(fileList[0]);
+  };
+
+  fileInputElem.click();
 };
 
 const homeCoords = [33.98054773154909, -84.00534408657629];
