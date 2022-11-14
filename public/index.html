@@ -102,6 +102,12 @@
         flex-flow: row;
         padding: 10px;
       }
+      .menu-header {
+        font-family: 'Courier New', Courier, monospace;
+        font-size: 0.65em;
+        margin-left: 70px;
+        user-select: none;
+      }
       #profile {
         position: absolute;
         top: 10px;
@@ -130,17 +136,19 @@
       #animation-graphic {
         cursor: pointer;
         user-select: none;
-        width: 170px;
-        height: 170px;
+        width: 50px;
+        height: 50px;
         margin-bottom: 10px;
         border-radius: 100%;
         box-sizing: border-box;
-        box-shadow: 0 8px 10px -8px #888;
-        transition: all 0.15s ease-out;
+        box-shadow: 0 8px 10px -9px #888;
+        outline: 1px solid rgba(0, 0, 0, 0);
+        transition: all 1.25s ease-out;
       }
       #animation-graphic:hover {
-        box-shadow: 0 15px 80px -8px #333, 0 3px 30px 1px #f0f;
-        transform: scale(1.05);
+        outline: 85px solid rgba(39, 15, 0, 0.15);
+        box-shadow: 0 15px 80px -8px #333, 0 30px 40px -5px #000;
+        transform: scale(1.1);
       }
       #build {
         display: none;
@@ -181,7 +189,6 @@
       <span class="visually-hidden">Toggle Dropdown</span>
     </button>
     <ul class="dropdown-menu">
-      <li><hr class="dropdown-divider"></li>
       <li><a class="dropdown-item" href="/app/wiring">🔬 Samples</a></li>
       <li><hr class="dropdown-divider"></li>
       <li><a class="dropdown-item" href="/app/prompts">📓 Prompts</a></li>
@@ -190,6 +197,7 @@
       <!-- <li><a class="dropdown-item" href="/app/write">📝 Writer</a></li> -->
       <li><a class="dropdown-item" href="/app/build">👷‍♀️ Codex (beta)</a></li>
       <li><hr class="dropdown-divider"></li>
+      <div class="menu-header">My Account</div>
       <li><a class="dropdown-item" href="/app/profile">Profile</a></li>
       <li><a class="dropdown-item" href="/app/history">History</a></li>
       <li><a class="dropdown-item" href="/app/admin">Admin</a></li>

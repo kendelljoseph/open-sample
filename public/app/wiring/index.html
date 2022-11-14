@@ -234,6 +234,10 @@
         display: none;
         animation: bounce 1s ease-in-out infinite;
       }
+      #edit-target-image {
+        display: none;
+        animation: bounce 3s ease-out infinite;
+      }
       #target-tooltip {
         display: none;
         position: absolute;
@@ -328,6 +332,11 @@
         margin-left: 10px;
         width: calc(100% - 20px);
       }
+      .edit-button {
+        margin-left: 40px;
+        width: calc(100% - 80px);
+        align-items: center;
+      }
       #map {
         z-index: -1;
         position: absolute;
@@ -380,6 +389,7 @@
         🔬
       </button>
       <ul class="dropdown-menu shadow">
+        <li id="edit-target-image"><button class="btn btn-small shadow-sm network-option edit-button btn-warning">🖼 edit</button></li>
         <li id="run-target-node"><button class="btn btn-small shadow-sm network-option run-button btn-danger">🏁 run</button></li>
         <hr>
         <div class="menu-header">📁 sample</div>

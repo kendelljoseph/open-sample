@@ -29,6 +29,8 @@ const showConfig = document.querySelector('#show-config');
 const clearNetwork = document.querySelector('#clear-network');
 const submit = document.querySelector('#submit');
 const runTargetNode = document.querySelector('#run-target-node');
+const editTargetImage = document.querySelector('#edit-target-image');
+
 const saveAsPrompt = document.querySelector('#save-prompt');
 const downloadData = document.querySelector('#download-data');
 const importData = document.querySelector('#import-data');
@@ -207,6 +209,12 @@ const networkInteractionAction = (params) => {
 
     const firstNode = nodes.get(params.nodes[0]);
 
+    if (firstNode.size && firstNode.size > 20) {
+      editTargetImage.style.display = 'block';
+    } else {
+      editTargetImage.style.display = 'none';
+    }
+
     if (firstNode && firstNode.label) {
       if (firstNode.slug) {
         runTargetNode.style.display = 'block';
@@ -237,6 +245,7 @@ const networkInteractionAction = (params) => {
     }
     activeNode = firstNode;
   } else {
+    editTargetImage.style.display = 'none';
     runTargetNode.style.display = 'none';
     graphOptionsMenu.style.display = 'none';
     targetNode.style.display = 'none';
@@ -1247,6 +1256,21 @@ runTargetNode.onclick = async () => {
   editor.setReadOnly(false);
   runTargetNode.disabled = false;
   loading.style.display = 'none';
+};
+
+editTargetImage.onclick = () => {
+  // eslint-disable-next-line no-alert, no-restricted-globals
+  if (!confirm('Edit Node image?')) return;
+  // eslint-disable-next-line no-alert
+  const url = prompt('image address:');
+  if (url) {
+    nodes.update([
+      {
+        id: activeNode.id,
+        image: url,
+      },
+    ]);
+  }
 };
 
 downloadData.onclick = () => {
