@@ -1111,15 +1111,20 @@ editor.commands.addCommand({
     return false;
   },
 });
-// toPrompts.onclick = async () => {
-//   hideGraphOptions();
-//   clearGraphData();
+toPrompts.onclick = async () => {
+  // eslint-disable-next-line no-alert, no-restricted-globals
+  if (!confirm('Load Prompts?\n\n This will clear your current network')) return;
+  hideGraphOptions();
+  clearGraph();
 
-//   toPrompts.disabled = true;
-//   await loadPrompts();
-//   toPrompts.disabled = false;
-// };
+  toPrompts.disabled = true;
+  await loadPrompts();
+  toPrompts.disabled = false;
+};
+
 toCompletions.onclick = async () => {
+  // eslint-disable-next-line no-alert, no-restricted-globals
+  if (!confirm('Load Completions?\n\n This will clear your current network')) return;
   hideGraphOptions();
   clearGraph();
 
@@ -1127,13 +1132,16 @@ toCompletions.onclick = async () => {
   await loadCompletions();
   toCompletions.disabled = false;
 };
-// toProblems.onclick = async () => {
-//   clearGraphData();
-//   hideGraphOptions();
-//   toProblems.disabled = true;
-//   await loadErrors();
-//   toProblems.disabled = false;
-// };
+toProblems.onclick = async () => {
+  // eslint-disable-next-line no-alert, no-restricted-globals
+  if (!confirm('Load Problems?\n\n This will clear your current network')) return;
+  hideGraphOptions();
+  clearGraph();
+
+  toProblems.disabled = true;
+  await loadErrors();
+  toProblems.disabled = false;
+};
 
 showConfig.onclick = () => {
   const isShowing = configContainer.style.display === 'block';
@@ -1145,6 +1153,8 @@ showConfig.onclick = () => {
 };
 
 clearNetwork.onclick = () => {
+  // eslint-disable-next-line no-restricted-globals, no-alert
+  if (!confirm('Clear Sample?\n\n This will clear this sample')) return;
   clearGraph(true);
   editor.setValue('');
 };
