@@ -27,14 +27,15 @@ const writeTip = document.querySelector('#write-tip');
 const configContainer = document.querySelector('#config');
 const showConfig = document.querySelector('#show-config');
 const clearNetwork = document.querySelector('#clear-network');
+const submit = document.querySelector('#submit');
 const runTargetNode = document.querySelector('#run-target-node');
 const saveAsPrompt = document.querySelector('#save-prompt');
 const downloadData = document.querySelector('#download-data');
 const importData = document.querySelector('#import-data');
 if (navigator.platform.indexOf('Win') !== -1) {
-  writeTip.innerHTML = 'Ctrl + Enter';
+  writeTip.innerHTML = `Viewing as ${displayName}`;
 } else if (navigator.platform.indexOf('Mac') !== -1) {
-  writeTip.innerHTML = 'Cmd + Enter';
+  writeTip.innerHTML = `Viewing as ${displayName}`;
 }
 
 // eslint-disable-next-line no-undef
@@ -1157,6 +1158,10 @@ clearNetwork.onclick = () => {
   if (!confirm('Clear Sample?\n\n This will clear this sample')) return;
   clearGraph(true);
   editor.setValue('');
+};
+
+submit.onclick = () => {
+  submitFunction();
 };
 
 const getOutputToEdgeByNode = (node) => edges.get().filter((e) => e.to === node.id && e.title === 'OUTPUTS_TO');

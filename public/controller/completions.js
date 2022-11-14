@@ -66,8 +66,8 @@ const submitFunction = async () => {
 
 submit.onclick = () => {
   const newWriteEditorValue = localStorage.getItem('tagCompletionText');
-  localStorage.setItem('writeEditorSessionValue', newWriteEditorValue);
-  window.location.href = '/app/write';
+  localStorage.setItem('wiringEditorSessionValue', newWriteEditorValue);
+  window.location.href = '/app/wiring';
 };
 
 deleteSample.onclick = async () => {

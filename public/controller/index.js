@@ -3,7 +3,7 @@ const user = document.querySelector('#user');
 const userPicture = document.querySelector('#user-image');
 const login = document.querySelector('#login');
 const logout = document.querySelector('#logout');
-const write = document.querySelector('#write');
+// const write = document.querySelector('#write');
 const wiring = document.querySelector('#wiring');
 const build = document.querySelector('#build');
 const github = document.querySelector('#github');
@@ -37,9 +37,9 @@ github.onclick = () => {
 login.onclick = () => {
   window.location = '/auth';
 };
-write.onclick = () => {
-  window.location = '/app/write';
-};
+// write.onclick = () => {
+//   window.location = '/app/write';
+// };
 wiring.onclick = () => {
   window.location = '/app/wiring';
 };

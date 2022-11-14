@@ -85,13 +85,13 @@ const populateList = (records) => {
     liContainer.classList.add('ms-2', 'me-auto');
     subHeading.classList.add('fw-bold');
     promptContent.classList.add('my-2');
-    writeButton.classList.add('btn', 'mx-1', 'btn-sm', 'btn-success');
-    wireButton.classList.add('btn', 'mx-1', 'btn-sm', 'btn-outline-success');
+    writeButton.classList.add('btn', 'mx-1', 'btn-sm', 'btn-outline-success');
+    wireButton.classList.add('btn', 'mx-1', 'btn-sm', 'btn-success');
     tagButton.classList.add('btn', 'me-3', 'btn-sm', 'btn-outline-primary');
     deleteButton.classList.add('btn', 'me-3', 'btn-sm', 'btn-outline-danger');
 
     writeButton.textContent = '📝';
-    wireButton.textContent = '🔌';
+    wireButton.textContent = '📁';
     tagButton.textContent = '🖊';
     deleteButton.textContent = '🗑';
 
