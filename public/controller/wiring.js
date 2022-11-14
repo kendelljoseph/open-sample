@@ -201,7 +201,26 @@ const showModalOpeners = () => {
 let activeNode = null;
 let setTargetEdge = null;
 let selectingTargetNode = false;
+const classifyActivity = async (params) => {
+  const n = nodes.get(params.nodes);
+  const e = edges.get(params.edges);
+  const activity = JSON.stringify({ n, e }, null, 2);
+  const activityPrompt = 'Describe the connectivity of this network in a short sentence (10 words or less):';
+  const prompt = `Given this graph dataset:\n\n${activity}\n\n${activityPrompt}`;
+
+  writeTip.innerHTML = 'reading...';
+  // eslint-disable-next-line no-undef
+  const data = await api.ai.prompt({ prompt });
+
+  if (data) {
+    writeTip.innerHTML = `${data.response || ''}`;
+  } else {
+    writeTip.innerHTML = `Viewing as ${displayName}`;
+  }
+};
+
 const networkInteractionAction = (params) => {
+  classifyActivity(params);
   if (params.nodes.length === 1) {
     if (network.isCluster(params.nodes[0]) === true) {
       network.openCluster(params.nodes[0]);
