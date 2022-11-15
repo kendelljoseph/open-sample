@@ -35,6 +35,7 @@ const editTargetImage = document.querySelector('#edit-target-image');
 
 const saveAsPrompt = document.querySelector('#save-prompt');
 const downloadData = document.querySelector('#download-data');
+const buyData = document.querySelector('#buy-data');
 const importData = document.querySelector('#import-data');
 if (navigator.platform.indexOf('Win') !== -1) {
   writeTip.innerHTML = `Viewing as ${displayName}`;
@@ -1336,6 +1337,7 @@ downloadData.onclick = () => {
   const time = new Date().getTime();
   const data = {
     meta: {
+      buyLink: localStorage.getItem('buyLink'),
       time,
       displayName,
       version: '0.0.1',
@@ -1351,6 +1353,21 @@ downloadData.onclick = () => {
   dlAnchorElem.setAttribute('download', `${displayName}'s Sample ${time}.json`);
   dlAnchorElem.click();
   dlAnchorElem.remove();
+};
+
+buyData.onclick = () => {
+  if (window.buyLink) {
+    // eslint-disable-next-line no-restricted-globals, no-alert
+    if (!confirm('Purchase this sample?')) return;
+    window.open(window.buyLink);
+  } else {
+    // eslint-disable-next-line no-restricted-globals, no-alert
+    if (!confirm('Claim this sample?\n\n You will be asked to add a link for purchasing')) return;
+    const url = prompt('Enter a valid URL for to allow someone to purchase this sample');
+    window.buyLink = url;
+    // eslint-disable-next-line no-alert
+    alert('This sample may now be purchased');
+  }
 };
 
 importData.onclick = () => {
@@ -1373,6 +1390,11 @@ importData.onclick = () => {
         // eslint-disable-next-line no-restricted-globals, no-alert
         if (!confirm(message)) return;
 
+        if (data.buyLink) {
+          localStorage.setItem('buyLink', data.buyLink);
+        } else {
+          localStorage.setItem('buyLink', false);
+        }
         if (data.nodes) {
           nodes.clear();
           nodes.add(data.nodes);
