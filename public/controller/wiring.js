@@ -1,4 +1,5 @@
 const back = document.querySelector('#back');
+const purchaseOption = document.querySelector('#purchase-option');
 const loading = document.querySelector('#loading');
 const graph = document.querySelector('#graph');
 const graphOptionsMenu = document.querySelector('#graph-options-menu');
@@ -44,6 +45,7 @@ if (navigator.platform.indexOf('Win') !== -1) {
 }
 
 window.buyLink = localStorage.getItem('buyLink');
+if (!window.buyLink) purchaseOption.innerHTML = 'claim';
 let speechEnabled = JSON.parse(localStorage.getItem('speechIndicatorMode'));
 speechIndicator.innerHTML = speechEnabled ? 'ON' : 'OFF';
 
@@ -816,6 +818,7 @@ function clearGraph(addUser = false) {
   drawingEdges.clear();
   localStorage.removeItem('buyLink');
   delete window.buyLink;
+  if (!window.buyLink) purchaseOption.innerHTML = 'claim';
 
   if (addUser) {
     const node = userNode();
@@ -1372,6 +1375,7 @@ buyData.onclick = () => {
     if (url) {
       window.buyLink = url;
       localStorage.setItem('buyLink', url);
+      purchaseOption.innerHTML = 'buy';
       // eslint-disable-next-line no-alert
       alert('This sample may now be purchased');
     }
@@ -1400,9 +1404,11 @@ importData.onclick = () => {
 
         if (data.meta && data.meta.buyLink) {
           window.buyLink = data.meta.buyLink;
+          purchaseOption.innerHTML = 'buy';
           localStorage.setItem('buyLink', data.meta.buyLink);
         } else {
           delete window.buyLink;
+          if (!window.buyLink) purchaseOption.innerHTML = 'claim';
           localStorage.removeItem('buyLink');
         }
         if (data.nodes) {
