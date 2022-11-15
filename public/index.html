@@ -46,26 +46,18 @@
         padding: 2px 10px;
       }
       #donate  {
-        position: absolute;
-        bottom: 10px;
-        left: 10px;
-        padding: 4px 10px;
-        border: 0;
         text-transform: lowercase;
-        font-size: 0.75em;
-      }
-      #logout {
-        position: absolute;
-        left: 10px;
-        top: 10px;
-        position: absolute;
       }
       #user-image {
         position: absolute;
-        left: 100px;
-        top: 10px;
-        min-width: 40px;
-        min-height: 40px;
+        left: 14px;
+        top: 14px;
+        min-width: 30px;
+        min-height: 30px;
+        width: 30px;
+        border-radius: 100%;
+        box-sizing: border-box;
+        border: 1px solid #000;
       }
       .button {
         cursor: pointer;
@@ -111,16 +103,10 @@
       #profile {
         position: absolute;
         top: 10px;
-        right: 8px;
+        left: 52px;
       }
       #user {
         font-size: 0.75em;
-      }
-      #user-image {
-        display: flex;
-        width: 22px;
-        border-radius: 100%;
-        margin-right: 3px;
       }
       #interaction-options {
         display: flex;
@@ -143,10 +129,10 @@
         box-sizing: border-box;
         box-shadow: 0 8px 10px -9px #888;
         outline: 1px solid rgba(0, 0, 0, 0);
-        transition: all 1.25s ease-out;
+        transition: all 0.25s ease-in-out;
       }
       #animation-graphic:hover {
-        outline: 85px solid rgba(39, 15, 0, 0.15);
+        outline: 15px solid rgba(39, 15, 0, 0.15);
         box-shadow: 0 15px 80px -8px #333, 0 30px 40px -5px #000;
         transform: scale(1.1);
       }
@@ -174,10 +160,6 @@
     </div>
   </button>
 
-
-  <button id="donate" class="button">
-    💝 donate here!
-  </button>
   <button id="github" class="btn btn-outline-light btn-sm">
     <img class="github-icon" src="assets/github_logo.png" alt="github">
   </button>
@@ -191,21 +173,25 @@
     <ul class="dropdown-menu">
       <li><a class="dropdown-item" href="/app/wiring">🔬 Samples</a></li>
       <li><hr class="dropdown-divider"></li>
+      <div class="menu-header">My Data</div>
       <li><a class="dropdown-item" href="/app/prompts">📓 Prompts</a></li>
       <li><a class="dropdown-item" href="/app/completions">🖊 Completions</a></li>
       <li><hr class="dropdown-divider"></li>
       <!-- <li><a class="dropdown-item" href="/app/write">📝 Writer</a></li> -->
       <li><a class="dropdown-item" href="/app/build">👷‍♀️ Codex (beta)</a></li>
+      <li><div id="donate" class="dropdown-item">💝 donate here!</div></li>
       <li><hr class="dropdown-divider"></li>
       <div class="menu-header">My Account</div>
       <li><a class="dropdown-item" href="/app/profile">Profile</a></li>
       <li><a class="dropdown-item" href="/app/history">History</a></li>
       <li><a class="dropdown-item" href="/app/admin">Admin</a></li>
+      <hr>
+      <li><div id="logout" class="dropdown-item">logout</div></li>
+      </button>
     </ul>
   </div>
   <div id="interaction-options">
     <img id="user-image" src="">
-    <button id="logout" class="btn btn-danger">logout</button>
     <!-- <button id="write" class="btn btn-success">📝 write</button> -->
     <button id="wiring" class="btn btn-success">📁 continue</button>
     <!-- <div class="large-text">or</div> -->

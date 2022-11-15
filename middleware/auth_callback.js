@@ -25,7 +25,8 @@ const html = (user, accessToken, reflectToken, appPhoneNumber, phoneNumber, mapB
       border-radius: 100%;
       animation-name: fade-in;
       animation-duration: 3s; 
-
+      box-sizing: border-box;
+      border: 3px solid #000;
     }
     .auth-text {
       font-family: 'Merriweather', serif;
