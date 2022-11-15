@@ -43,7 +43,7 @@ if (navigator.platform.indexOf('Win') !== -1) {
   writeTip.innerHTML = `Viewing as ${displayName}`;
 }
 
-window.buyLink = JSON.parse(localStorage.getItem('buyLink', false));
+window.buyLink = localStorage.getItem('buyLink');
 let speechEnabled = JSON.parse(localStorage.getItem('speechIndicatorMode'));
 speechIndicator.innerHTML = speechEnabled ? 'ON' : 'OFF';
 
@@ -1340,7 +1340,7 @@ downloadData.onclick = () => {
   const time = new Date().getTime();
   const data = {
     meta: {
-      buyLink: JSON.parse(localStorage.getItem('buyLink')),
+      buyLink: localStorage.getItem('buyLink'),
       time,
       displayName,
       version: '0.0.1',
@@ -1370,6 +1370,7 @@ buyData.onclick = () => {
 
     if (url) {
       window.buyLink = url;
+      localStorage.setItem('buyLink', url);
       // eslint-disable-next-line no-alert
       alert('This sample may now be purchased');
     }
