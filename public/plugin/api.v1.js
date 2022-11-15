@@ -61,7 +61,7 @@ const api = {
         // eslint-disable-next-line no-console
         console.error(error);
         // eslint-disable-next-line no-alert
-        alert(`${error.message}`);
+        // alert(`${error.message}`);
       }
       return undefined;
     },
