@@ -1305,6 +1305,7 @@ editTargetImage.onclick = () => {
         image: url,
       },
     ]);
+    localStorage.setItem('wiringEditorNodeList', JSON.stringify(nodes.get()));
   }
 };
 
