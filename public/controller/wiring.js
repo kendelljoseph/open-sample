@@ -22,6 +22,8 @@ const targetModalOpener = document.querySelectorAll('.target-modal-opener');
 const toPrompts = document.querySelector('#to-prompts');
 const toCompletions = document.querySelector('#to-completions');
 const toProblems = document.querySelector('#to-problems');
+const toggleSpeech = document.querySelector('#toggle-speech');
+const speechIndicator = document.querySelector('#speech-indicator');
 const waText = document.querySelectorAll('.wa-text');
 const writeTip = document.querySelector('#write-tip');
 const configContainer = document.querySelector('#config');
@@ -39,6 +41,9 @@ if (navigator.platform.indexOf('Win') !== -1) {
 } else if (navigator.platform.indexOf('Mac') !== -1) {
   writeTip.innerHTML = `Viewing as ${displayName}`;
 }
+
+let speechEnabled = JSON.parse(localStorage.getItem('speechIndicatorMode'));
+speechIndicator.innerHTML = speechEnabled ? 'ON' : 'OFF';
 
 // eslint-disable-next-line no-undef
 const editor = ace.edit('editor');
@@ -229,6 +234,10 @@ const classifyActivity = async (params) => {
   const data = await api.ai.prompt({ prompt });
 
   if (data) {
+    if (speechEnabled) {
+      responsiveVoice.cancel();
+      responsiveVoice.speak(data.response);
+    }
     writeTip.innerHTML = `${data.response || ''}`;
   } else {
     writeTip.innerHTML = `Viewing as ${displayName}`;
@@ -965,6 +974,10 @@ const submitFunction = async () => {
   const data = await api.ai.prompt({ prompt });
 
   if (data) {
+    if (speechEnabled) {
+      responsiveVoice.cancel();
+      responsiveVoice.speak(data.response);
+    }
     editor.setValue(`${data.prompt || ''}${data.response || ''}`);
     selectResponse(data.response);
     loading.style.display = 'none';
@@ -1197,6 +1210,12 @@ showConfig.onclick = () => {
   configContainer.style.display = 'block';
 };
 
+toggleSpeech.onclick = () => {
+  speechEnabled = !speechEnabled;
+  speechIndicator.innerHTML = speechEnabled ? 'ON' : 'OFF';
+  localStorage.setItem('speechIndicatorMode', JSON.stringify(speechEnabled));
+};
+
 clearNetwork.onclick = () => {
   // eslint-disable-next-line no-restricted-globals, no-alert
   if (!confirm('Clear Sample?\n\n This will clear this sample')) return;
@@ -1286,6 +1305,10 @@ runTargetNode.onclick = async () => {
   selectResponse(renderedText);
   // eslint-disable-next-line no-undef
   const { response } = await api.ai.prompt({ prompt: renderedText });
+  if (speechEnabled) {
+    responsiveVoice.cancel();
+    responsiveVoice.speak(response);
+  }
   editor.setValue(`${editor.getValue()}\n\n${activeNode.label} - Response\n${response}`);
   selectResponse(response);
   editor.setReadOnly(false);
