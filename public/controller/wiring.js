@@ -202,8 +202,9 @@ let activeNode = null;
 let setTargetEdge = null;
 let selectingTargetNode = false;
 const classifyActivity = async (params) => {
-  if (params.nodes.length === 0 && params.edges.length === 0) {
+  if (!params.nodes.length && !params.edges.length) {
     writeTip.innerHTML = `Viewing as ${displayName}`;
+    return;
   }
 
   const n = nodes.get(params.nodes).map((node) => ({
