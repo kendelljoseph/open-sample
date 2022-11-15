@@ -202,13 +202,28 @@ let activeNode = null;
 let setTargetEdge = null;
 let selectingTargetNode = false;
 const classifyActivity = async (params) => {
-  const n = nodes.get(params.nodes);
-  const e = edges.get(params.edges);
+  if (params.nodes.length === 0 && params.edges.length === 0) {
+    writeTip.innerHTML = `Viewing as ${displayName}`;
+  }
+
+  const n = nodes.get(params.nodes).map((node) => ({
+    id: node.id === userAccessToken ? displayName : node.id,
+    type: node.id === userAccessToken ? 'User Account' : undefined,
+    label: node.label,
+    title: node.title,
+  }));
+  const e = edges.get(params.edges).map((edge) => ({
+    id: edge.id,
+    label: edge.label,
+    from: edge.from,
+    to: edge.to,
+  }));
+
   const activity = JSON.stringify({ n, e }, null, 2);
-  const activityPrompt = 'Describe the connectivity of this network in a short sentence (10 words or less):';
+  const activityPrompt = 'As an Data Security Auditor, describe this network selection and potential usecases or a propper function in a short sentence:';
   const prompt = `Given this graph dataset:\n\n${activity}\n\n${activityPrompt}`;
 
-  writeTip.innerHTML = 'reading...';
+  writeTip.innerHTML = 'thinking...';
   // eslint-disable-next-line no-undef
   const data = await api.ai.prompt({ prompt });
 
