@@ -814,7 +814,7 @@ function clearGraph(addUser = false) {
   edges.clear();
   drawingNodes.clear();
   drawingEdges.clear();
-  localStorage.setItem('buyLink', false);
+  localStorage.removeItem('buyLink');
 
   if (addUser) {
     const node = userNode();
@@ -1340,7 +1340,7 @@ downloadData.onclick = () => {
   const time = new Date().getTime();
   const data = {
     meta: {
-      buyLink: localStorage.getItem('buyLink'),
+      buyLink: JSON.parse(localStorage.getItem('buyLink')),
       time,
       displayName,
       version: '0.0.1',
@@ -1367,9 +1367,12 @@ buyData.onclick = () => {
     // eslint-disable-next-line no-restricted-globals, no-alert
     if (!confirm('Claim this sample?\n\n You will be asked to add a link for purchasing')) return;
     const url = prompt('Enter a valid URL for to allow someone to purchase this sample');
-    window.buyLink = url;
-    // eslint-disable-next-line no-alert
-    alert('This sample may now be purchased');
+
+    if (url) {
+      window.buyLink = url;
+      // eslint-disable-next-line no-alert
+      alert('This sample may now be purchased');
+    }
   }
 };
 
@@ -1396,7 +1399,7 @@ importData.onclick = () => {
         if (data.buyLink) {
           localStorage.setItem('buyLink', data.buyLink);
         } else {
-          localStorage.setItem('buyLink', false);
+          localStorage.removeItem('buyLink');
         }
         if (data.nodes) {
           nodes.clear();
