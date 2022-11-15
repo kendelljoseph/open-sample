@@ -221,8 +221,8 @@ const classifyActivity = async (params) => {
   }));
 
   const activity = JSON.stringify({ n, e }, null, 2);
-  const activityPrompt = 'As an Data Security Auditor, describe this network selection and potential usecases or a propper function in a short sentence:';
-  const prompt = `Given this graph dataset:\n\n${activity}\n\n${activityPrompt}`;
+  const activityPrompt = 'As an Data Security Auditor and Network Analyst, describe this network selection and potential usecases or a propper function in a short sentence:';
+  const prompt = `Given this dataset of nodes and relations:\n\n###\n\n${activity}\n\n###\n\n${activityPrompt}`;
 
   writeTip.innerHTML = 'thinking...';
   // eslint-disable-next-line no-undef
