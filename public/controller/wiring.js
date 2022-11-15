@@ -299,6 +299,7 @@ const networkInteractionAction = (params) => {
     selectingTargetNode = false;
     graph.classList.remove('select-bkg');
     showModalOpeners();
+    responsiveVoice.cancel();
   }
 };
 
