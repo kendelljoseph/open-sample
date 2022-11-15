@@ -43,6 +43,7 @@ if (navigator.platform.indexOf('Win') !== -1) {
   writeTip.innerHTML = `Viewing as ${displayName}`;
 }
 
+window.buyLink = JSON.parse(localStorage.getItem('buyLink', false));
 let speechEnabled = JSON.parse(localStorage.getItem('speechIndicatorMode'));
 speechIndicator.innerHTML = speechEnabled ? 'ON' : 'OFF';
 
