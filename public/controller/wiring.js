@@ -815,6 +815,7 @@ function clearGraph(addUser = false) {
   drawingNodes.clear();
   drawingEdges.clear();
   localStorage.removeItem('buyLink');
+  delete window.buyLink;
 
   if (addUser) {
     const node = userNode();
@@ -1397,9 +1398,11 @@ importData.onclick = () => {
         // eslint-disable-next-line no-restricted-globals, no-alert
         if (!confirm(message)) return;
 
-        if (data.buyLink) {
-          localStorage.setItem('buyLink', data.buyLink);
+        if (data.meta && data.meta.buyLink) {
+          window.buyLink = data.meta.buyLink;
+          localStorage.setItem('buyLink', data.meta.buyLink);
         } else {
+          delete window.buyLink;
           localStorage.removeItem('buyLink');
         }
         if (data.nodes) {
