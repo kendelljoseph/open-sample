@@ -812,6 +812,7 @@ function clearGraph(addUser = false) {
   edges.clear();
   drawingNodes.clear();
   drawingEdges.clear();
+  localStorage.setItem('buyLink', false);
 
   if (addUser) {
     const node = userNode();
