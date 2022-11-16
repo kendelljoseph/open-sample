@@ -1217,12 +1217,17 @@ const toggleSimulation = () => {
     }
     simulation.src = simulationUrl;
     simulation.style.display = 'block';
-    setTimeout(() => {
-      editor.setValue(`${editor.getValue()}\n\n ${simulation.contentWindow.location.href}`);
-    }, 1000);
+    if (speechEnabled) {
+      responsiveVoice.cancel();
+      responsiveVoice.speak('simulation is starting');
+    }
   } else {
     simulation.src = '';
     simulation.style.display = 'none';
+    if (speechEnabled) {
+      responsiveVoice.cancel();
+      responsiveVoice.speak('stopped simulation');
+    }
   }
 };
 
