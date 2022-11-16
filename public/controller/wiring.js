@@ -25,6 +25,7 @@ const toCompletions = document.querySelector('#to-completions');
 const toProblems = document.querySelector('#to-problems');
 const toggleSpeech = document.querySelector('#toggle-speech');
 const speechIndicator = document.querySelector('#speech-indicator');
+const simIndicator = document.querySelector('#sim-indicator');
 const waText = document.querySelectorAll('.wa-text');
 const writeTip = document.querySelector('#write-tip');
 const configContainer = document.querySelector('#config');
@@ -1219,6 +1220,7 @@ editor.commands.addCommand({
 });
 
 let simulationActive = false;
+simIndicator.innerHTML = simulationActive ? 'ON' : 'OFF';
 simulation.style.pointerEvents = 'none';
 const toggleSimulation = () => {
   if (simulationActive) {
@@ -1226,6 +1228,7 @@ const toggleSimulation = () => {
     simulation.style.pointerEvents = 'all';
     simulation.src = url;
     simulation.style.display = 'block';
+    simIndicator.innerHTML = simulationActive ? 'ON' : 'OFF';
     localStorage.setItem('iframes', JSON.stringify([url]));
     greenLineAnimation();
     if (speechEnabled) {
@@ -1236,6 +1239,7 @@ const toggleSimulation = () => {
     simulation.style.pointerEvents = 'none';
     simulation.src = '';
     simulation.style.display = 'none';
+    simIndicator.innerHTML = simulationActive ? 'ON' : 'OFF';
     greenLineAnimation();
     if (speechEnabled) {
       window.responsiveVoice.cancel();
@@ -1249,6 +1253,7 @@ const openSimulation = (url) => {
   simulation.style.pointerEvents = 'all';
   simulation.src = url;
   simulation.style.display = 'block';
+  simIndicator.innerHTML = simulationActive ? 'ON' : 'OFF';
   localStorage.setItem('iframes', JSON.stringify([url]));
   greenLineAnimation();
   if (speechEnabled) {
@@ -1274,6 +1279,16 @@ editor.commands.addCommand({
       toggleSimulation();
     }
   },
+});
+
+network.on('hold', (params) => {
+  if (params.nodes && params.nodes.length) {
+    const node = nodes.get(params.nodes)[0];
+
+    if (node.url) {
+      openSimulation(node.url);
+    }
+  }
 });
 
 toPrompts.onclick = async () => {
