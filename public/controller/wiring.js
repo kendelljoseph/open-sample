@@ -1236,10 +1236,37 @@ const toggleSimulation = () => {
   }
 };
 
+const openSimulation = (url) => {
+  simulationActive = true;
+  simulation.style.pointerEvents = 'all';
+  simulation.src = url;
+  simulation.style.display = 'block';
+  localStorage.setItem('iframes', JSON.stringify([url]));
+  greenLineAnimation();
+  if (speechEnabled) {
+    window.responsiveVoice.cancel();
+    window.responsiveVoice.speak('simulation is starting');
+  }
+};
+
 loadExperience.onclick = () => {
   simulationActive = !simulationActive;
   toggleSimulation();
 };
+
+editor.commands.addCommand({
+  name: 'openSimulationUrl',
+  bindKey: { win: 'Ctrl-Shift-O', mac: 'Command-Shift-O' },
+  exec() {
+    const url = editor.getSelectedText();
+    if (url) {
+      openSimulation(url);
+    } else {
+      simulationActive = !simulationActive;
+      toggleSimulation();
+    }
+  },
+});
 
 toPrompts.onclick = async () => {
   // eslint-disable-next-line no-alert, no-restricted-globals
