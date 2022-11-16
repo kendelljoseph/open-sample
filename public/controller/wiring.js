@@ -37,6 +37,7 @@ const sampleMenu = document.querySelector('#sample-menu');
 const automationMenu = document.querySelector('#automation-menu');
 const loadExperience = document.querySelector('#load-experience');
 const simulation = document.querySelector('#simulation');
+const loadWebApp = document.querySelector('#load-web-app');
 
 const saveAsPrompt = document.querySelector('#save-prompt');
 const downloadData = document.querySelector('#download-data');
@@ -47,6 +48,8 @@ if (navigator.platform.indexOf('Win') !== -1) {
 } else if (navigator.platform.indexOf('Mac') !== -1) {
   writeTip.innerHTML = `Viewing as ${displayName}`;
 }
+
+window.simulationFrames = JSON.parse(localStorage.getItem('iframes'));
 
 window.buyLink = localStorage.getItem('buyLink');
 if (!window.buyLink) purchaseOption.innerHTML = 'claim';
@@ -1003,8 +1006,8 @@ const submitFunction = async () => {
   if (data) {
     greenLineAnimation();
     if (speechEnabled) {
-      responsiveVoice.cancel();
-      responsiveVoice.speak(data.response);
+      window.responsiveVoice.cancel();
+      window.responsiveVoice.speak(data.response);
     }
     editor.setValue(`${data.prompt || ''}${data.response || ''}`);
     selectResponse(data.response);
@@ -1134,8 +1137,8 @@ const showBothUX = () => {
   editorElement.classList.remove('fullEditor');
   showConfig.style.display = 'block';
   if (speechEnabled) {
-    responsiveVoice.cancel();
-    responsiveVoice.speak('Showing both editor panels');
+    window.responsiveVoice.cancel();
+    window.responsiveVoice.speak('Showing both editor panels');
   }
 };
 const showGraphUX = () => {
@@ -1146,8 +1149,8 @@ const showGraphUX = () => {
   configContainer.style.display = 'none';
   showConfig.style.display = 'none';
   if (speechEnabled) {
-    responsiveVoice.cancel();
-    responsiveVoice.speak('Showing network editor panel only');
+    window.responsiveVoice.cancel();
+    window.responsiveVoice.speak('Showing network editor panel only');
   }
 };
 const showEditorUx = () => {
@@ -1209,24 +1212,25 @@ editor.commands.addCommand({
 });
 
 let simulationActive = false;
-let simulationUrl = 'https://casualos.com';
 const toggleSimulation = () => {
   if (simulationActive) {
-    if (simulationUrl !== 'https://casualos.com') {
-      simulationUrl = simulation.contentWindow.location.href;
-    }
-    simulation.src = simulationUrl;
+    simulation.src = window.simulationFrames
+      ? window.simulationFrames[0]
+      : 'https://casualos.com';
     simulation.style.display = 'block';
+    localStorage.setItem('iframes', JSON.stringify(window.simulationFrames));
+    greenLineAnimation();
     if (speechEnabled) {
-      responsiveVoice.cancel();
-      responsiveVoice.speak('simulation is starting');
+      window.responsiveVoice.cancel();
+      window.responsiveVoice.speak('simulation is starting');
     }
   } else {
     simulation.src = '';
     simulation.style.display = 'none';
+    greenLineAnimation();
     if (speechEnabled) {
-      responsiveVoice.cancel();
-      responsiveVoice.speak('stopped simulation');
+      window.responsiveVoice.cancel();
+      window.responsiveVoice.speak('stopped simulation');
     }
   }
 };
@@ -1234,6 +1238,29 @@ const toggleSimulation = () => {
 loadExperience.onclick = () => {
   simulationActive = !simulationActive;
   toggleSimulation();
+};
+
+loadWebApp.onclick = () => {
+  simulationActive = !simulationActive;
+  if (simulationActive) {
+    const url = prompt('link:');
+    if (!url) return;
+    greenLineAnimation();
+    simulation.src = url;
+    simulation.style.display = 'block';
+    if (speechEnabled) {
+      window.responsiveVoice.cancel();
+      window.responsiveVoice.speak('website is starting');
+    } else {
+      greenLineAnimation();
+      simulation.src = '';
+      simulation.style.display = 'none';
+      if (speechEnabled) {
+        window.responsiveVoice.cancel();
+        window.responsiveVoice.speak('stopped website');
+      }
+    }
+  }
 };
 
 toPrompts.onclick = async () => {
@@ -1470,21 +1497,25 @@ importData.onclick = () => {
         // eslint-disable-next-line no-restricted-globals, no-alert
         if (!confirm(message)) return;
 
+        if (data.meta && data.meta.iframes) {
+          window.simulationFrames = data.meta.iframes;
+          localStorage.setItem('iframes', JSON.stringify(data.meta.iframes));
+        }
         if (data.meta && data.meta.buyLink) {
           window.buyLink = data.meta.buyLink;
           purchaseOption.innerHTML = 'buy';
           localStorage.setItem('buyLink', data.meta.buyLink);
           if (speechEnabled) {
-            responsiveVoice.cancel();
-            responsiveVoice.speak('This sample is available for purchase');
+            window.responsiveVoice.cancel();
+            window.responsiveVoice.speak('This sample is available for purchase');
           }
         } else {
           delete window.buyLink;
           if (!window.buyLink) purchaseOption.innerHTML = 'claim';
           localStorage.removeItem('buyLink');
           if (speechEnabled) {
-            responsiveVoice.cancel();
-            responsiveVoice.speak('This sample is not claimed by anyone');
+            window.responsiveVoice.cancel();
+            window.responsiveVoice.speak('This sample is not claimed by anyone');
           }
         }
         if (data.nodes) {
