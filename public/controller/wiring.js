@@ -238,6 +238,7 @@ const classifyActivity = async (params) => {
   const data = await api.ai.prompt({ prompt });
 
   if (data) {
+    greenLineAnimation();
     if (speechEnabled) {
       responsiveVoice.cancel();
       responsiveVoice.speak(data.response);
@@ -982,6 +983,7 @@ const submitFunction = async () => {
   const data = await api.ai.prompt({ prompt });
 
   if (data) {
+    greenLineAnimation();
     if (speechEnabled) {
       responsiveVoice.cancel();
       responsiveVoice.speak(data.response);
@@ -1010,6 +1012,7 @@ editor.commands.addCommand({
   name: 'detectCommandShiftEnter',
   bindKey: { win: 'Ctrl-Shift-Enter', mac: 'Command-Shift-Enter' },
   exec() {
+    greenLineAnimation();
     const mode = `ace/mode/${nextMode()}`;
     editor.getSession().setMode(mode);
     localStorage.setItem('wiringEditorSessionMode', mode);
@@ -1020,6 +1023,7 @@ editor.commands.addCommand({
   name: 'executeAsCode',
   bindKey: { win: 'Alt-Shift-Enter', mac: 'Option-Shift-Enter' },
   exec() {
+    greenLineAnimation();
     const selectedText = editor.getSelectedText();
     const allText = editor.session.getValue();
     const value = selectedText.length ? selectedText : allText;
@@ -1219,6 +1223,7 @@ showConfig.onclick = () => {
 };
 
 toggleSpeech.onclick = () => {
+  responsiveVoice.cancel();
   speechEnabled = !speechEnabled;
   speechIndicator.innerHTML = speechEnabled ? 'ON' : 'OFF';
   localStorage.setItem('speechIndicatorMode', JSON.stringify(speechEnabled));
@@ -1316,6 +1321,9 @@ runTargetNode.onclick = async () => {
   if (speechEnabled) {
     responsiveVoice.cancel();
     responsiveVoice.speak(response);
+  }
+  if (response) {
+    greenLineAnimation();
   }
   editor.setValue(`${editor.getValue()}\n\n${activeNode.label} - Response\n${response}`);
   selectResponse(response);
