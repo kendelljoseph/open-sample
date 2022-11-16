@@ -1008,7 +1008,7 @@ const submitFunction = async () => {
       window.responsiveVoice.cancel();
       window.responsiveVoice.speak(data.response);
     }
-    editor.setValue(`${data.prompt || ''}${data.response || ''}`);
+    editor.setValue(`${editor.getValue()}${data.response || ''}`);
     selectResponse(data.response);
     loading.style.display = 'none';
     editor.setReadOnly(false);
