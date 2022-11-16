@@ -37,7 +37,6 @@ const sampleMenu = document.querySelector('#sample-menu');
 const automationMenu = document.querySelector('#automation-menu');
 const loadExperience = document.querySelector('#load-experience');
 const simulation = document.querySelector('#simulation');
-const loadWebApp = document.querySelector('#load-web-app');
 
 const saveAsPrompt = document.querySelector('#save-prompt');
 const downloadData = document.querySelector('#download-data');
@@ -57,8 +56,8 @@ let speechEnabled = JSON.parse(localStorage.getItem('speechIndicatorMode'));
 speechIndicator.innerHTML = speechEnabled ? 'ON' : 'OFF';
 
 if (speechEnabled) {
-  responsiveVoice.cancel();
-  responsiveVoice.speak(
+  window.responsiveVoice.cancel();
+  window.responsiveVoice.speak(
     `Welcome back, ${displayName}. ${
       window.buyLink ? 'This sample is available for purchase' : ''
     }`,
@@ -324,7 +323,7 @@ const networkInteractionAction = (params) => {
     selectingTargetNode = false;
     graph.classList.remove('select-bkg');
     showModalOpeners();
-    responsiveVoice.cancel();
+    window.responsiveVoice.cancel();
   }
 };
 
@@ -1212,19 +1211,21 @@ editor.commands.addCommand({
 });
 
 let simulationActive = false;
+simulation.style.pointerEvents = 'none';
 const toggleSimulation = () => {
   if (simulationActive) {
-    simulation.src = window.simulationFrames
-      ? window.simulationFrames[0]
-      : 'https://casualos.com';
+    const url = prompt('leave blank to use\nhttps://casualos.com') || 'https://casualos.com';
+    simulation.style.pointerEvents = 'all';
+    simulation.src = url;
     simulation.style.display = 'block';
-    localStorage.setItem('iframes', JSON.stringify(window.simulationFrames));
+    localStorage.setItem('iframes', JSON.stringify([url]));
     greenLineAnimation();
     if (speechEnabled) {
       window.responsiveVoice.cancel();
       window.responsiveVoice.speak('simulation is starting');
     }
   } else {
+    simulation.style.pointerEvents = 'none';
     simulation.src = '';
     simulation.style.display = 'none';
     greenLineAnimation();
@@ -1238,29 +1239,6 @@ const toggleSimulation = () => {
 loadExperience.onclick = () => {
   simulationActive = !simulationActive;
   toggleSimulation();
-};
-
-loadWebApp.onclick = () => {
-  simulationActive = !simulationActive;
-  if (simulationActive) {
-    const url = prompt('link:');
-    if (!url) return;
-    greenLineAnimation();
-    simulation.src = url;
-    simulation.style.display = 'block';
-    if (speechEnabled) {
-      window.responsiveVoice.cancel();
-      window.responsiveVoice.speak('website is starting');
-    } else {
-      greenLineAnimation();
-      simulation.src = '';
-      simulation.style.display = 'none';
-      if (speechEnabled) {
-        window.responsiveVoice.cancel();
-        window.responsiveVoice.speak('stopped website');
-      }
-    }
-  }
 };
 
 toPrompts.onclick = async () => {
