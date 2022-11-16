@@ -1163,6 +1163,10 @@ const showEditorUx = () => {
   graph.classList.remove('fullGraph');
   configContainer.style.display = 'none';
   showConfig.style.display = 'none';
+  if (speechEnabled) {
+    window.responsiveVoice.cancel();
+    window.responsiveVoice.speak('Showing text editor panel only');
+  }
 };
 viewBoth.onclick = showBothUX;
 viewGraphOnly.onclick = showGraphUX;
