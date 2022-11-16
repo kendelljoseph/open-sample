@@ -1050,8 +1050,12 @@ editor.commands.addCommand({
     if (!value) return;
 
     try {
-      // eslint-disable-next-line no-eval
-      window.eval(value);
+      // eslint-disable-next-line no-new-func
+      const evaluateValue = Function(`${value}`);
+      const evaulationResponse = evaluateValue();
+      if (evaulationResponse) {
+        editor.setValue(`${editor.getValue()}\n\n${evaluateValue()}`);
+      }
     } catch (error) {
       // eslint-disable-next-line no-console
       console.error(error);
