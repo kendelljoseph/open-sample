@@ -1456,6 +1456,10 @@ downloadData.onclick = () => {
   dlAnchorElem.setAttribute('download', `${displayName}'s Sample ${time}.json`);
   dlAnchorElem.click();
   dlAnchorElem.remove();
+  if (speechEnabled) {
+    window.responsiveVoice.cancel();
+    window.responsiveVoice.speak('Download complete');
+  }
 };
 
 buyData.onclick = () => {
