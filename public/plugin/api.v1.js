@@ -60,6 +60,10 @@ const api = {
       } catch (error) {
         // eslint-disable-next-line no-console
         console.error(error);
+        if (window.responsiveVoice) {
+          window.responsiveVoice.cancel();
+          window.responsiveVoice.speak(`error: ${error.message}`);
+        }
         // eslint-disable-next-line no-alert
         // alert(`${error.message}`);
       }
