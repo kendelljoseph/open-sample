@@ -33,6 +33,8 @@ const clearNetwork = document.querySelector('#clear-network');
 const submit = document.querySelector('#submit');
 const runTargetNode = document.querySelector('#run-target-node');
 const editTargetImage = document.querySelector('#edit-target-image');
+const sampleMenu = document.querySelector('#sample-menu');
+const automationMenu = document.querySelector('#automation-menu');
 
 const saveAsPrompt = document.querySelector('#save-prompt');
 const downloadData = document.querySelector('#download-data');
@@ -268,15 +270,19 @@ const networkInteractionAction = (params) => {
 
     if (firstNode.size && firstNode.size > 20) {
       editTargetImage.style.display = 'block';
+      sampleMenu.classList.add('yellow-glow');
     } else {
       editTargetImage.style.display = 'none';
+      sampleMenu.classList.remove('yellow-glow');
     }
 
     if (firstNode && firstNode.label) {
       if (firstNode.slug) {
         runTargetNode.style.display = 'block';
+        automationMenu.classList.add('red-glow');
       } else {
         runTargetNode.style.display = 'none';
+        automationMenu.classList.remove('red-glow');
       }
       if (selectingTargetNode) {
         cancelNodeTarget.style.display = 'none';
@@ -303,7 +309,9 @@ const networkInteractionAction = (params) => {
     activeNode = firstNode;
   } else {
     editTargetImage.style.display = 'none';
+    sampleMenu.classList.remove('yellow-glow');
     runTargetNode.style.display = 'none';
+    automationMenu.classList.remove('red-glow');
     graphOptionsMenu.style.display = 'none';
     targetNode.style.display = 'none';
     cancelNodeTarget.style.display = 'none';
@@ -1370,6 +1378,7 @@ downloadData.onclick = () => {
     meta: {
       buyLink: localStorage.getItem('buyLink'),
       time,
+      iframes: JSON.parse(localStorage.getItem('iframes')),
       displayName,
       version: '0.0.1',
     },

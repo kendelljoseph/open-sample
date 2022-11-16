@@ -363,6 +363,29 @@
       .fadeInOut {
         animation: fadeInOut 13s ease-in-out infinite;
       }
+      #purchase-option {
+        animation: bounce-glow-yellow 3s ease-out infinite;
+      }
+      .red-glow {
+        animation: red-glow-box 0.8s ease-in-out infinite;
+        box-sizing: border-box;
+        outline: 0px solid rgba(255, 0, 0, 0);
+      }
+      .yellow-glow {
+        animation: yellow-glow-box 0.8s ease-in-out infinite;
+        box-sizing: border-box;
+        outline: 0px solid rgb(255, 208, 0)
+      }
+      @keyframes red-glow-box {
+        0%, 20%, 50%, 80%, 100% {outline: 5px solid rgba(255, 0, 0, 1);}
+        40% {outline: 5px solid rgba(255, 0, 0, 0.5);}
+        60% {outline: 8px solid rgba(255, 0, 0, 0.2);}
+      }
+      @keyframes yellow-glow-box {
+        0%, 20%, 50%, 80%, 100% {outline: 5px solid rgb(255, 208, 0);}
+        40% {outline: 5px solid rgba(255, 191, 0, 0.5);}
+        60% {outline: 8px solid rgba(255, 149, 0, 0.2);}
+      }
       @keyframes bounce {
         0%, 20%, 50%, 80%, 100% {transform: translateX(0);}
         40% {transform: translateX(-10px);}
@@ -394,45 +417,43 @@
   </div>
   <div id="write-tip"></div>
   <button id="back" class="button rotate">&#10149;</button>
-  <div id="write-actions" class="btn-group shadow-sm btn-group-sm" role="group" aria-label="write actions radio toggle button group">
-    <div class="btn-group btn-group-sm shadow-sm" role="group">
-      <button type="button" class="btn shadow-sm btn-dark dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+    <div id="write-actions" class="" role="group">
+      <button id="sample-menu" type="button" class="btn mx-2 shadow-sm btn-warning dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
         🔬
       </button>
       <ul class="dropdown-menu shadow">
         <li id="edit-target-image"><button class="btn btn-small shadow-sm network-option edit-button btn-warning">🖼 edit</button></li>
-        <li id="run-target-node"><button class="btn btn-small shadow-sm network-option run-button btn-danger">🏁 run</button></li>
         <hr>
         <div class="menu-header">📁 sample</div>
+        <li id="import-data"><div class="network-option dropdown-item">open<div class="badge bg-info tiny-badge">sample.json</div></div></li>
         <li id="submit"><div class="network-option dropdown-item">submit<span class="caption">Ctrl/Cmd + Enter</span></div></li>
         <li id="clear-network"><div class="network-option dropdown-item">clear</div></li>
-        <hr>
-        <li id="toggle-speech"><div class="network-option dropdown-item">speech<span id="speech-indicator" class="caption">OFF</span></div></li>
-        <hr>
-        <div class="menu-header">🤖 automation / AI</div>
-        <li id="to-completions"><div class="network-option dropdown-item">completions</div></li>
-        <li id="to-prompts"><div class="network-option dropdown-item">prompts</div></li>
-        <li id="to-problems"><div class="network-option dropdown-item">problems</div></li>
         <hr>
         <div class="menu-header">👁 view </div>
         <li id="view-both"><div class="network-option dropdown-item">both<span class="caption">Ctrl + 1</span></div></li>
         <li id="view-graph-only"><div class="network-option dropdown-item">network<span class="caption">Ctrl + 2</span></div></li>
         <li id="view-editor-only"><div class="network-option dropdown-item">writer<span class="caption">Ctrl + 3</span></div><span></span></li>
         <hr>
+        <div class="menu-header">📊 data</div>
+        <li id="buy-data"><div id="purchase-option" class="network-option dropdown-item">buy</div></li>
+        <li id="download-data"><div class="network-option dropdown-item">download</div></li>
+      </ul>
+      <button id="automation-menu" type="button" class="btn shadow-sm btn-danger dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+        🤖
+      </button>
+      <ul class="dropdown-menu">
+        <li id="run-target-node"><button class="btn btn-small shadow-sm network-option run-button btn-danger">🏁 run</button></li>
+        <hr>
+        <li id="toggle-speech"><div class="network-option dropdown-item">speech<span id="speech-indicator" class="caption">OFF</span></div></li>
+        <hr>
         <div class="menu-header">📓  prompt</div>
         <li id="save-prompt"><div class="network-option dropdown-item">save<span class="caption">Ctrl/Cmd + Shift + S</span></div></li>
         <hr>
-        <div class="menu-header">📊 data</div>
-        <li id="buy-data"><div id="purchase-option" class="network-option dropdown-item">buy</div></li>
-        <hr>
-        <li id="download-data"><div class="network-option dropdown-item">download</div></li>
-        <li id="import-data"><div class="network-option dropdown-item">open<div class="badge bg-info tiny-badge">sample.json</div></div></li>
+        <div class="menu-header">🤖 automation / AI</div>
+        <li id="to-completions"><div class="network-option dropdown-item">completions</div></li>
+        <li id="to-prompts"><div class="network-option dropdown-item">prompts</div></li>
+        <li id="to-problems"><div class="network-option dropdown-item">problems</div></li>
       </ul>
-    </div>
-    <!-- <input type="radio" class="btn-check" name="btnradio" id="to-prompts" autocomplete="off">
-    <label class="btn btn-outline-success" for="to-prompts"><span>📓 </span><span class="wa-text">prompts</span></label>
-    <input type="radio" class="btn-check" name="btnradio" id="to-problems" autocomplete="off">
-    <label class="btn btn-outline-success" for="to-problems"><span>🔥 </span><span class="wa-text">problems</span></label> -->
   </div>
   <img id="loading" src="../../assets/thinking.gif" alt="thinking">
   <div id="graph-options-menu">
