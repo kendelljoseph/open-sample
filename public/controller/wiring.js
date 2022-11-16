@@ -35,6 +35,8 @@ const runTargetNode = document.querySelector('#run-target-node');
 const editTargetImage = document.querySelector('#edit-target-image');
 const sampleMenu = document.querySelector('#sample-menu');
 const automationMenu = document.querySelector('#automation-menu');
+const loadExperience = document.querySelector('#load-experience');
+const simulation = document.querySelector('#simulation');
 
 const saveAsPrompt = document.querySelector('#save-prompt');
 const downloadData = document.querySelector('#download-data');
@@ -275,7 +277,7 @@ const networkInteractionAction = (params) => {
       editTargetImage.style.display = 'none';
       sampleMenu.classList.remove('yellow-glow');
     }
-
+    // https://casualos.com/?inst=disciplinary-azure-goose&gridPortal=home
     if (firstNode && firstNode.label) {
       if (firstNode.slug) {
         runTargetNode.style.display = 'block';
@@ -1205,6 +1207,30 @@ editor.commands.addCommand({
     return false;
   },
 });
+
+let simulationActive = false;
+let simulationUrl = 'https://casualos.com';
+const toggleSimulation = () => {
+  if (simulationActive) {
+    if (simulationUrl !== 'https://casualos.com') {
+      simulationUrl = simulation.contentWindow.location.href;
+    }
+    simulation.src = simulationUrl;
+    simulation.style.display = 'block';
+    setTimeout(() => {
+      editor.setValue(`${editor.getValue()}\n\n ${simulation.contentWindow.location.href}`);
+    }, 1000);
+  } else {
+    simulation.src = '';
+    simulation.style.display = 'none';
+  }
+};
+
+loadExperience.onclick = () => {
+  simulationActive = !simulationActive;
+  toggleSimulation();
+};
+
 toPrompts.onclick = async () => {
   // eslint-disable-next-line no-alert, no-restricted-globals
   if (!confirm('Load Prompts?\n\n This will clear your current network')) return;

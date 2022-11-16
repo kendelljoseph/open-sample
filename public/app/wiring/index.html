@@ -376,6 +376,14 @@
         box-sizing: border-box;
         outline: 0px solid rgb(255, 208, 0)
       }
+      #simulation {
+        z-index: 99999999;
+        position: absolute;
+        top: 50px;
+        left: 50vw;
+        width: 50vw;
+        height: calc(100vh - 50px);
+      }
       @keyframes red-glow-box {
         0%, 20%, 50%, 80%, 100% {outline: 5px solid rgba(255, 0, 0, 1);}
         40% {outline: 5px solid rgba(255, 0, 0, 0.5);}
@@ -446,6 +454,9 @@
         <hr>
         <li id="toggle-speech"><div class="network-option dropdown-item">speech<span id="speech-indicator" class="caption">OFF</span></div></li>
         <hr>
+        <div class="menu-header">🥚 experience</div>
+        <li id="load-experience"><div class="network-option dropdown-item">simulation<span class="caption" data-bs-toggle="casual-frame">CASUALOS</span></div></li>
+        <hr>
         <div class="menu-header">📓  prompt</div>
         <li id="save-prompt"><div class="network-option dropdown-item">save<span class="caption">Ctrl/Cmd + Shift + S</span></div></li>
         <hr>
@@ -456,6 +467,7 @@
       </ul>
   </div>
   <img id="loading" src="../../assets/thinking.gif" alt="thinking">
+  <iframe id="simulation" src="" frameborder="0" sandbox="allow-same-origin allow-scripts allow-forms"></iframe>
   <div id="graph-options-menu">
     <div id="target-tooltip">test</div>
     <div id="target-node" class="badge bg-dark text-truncate shadow"></div>
