@@ -49,6 +49,14 @@ if (!window.buyLink) purchaseOption.innerHTML = 'claim';
 let speechEnabled = JSON.parse(localStorage.getItem('speechIndicatorMode'));
 speechIndicator.innerHTML = speechEnabled ? 'ON' : 'OFF';
 
+if (speechEnabled) {
+  responsiveVoice.cancel();
+  responsiveVoice.speak(
+    `Welcome back, ${displayName}. ${
+      window.buyLink ? 'This sample is available for purchase' : ''
+    }`,
+  );
+}
 // eslint-disable-next-line no-undef
 const editor = ace.edit('editor');
 editor.setOption('wrap', true);
@@ -1115,6 +1123,10 @@ const showBothUX = () => {
   editorElement.style.display = 'block';
   editorElement.classList.remove('fullEditor');
   showConfig.style.display = 'block';
+  if (speechEnabled) {
+    responsiveVoice.cancel();
+    responsiveVoice.speak('Showing both editor panels');
+  }
 };
 const showGraphUX = () => {
   graph.style.display = 'block';
@@ -1123,6 +1135,10 @@ const showGraphUX = () => {
   editorElement.classList.remove('fullEditor');
   configContainer.style.display = 'none';
   showConfig.style.display = 'none';
+  if (speechEnabled) {
+    responsiveVoice.cancel();
+    responsiveVoice.speak('Showing network editor panel only');
+  }
 };
 const showEditorUx = () => {
   editorElement.style.display = 'block';
@@ -1385,7 +1401,11 @@ buyData.onclick = () => {
       localStorage.setItem('buyLink', url);
       purchaseOption.innerHTML = 'buy';
       // eslint-disable-next-line no-alert
-      alert('This sample may now be purchased');
+      alert('This sample may now be purchased at the link you provided');
+      if (speechEnabled) {
+        responsiveVoice.cancel();
+        responsiveVoice.speak('This sample is now available for purchase');
+      }
     }
   }
 };
@@ -1414,15 +1434,29 @@ importData.onclick = () => {
           window.buyLink = data.meta.buyLink;
           purchaseOption.innerHTML = 'buy';
           localStorage.setItem('buyLink', data.meta.buyLink);
+          if (speechEnabled) {
+            responsiveVoice.cancel();
+            responsiveVoice.speak('This sample is available for purchase');
+          }
         } else {
           delete window.buyLink;
           if (!window.buyLink) purchaseOption.innerHTML = 'claim';
           localStorage.removeItem('buyLink');
+          if (speechEnabled) {
+            responsiveVoice.cancel();
+            responsiveVoice.speak('This sample is not claimed by anyone');
+          }
         }
         if (data.nodes) {
           nodes.clear();
           nodes.add(data.nodes);
           localStorage.setItem('wiringEditorNodeList', JSON.stringify(nodes.get()));
+          if (speechEnabled) {
+            responsiveVoice.cancel();
+            responsiveVoice.speak(
+              `${nodes.length} data point${nodes.length > 1 ? 's' : ''} added`,
+            );
+          }
         }
         if (data.edges) {
           edges.clear();
@@ -1435,6 +1469,10 @@ importData.onclick = () => {
       } catch (error) {
         console.log(error);
         alert(`Could not read file\n\n${error.message}`);
+        if (speechEnabled) {
+          responsiveVoice.cancel();
+          responsiveVoice.speak('Sample file could not be opened');
+        }
       }
 
       fileInputElem.remove();
