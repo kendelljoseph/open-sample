@@ -474,11 +474,18 @@
     <div id="target-tooltip">test</div>
     <div id="target-node" class="badge bg-dark text-truncate shadow"></div>
     <div class="btn-group mt-2 target-modal-opener" role="group">
-      <button type="button" class="btn btn-lg btn-success shadow dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-        draw
+      <button type="button" class="btn btn-lg btn-danger shadow dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+        edit
       </button>
       <ol id="interaction-options" class="dropdown-menu shadow-lg">
-        <div class="menu-header">connect </div>
+        <div class="menu-header">reaction</div>
+        <li>
+          <div id="set-node-activity-prompt"class="target-modal-opener dropdown-item graph-option" data-bs-toggle="modal">
+            activity prompt
+          </div>
+        </li>
+        <hr>
+        <div class="menu-header">connect</div>
         <li>
           <div class="target-modal-opener dropdown-item graph-option" data-bs-toggle="modal" data-bs-target="#output-to-modal">
             🔌 Output
@@ -490,7 +497,7 @@
           </div>
         </li>
         <hr>
-        <div class="menu-header">name </div>
+        <div class="menu-header">name</div>
         <li>
           <div class="target-modal-opener dropdown-item graph-option" data-bs-toggle="modal" data-bs-target="#within-area-modal">
             📍 Area

@@ -39,6 +39,7 @@ const automationMenu = document.querySelector('#automation-menu');
 const loadExperience = document.querySelector('#load-experience');
 const simulation = document.querySelector('#simulation');
 const setActivityPrompt = document.querySelector('#set-activity-prompt');
+const setNodeActivityPrompt = document.querySelector('#set-node-activity-prompt');
 
 const saveAsPrompt = document.querySelector('#save-prompt');
 const downloadData = document.querySelector('#download-data');
@@ -239,6 +240,7 @@ const classifyActivity = async (params) => {
     type: node.id === userAccessToken ? 'User Account' : undefined,
     label: node.label,
     title: node.title,
+    activityPrompt: node.activityPrompt,
   }));
   const e = edges.get(params.edges).map((edge) => ({
     id: edge.id,
@@ -248,7 +250,8 @@ const classifyActivity = async (params) => {
   }));
 
   const activity = JSON.stringify({ n, e }, null, 2);
-  const prompt = `Given this dataset of nodes and relations:\n\n###\n\n${activity}\n\n###\n\n${activityPrompt}`;
+  const prependPrompt = n[0].activityPrompt ? n[0].activityPrompt : activityPrompt;
+  const prompt = `Given this dataset of nodes and relations:\n\n###\n\n${activity}\n\n###\n\n${prependPrompt}`;
 
   writeTip.innerHTML = 'thinking...';
   // eslint-disable-next-line no-undef
@@ -1522,6 +1525,26 @@ setActivityPrompt.onclick = () => {
   if (!newPrompt) return;
   activityPrompt = newPrompt;
   localStorage.setItem('activityPrompt', newPrompt);
+};
+
+setNodeActivityPrompt.onclick = () => {
+  // eslint-disable-next-line no-restricted-globals, no-alert
+  if (!confirm('Set a custom activity prompt for this node?')) return;
+  // eslint-disable-next-line no-alert
+  const newPrompt = prompt('Prompt:');
+  if (!newPrompt) return;
+  nodes.update([
+    {
+      id: activeNode.id,
+      activityPrompt: newPrompt,
+    },
+  ]);
+  localStorage.setItem('wiringEditorNodeList', JSON.stringify(nodes.get()));
+  console.log(nodes.get([activeNode.id]));
+  if (speechEnabled) {
+    responsiveVoice.cancel();
+    responsiveVoice.speak(`Okay, with this node, I will consider:\n\n${newPrompt}`);
+  }
 };
 
 importData.onclick = () => {
