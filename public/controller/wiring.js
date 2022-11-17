@@ -38,6 +38,7 @@ const sampleMenu = document.querySelector('#sample-menu');
 const automationMenu = document.querySelector('#automation-menu');
 const loadExperience = document.querySelector('#load-experience');
 const simulation = document.querySelector('#simulation');
+const setActivityPrompt = document.querySelector('#set-activity-prompt');
 
 const saveAsPrompt = document.querySelector('#save-prompt');
 const downloadData = document.querySelector('#download-data');
@@ -49,6 +50,8 @@ if (navigator.platform.indexOf('Win') !== -1) {
   writeTip.innerHTML = `Viewing as ${displayName}`;
 }
 
+const defaultActivityPrompt = 'As an Data Security Auditor and Network Analyst, describe this network selection and potential usecases or a propper function in a short sentence:';
+let activityPrompt = localStorage.getItem('activityPrompt') || defaultActivityPrompt;
 window.simulationFrames = JSON.parse(localStorage.getItem('iframes'));
 
 window.buyLink = localStorage.getItem('buyLink');
@@ -245,7 +248,6 @@ const classifyActivity = async (params) => {
   }));
 
   const activity = JSON.stringify({ n, e }, null, 2);
-  const activityPrompt = 'As an Data Security Auditor and Network Analyst, describe this network selection and potential usecases or a propper function in a short sentence:';
   const prompt = `Given this dataset of nodes and relations:\n\n###\n\n${activity}\n\n###\n\n${activityPrompt}`;
 
   writeTip.innerHTML = 'thinking...';
@@ -839,6 +841,8 @@ function clearGraph(addUser = false) {
   drawingNodes.clear();
   drawingEdges.clear();
   localStorage.removeItem('buyLink');
+  activityPrompt = defaultActivityPrompt;
+  localStorage.setItem('activityPrompt', defaultActivityPrompt);
   delete window.buyLink;
   if (!window.buyLink) purchaseOption.innerHTML = 'claim';
 
@@ -1464,6 +1468,7 @@ downloadData.onclick = () => {
     meta: {
       buyLink: localStorage.getItem('buyLink'),
       time,
+      activityPrompt: localStorage.getItem('activityPrompt'),
       iframes: JSON.parse(localStorage.getItem('iframes')),
       displayName,
       version: '0.0.1',
@@ -1509,6 +1514,16 @@ buyData.onclick = () => {
   }
 };
 
+setActivityPrompt.onclick = () => {
+  // eslint-disable-next-line no-restricted-globals, no-alert
+  if (!confirm('Set a custom activity prompt?')) return;
+  // eslint-disable-next-line no-alert
+  const newPrompt = prompt('Prompt:');
+  if (!newPrompt) return;
+  activityPrompt = newPrompt;
+  localStorage.setItem('activityPrompt', newPrompt);
+};
+
 importData.onclick = () => {
   const fileInputElem = document.createElement('input');
   fileInputElem.setAttribute('type', 'file');
@@ -1529,6 +1544,10 @@ importData.onclick = () => {
         // eslint-disable-next-line no-restricted-globals, no-alert
         if (!confirm(message)) return;
 
+        if (data.meta && data.meta.activityPrompt) {
+          activityPrompt = data.meta.activityPrompt;
+          localStorage.setItem('activityPrompt', data.meta.activityPrompt);
+        }
         if (data.meta && data.meta.iframes) {
           window.simulationFrames = data.meta.iframes;
           localStorage.setItem('iframes', JSON.stringify(data.meta.iframes));
@@ -1622,3 +1641,17 @@ const fadeInOutInterval = setInterval(() => {
   const nextCoord = panCoords[current];
   map.panTo(nextCoord);
 }, 13000);
+
+const test = () => {
+  const node = {
+    id: `${Math.ceil(Math.random() * 99999999999)}`,
+    category: 'casualos',
+    title: 'simulation',
+    shape: 'circularImage',
+    size: 30,
+    label: '🥚 River of Time (Live)',
+    url: 'https://casualos.com/?auxCode=riverOfTime_live',
+  };
+  nodes.add([node]);
+  return JSON.stringify(nodes.get(node.id), null, 1);
+};
