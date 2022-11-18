@@ -1672,20 +1672,6 @@ const fadeInOutInterval = setInterval(() => {
   }
   const nextCoord = panCoords[current];
   map.panTo(nextCoord);
-}, 13000);
-
-const test = () => {
-  const node = {
-    id: `${Math.ceil(Math.random() * 99999999999)}`,
-    category: 'casualos',
-    title: 'simulation',
-    shape: 'circularImage',
-    size: 30,
-    label: '🥚 River of Time (Live)',
-    url: 'https://casualos.com/?auxCode=riverOfTime_live',
-  };
-  nodes.add([node]);
-  return JSON.stringify(nodes.get(node.id), null, 1);
-};
+}, 23000);
 
 beaconAnimation(true);
