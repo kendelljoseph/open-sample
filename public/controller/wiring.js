@@ -254,6 +254,7 @@ const classifyActivity = async (params) => {
   const prompt = `Given this dataset of nodes and relations:\n\n###\n\n${activity}\n\n###\n\n${prependPrompt}`;
 
   writeTip.innerHTML = 'thinking...';
+  beaconAnimation();
   // eslint-disable-next-line no-undef
   const data = await api.ai.prompt({ prompt });
 
@@ -1007,6 +1008,7 @@ const submitFunction = async () => {
     prompt = editor.getValue();
   }
 
+  beaconAnimation();
   // eslint-disable-next-line no-undef
   const data = await api.ai.prompt({ prompt });
 
@@ -1040,6 +1042,7 @@ editor.commands.addCommand({
   name: 'detectCommandShiftEnter',
   bindKey: { win: 'Ctrl-Shift-Enter', mac: 'Command-Shift-Enter' },
   exec() {
+    beaconAnimation();
     greenLineAnimation();
     const mode = `ace/mode/${nextMode()}`;
     editor.getSession().setMode(mode);
@@ -1051,6 +1054,7 @@ editor.commands.addCommand({
   name: 'executeAsCode',
   bindKey: { win: 'Alt-Shift-Enter', mac: 'Option-Shift-Enter' },
   exec() {
+    beaconAnimation();
     greenLineAnimation();
     const selectedText = editor.getSelectedText();
     const allText = editor.session.getValue();
@@ -1237,6 +1241,7 @@ const toggleSimulation = () => {
     simulation.style.display = 'block';
     simIndicator.innerHTML = simulationActive ? 'ON' : 'OFF';
     localStorage.setItem('iframes', JSON.stringify([url]));
+    beaconAnimation();
     greenLineAnimation();
     if (speechEnabled) {
       window.responsiveVoice.cancel();
@@ -1247,6 +1252,7 @@ const toggleSimulation = () => {
     simulation.src = '';
     simulation.style.display = 'none';
     simIndicator.innerHTML = simulationActive ? 'ON' : 'OFF';
+    beaconAnimation();
     greenLineAnimation();
     if (speechEnabled) {
       window.responsiveVoice.cancel();
@@ -1262,6 +1268,7 @@ const openSimulation = (url) => {
   simulation.style.display = 'block';
   simIndicator.innerHTML = simulationActive ? 'ON' : 'OFF';
   localStorage.setItem('iframes', JSON.stringify([url]));
+  beaconAnimation();
   greenLineAnimation();
   if (speechEnabled) {
     window.responsiveVoice.cancel();
@@ -1433,6 +1440,8 @@ runTargetNode.onclick = async () => {
 
   editor.setValue(`${editor.getValue()}\n\n${activeNode.label}\n\n${renderedText}`);
   selectResponse(renderedText);
+
+  beaconAnimation();
   // eslint-disable-next-line no-undef
   const { response } = await api.ai.prompt({ prompt: renderedText });
   if (speechEnabled) {
@@ -1678,3 +1687,5 @@ const test = () => {
   nodes.add([node]);
   return JSON.stringify(nodes.get(node.id), null, 1);
 };
+
+beaconAnimation(true);
