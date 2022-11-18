@@ -454,7 +454,7 @@
         <hr>
         <div class="menu-header">🔊 interface</div>
         <li id="toggle-speech"><div class="network-option dropdown-item">speech<span id="speech-indicator" class="caption">OFF</span></div></li>
-        <li id="set-activity-prompt"><div class="network-option dropdown-item">activity prompt</div></li>
+        <li data-bs-toggle="modal" data-bs-target="#sample-prompt-options"><div class="network-option dropdown-item">custom reaction</div></li>
         <hr>
         <div class="menu-header">🥚 experience</div>
         <li id="load-experience"><div class="network-option dropdown-item">simulation<span id="sim-indicator" class="caption">OFF</span></div></li>
@@ -470,6 +470,33 @@
   </div>
   <img id="loading" src="../../assets/thinking.gif" alt="thinking">
   <iframe id="simulation" src="" frameborder="0" sandbox="allow-same-origin allow-scripts allow-forms"></iframe>
+  
+  <div class="modal fade" id="sample-prompt-options" tabindex="-1" aria-labelledby="sample-prompt-options" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="exampleModalLabel">🤖 Custom Reaction</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          Append a prompt to activity -- for example you could say, <br><br>
+          Looking at this information, respond as if you were a elementary teacher:
+          <br> <br>
+          This will cause your bot to consider that before analyzing activity.
+        </div>
+        <hr>
+        <div class="modal-body input-group">
+          <div class="input-group-text">prompt:</div>
+          <textarea id="new-activity-prompt" class="form-control" placeholder="Looking at this information, respond as if you were an elementary teacher:" style="resize:none;" aria-label="With textarea"></textarea>
+        </div>
+        <div class="modal-footer">
+          <button id="set-activity-prompt" type="button" class="btn btn-success" data-bs-dismiss="modal">Submit</button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <div id="graph-options-menu">
     <div id="target-tooltip">test</div>
     <div id="target-node" class="badge bg-dark text-truncate shadow"></div>

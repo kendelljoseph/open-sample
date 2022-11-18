@@ -40,6 +40,7 @@ const loadExperience = document.querySelector('#load-experience');
 const simulation = document.querySelector('#simulation');
 const setActivityPrompt = document.querySelector('#set-activity-prompt');
 const setNodeActivityPrompt = document.querySelector('#set-node-activity-prompt');
+const newActivityPrompt = document.querySelector('#new-activity-prompt');
 
 const saveAsPrompt = document.querySelector('#save-prompt');
 const downloadData = document.querySelector('#download-data');
@@ -1351,6 +1352,12 @@ toggleSpeech.onclick = () => {
   speechEnabled = !speechEnabled;
   speechIndicator.innerHTML = speechEnabled ? 'ON' : 'OFF';
   localStorage.setItem('speechIndicatorMode', JSON.stringify(speechEnabled));
+  if (speechEnabled) {
+    window.responsiveVoice.cancel();
+    window.responsiveVoice.speak(
+      `Hello ${displayName}, I will say my responses to you now.  You can disable this at any time from the menu.`,
+    );
+  }
 };
 
 clearNetwork.onclick = () => {
@@ -1527,13 +1534,14 @@ buyData.onclick = () => {
 };
 
 setActivityPrompt.onclick = () => {
-  // eslint-disable-next-line no-restricted-globals, no-alert
-  if (!confirm('Set a custom activity prompt?')) return;
-  // eslint-disable-next-line no-alert
-  const newPrompt = prompt('Prompt:');
+  const newPrompt = newActivityPrompt.value || defaultActivityPrompt;
   if (!newPrompt) return;
   activityPrompt = newPrompt;
   localStorage.setItem('activityPrompt', newPrompt);
+  if (speechEnabled) {
+    responsiveVoice.cancel();
+    responsiveVoice.speak(`Okay, I will consider this before reacting:\n\n${newPrompt}`);
+  }
 };
 
 setNodeActivityPrompt.onclick = () => {
@@ -1549,7 +1557,7 @@ setNodeActivityPrompt.onclick = () => {
     },
   ]);
   localStorage.setItem('wiringEditorNodeList', JSON.stringify(nodes.get()));
-  console.log(nodes.get([activeNode.id]));
+
   if (speechEnabled) {
     responsiveVoice.cancel();
     responsiveVoice.speak(`Okay, with this node, I will consider:\n\n${newPrompt}`);
