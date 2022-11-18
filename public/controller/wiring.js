@@ -52,8 +52,7 @@ if (navigator.platform.indexOf('Win') !== -1) {
   writeTip.innerHTML = `Viewing as ${displayName}`;
 }
 
-const defaultActivityPrompt = 'As an Data Security Auditor and Network Analyst, describe this network selection and potential usecases or a propper function in a short sentence:';
-let activityPrompt = localStorage.getItem('activityPrompt') || defaultActivityPrompt;
+let activityPrompt = localStorage.getItem('activityPrompt');
 window.simulationFrames = JSON.parse(localStorage.getItem('iframes'));
 
 window.buyLink = localStorage.getItem('buyLink');
@@ -249,9 +248,10 @@ const classifyActivity = async (params) => {
     from: edge.from,
     to: edge.to,
   }));
-
+  const defaultNodeActivityPrompt = 'As an Data Security Auditor and Network Analyst, describe this network selection and potential usecases or a propper function in a short sentence:';
+  const nodeActivityPrompt = activityPrompt || defaultNodeActivityPrompt;
   const activity = JSON.stringify({ n, e }, null, 2);
-  const prependPrompt = n[0].activityPrompt ? n[0].activityPrompt : activityPrompt;
+  const prependPrompt = n[0].activityPrompt ? n[0].activityPrompt : nodeActivityPrompt;
   const prompt = `Given this dataset of nodes and relations:\n\n###\n\n${activity}\n\n###\n\n${prependPrompt}`;
 
   writeTip.innerHTML = 'thinking...';
@@ -846,8 +846,8 @@ function clearGraph(addUser = false) {
   drawingNodes.clear();
   drawingEdges.clear();
   localStorage.removeItem('buyLink');
-  activityPrompt = defaultActivityPrompt;
-  localStorage.setItem('activityPrompt', defaultActivityPrompt);
+  activityPrompt = null;
+  localStorage.removeItem('activityPrompt');
   delete window.buyLink;
   if (!window.buyLink) purchaseOption.innerHTML = 'claim';
 
@@ -1004,9 +1004,9 @@ const submitFunction = async () => {
   const selectedText = editor.getSelectedText();
   let prompt = '';
   if (selectedText.length) {
-    prompt = selectedText;
+    prompt = `${activityPrompt || ''}\n\n${selectedText}`;
   } else {
-    prompt = editor.getValue();
+    prompt = `${activityPrompt || ''}\n\n${editor.getValue()}`;
   }
 
   beaconAnimation();
@@ -1534,11 +1534,16 @@ buyData.onclick = () => {
 };
 
 setActivityPrompt.onclick = () => {
-  const newPrompt = newActivityPrompt.value || defaultActivityPrompt;
-  if (!newPrompt) return;
+  const newPrompt = newActivityPrompt.value;
   activityPrompt = newPrompt;
   localStorage.setItem('activityPrompt', newPrompt);
+  beaconAnimation();
+
   if (speechEnabled) {
+    if (!activityPrompt) {
+      responsiveVoice.cancel();
+      responsiveVoice.speak('Okay, I will use my default reaction.');
+    }
     responsiveVoice.cancel();
     responsiveVoice.speak(`Okay, I will consider this before reacting:\n\n${newPrompt}`);
   }
@@ -1557,6 +1562,7 @@ setNodeActivityPrompt.onclick = () => {
     },
   ]);
   localStorage.setItem('wiringEditorNodeList', JSON.stringify(nodes.get()));
+  beaconAnimation();
 
   if (speechEnabled) {
     responsiveVoice.cancel();
