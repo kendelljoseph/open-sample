@@ -41,6 +41,7 @@ const simulation = document.querySelector('#simulation');
 const setActivityPrompt = document.querySelector('#set-activity-prompt');
 const setNodeActivityPrompt = document.querySelector('#set-node-activity-prompt');
 const newActivityPrompt = document.querySelector('#new-activity-prompt');
+const runCode = document.querySelector('#run-javascript');
 
 const saveAsPrompt = document.querySelector('#save-prompt');
 const downloadData = document.querySelector('#download-data');
@@ -1053,32 +1054,38 @@ editor.commands.addCommand({
   },
 });
 
+const runJavascript = () => {
+  beaconAnimation();
+  greenLineAnimation();
+  const selectedText = editor.getSelectedText();
+  const allText = editor.session.getValue();
+  const value = selectedText.length ? selectedText : allText;
+  if (!value) return;
+
+  try {
+    // eslint-disable-next-line no-new-func
+    const evaluateValue = Function(`${value}`);
+    const evaulationResponse = evaluateValue();
+    if (evaulationResponse) {
+      editor.setValue(`${editor.getValue()}\n\n${evaluateValue()}`);
+    }
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.error(error);
+    // eslint-disable-next-line no-alert
+    alert(`${error.message}`);
+  }
+};
+
 editor.commands.addCommand({
   name: 'executeAsCode',
   bindKey: { win: 'Alt-Shift-Enter', mac: 'Option-Shift-Enter' },
   exec() {
-    beaconAnimation();
-    greenLineAnimation();
-    const selectedText = editor.getSelectedText();
-    const allText = editor.session.getValue();
-    const value = selectedText.length ? selectedText : allText;
-    if (!value) return;
-
-    try {
-      // eslint-disable-next-line no-new-func
-      const evaluateValue = Function(`${value}`);
-      const evaulationResponse = evaluateValue();
-      if (evaulationResponse) {
-        editor.setValue(`${editor.getValue()}\n\n${evaluateValue()}`);
-      }
-    } catch (error) {
-      // eslint-disable-next-line no-console
-      console.error(error);
-      // eslint-disable-next-line no-alert
-      alert(`${error.message}`);
-    }
+    runJavascript();
   },
 });
+
+runCode.onclick = runJavascript;
 
 editor.commands.addCommand({
   name: 'tabBetweenWriteAndEntity',
@@ -1187,12 +1194,19 @@ viewBoth.onclick = showBothUX;
 viewGraphOnly.onclick = showGraphUX;
 viewEditorOnly.onclick = showEditorUx;
 
+const stopSpeech = () => {
+  window.responsiveVoice.cancel();
+};
+
 editor.commands.addCommand({
   name: 'showBothUX',
   bindKey: {
     win: window.addEventListener('keydown', (event) => {
       if (event.ctrlKey && event.keyCode === 49) {
         showBothUX();
+      }
+      if (event.keyCode === 27) {
+        stopSpeech();
       }
     }),
     mac: 'Ctrl-1',
@@ -1276,6 +1290,18 @@ const openSimulation = (url) => {
   if (speechEnabled) {
     window.responsiveVoice.cancel();
     window.responsiveVoice.speak('simulation is starting');
+  }
+};
+
+const closeSimulation = () => {
+  simulationActive = false;
+  simulation.style.pointerEvents = 'none';
+  simulation.src = '';
+  simulation.style.display = 'none';
+  simIndicator.innerHTML = simulationActive ? 'ON' : 'OFF';
+  if (speechEnabled) {
+    window.responsiveVoice.cancel();
+    window.responsiveVoice.speak('stopped simulation');
   }
 };
 
@@ -1587,8 +1613,8 @@ importData.onclick = () => {
     reader.onload = (event) => {
       const contents = event.target.result;
       try {
+        closeSimulation();
         const data = JSON.parse(contents);
-
         const message = `Import data from ${data.meta.displayName}?\n\n This will replace your current data!`;
         // eslint-disable-next-line no-restricted-globals, no-alert
         if (!confirm(message)) return;
