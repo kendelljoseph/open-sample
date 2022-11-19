@@ -47,3 +47,32 @@ const beaconAnimation = (repeat) => {
     },
   );
 };
+
+const bottomBeaconAnimation = (repeat) => {
+  const circle = document.createElement('div');
+  circle.style.zIndex = '-1';
+  circle.style.width = '100px';
+  circle.style.height = '100px';
+  circle.style.borderRadius = '400px';
+  circle.style.backgroundColor = 'white';
+  circle.style.position = 'absolute';
+  circle.style.top = '100vh';
+  circle.style.left = '50%';
+  circle.style.marginTop = '-50px';
+  circle.style.marginLeft = '-50px';
+  circle.style.opacity = '0';
+  circle.style.pointerEvents = 'none';
+  document.body.appendChild(circle);
+
+  const animation = circle.animate(
+    [
+      { transform: 'scale(0)', opacity: '0' },
+      { transform: 'scale(10)', opacity: repeat ? '0.25' : '0.9' },
+      { transform: 'scale(20)', opacity: '0' },
+    ],
+    {
+      duration: repeat ? 18000 : 1000,
+      iterations: repeat ? Infinity : 1,
+    },
+  );
+};

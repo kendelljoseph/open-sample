@@ -261,6 +261,7 @@ const classifyActivity = async (params) => {
 
   if (data) {
     greenLineAnimation();
+    bottomBeaconAnimation();
     if (speechEnabled) {
       responsiveVoice.cancel();
       responsiveVoice.speak(data.response);
@@ -1015,6 +1016,7 @@ const submitFunction = async () => {
 
   if (data) {
     greenLineAnimation();
+    bottomBeaconAnimation();
     if (speechEnabled) {
       window.responsiveVoice.cancel();
       window.responsiveVoice.speak(data.response);
@@ -1242,8 +1244,8 @@ const toggleSimulation = () => {
     simulation.style.display = 'block';
     simIndicator.innerHTML = simulationActive ? 'ON' : 'OFF';
     localStorage.setItem('iframes', JSON.stringify([url]));
-    beaconAnimation();
     greenLineAnimation();
+    bottomBeaconAnimation();
     if (speechEnabled) {
       window.responsiveVoice.cancel();
       window.responsiveVoice.speak('simulation is starting');
@@ -1253,8 +1255,8 @@ const toggleSimulation = () => {
     simulation.src = '';
     simulation.style.display = 'none';
     simIndicator.innerHTML = simulationActive ? 'ON' : 'OFF';
-    beaconAnimation();
     greenLineAnimation();
+    bottomBeaconAnimation();
     if (speechEnabled) {
       window.responsiveVoice.cancel();
       window.responsiveVoice.speak('stopped simulation');
@@ -1269,7 +1271,7 @@ const openSimulation = (url) => {
   simulation.style.display = 'block';
   simIndicator.innerHTML = simulationActive ? 'ON' : 'OFF';
   localStorage.setItem('iframes', JSON.stringify([url]));
-  beaconAnimation();
+  bottomBeaconAnimation();
   greenLineAnimation();
   if (speechEnabled) {
     window.responsiveVoice.cancel();
@@ -1456,6 +1458,7 @@ runTargetNode.onclick = async () => {
     responsiveVoice.speak(response);
   }
   if (response) {
+    bottomBeaconAnimation();
     greenLineAnimation();
   }
   editor.setValue(`${editor.getValue()}\n\n${activeNode.label} - Response\n${response}`);
@@ -1689,3 +1692,4 @@ const fadeInOutInterval = setInterval(() => {
 }, 23000);
 
 beaconAnimation(true);
+bottomBeaconAnimation(true);
