@@ -1726,7 +1726,9 @@ importData.onclick = () => {
           editor.setValue(data.prompt);
         }
       } catch (error) {
-        console.log(error);
+        // eslint-disable-next-line no-console
+        console.error(error);
+        // eslint-disable-next-line no-alert
         alert(`Could not read file\n\n${error.message}`);
         if (speechEnabled) {
           responsiveVoice.cancel();
