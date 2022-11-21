@@ -45,6 +45,7 @@ const runCode = document.querySelector('#run-javascript');
 const nodeAttributeNameInput = document.querySelector('#set-node-attribute-name');
 const nodeAttributeValueInput = document.querySelector('#set-node-attribute-value');
 const setNodeAttribute = document.querySelector('#set-node-attribute');
+const setNodePromptValueInput = document.querySelector('#set-node-prompt-value');
 
 const saveAsPrompt = document.querySelector('#save-prompt');
 const downloadData = document.querySelector('#download-data');
@@ -1574,7 +1575,7 @@ setActivityPrompt.onclick = () => {
   if (speechEnabled) {
     if (!activityPrompt) {
       responsiveVoice.cancel();
-      responsiveVoice.speak('Okay, I will use my default reaction.');
+      responsiveVoice.speak('Okay, I will use this default reaction.');
     }
     responsiveVoice.cancel();
     responsiveVoice.speak(`Okay, I will consider this before reacting:\n\n${newPrompt}`);
@@ -1582,15 +1583,12 @@ setActivityPrompt.onclick = () => {
 };
 
 setNodeActivityPrompt.onclick = () => {
-  // eslint-disable-next-line no-restricted-globals, no-alert
-  if (!confirm('Set a custom prompt for this node?')) return;
-  // eslint-disable-next-line no-alert
-  const newPrompt = prompt('Prompt:');
-  if (!newPrompt) return;
+  const promptValue = setNodePromptValueInput.value;
+  if (!promptValue) return;
   nodes.update([
     {
       id: activeNode.id,
-      activityPrompt: newPrompt,
+      activityPrompt: promptValue,
     },
   ]);
   localStorage.setItem('wiringEditorNodeList', JSON.stringify(nodes.get()));
@@ -1598,7 +1596,7 @@ setNodeActivityPrompt.onclick = () => {
 
   if (speechEnabled) {
     responsiveVoice.cancel();
-    responsiveVoice.speak('Okay, with this node, I will consider this prompt.');
+    responsiveVoice.speak('Okay, with this node, I will consider this prompt before reacting.');
   }
 };
 
@@ -1615,7 +1613,9 @@ setNodeAttribute.onclick = () => {
 
   if (speechEnabled) {
     responsiveVoice.cancel();
-    responsiveVoice.speak('Okay, with this node, I will consider these attributes.');
+    responsiveVoice.speak(
+      'Okay, with this node, I will consider these attributes before reacting.',
+    );
   }
 };
 

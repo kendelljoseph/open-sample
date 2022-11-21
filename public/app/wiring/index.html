@@ -8,7 +8,7 @@
     <meta name="title" content="Open Sample">
     <meta name="description" content="An open-source AI assisted API">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.2/dist/leaflet.css" integrity="sha256-sA+zWATbFveLLNqWO2gtiw3HL/lh1giY/Inf1BJ0z14=" crossorigin="" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.3/leaflet.css" integrity="sha512-mD70nAW2ThLsWH0zif8JPbfraZ8hbCtjQ+5RU1m4+ztZq6/MymyZeB55pWsi4YAX+73yvcaJyk61mzfYMvtm9w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <style>
       @import url('https://fonts.googleapis.com/css2?family=Merriweather&display=swap');
       body {
@@ -508,7 +508,7 @@
       <ol id="interaction-options" class="dropdown-menu shadow-lg">
         <div class="menu-header">reaction</div>
         <li>
-          <div id="set-node-activity-prompt" class="target-modal-opener dropdown-item graph-option">
+          <div class="target-modal-opener dropdown-item graph-option"  data-bs-toggle="modal" data-bs-target="#set-node-prompt-modal">
             custom prompt
           </div>
           <div class="target-modal-opener dropdown-item graph-option" data-bs-toggle="modal" data-bs-target="#set-node-attribute-modal">
@@ -719,7 +719,7 @@
       </div>
     </div>
 
-    <div class="modal fade" id="set-node-attribute-modal" tabindex="-1" aria-labelledby="sample-prompt-properties" aria-hidden="true">
+    <div class="modal fade" id="set-node-attribute-modal" tabindex="-1" aria-labelledby="set-node-attribute-modal" aria-hidden="true">
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
@@ -744,6 +744,32 @@
         </div>
       </div>
     </div>
+
+    <div class="modal fade" id="set-node-prompt-modal" tabindex="-1" aria-labelledby="custom-node-prompt" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 class="modal-title fs-5">Custom Prompt</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          
+          <div class="modal-body">
+            Set a custom prompt for this node.</br>
+            <br> <br>
+            This will cause your bot to consider this prompt for this node before analyzing activity.
+          </div>
+          <hr>
+          <div class="modal-body input-group">
+            <div class="input-group-text">prompt</div>
+            <textarea id="set-node-prompt-value" class="form-control" placeholder="Looking at this node, respond as if you were an elementary teacher:" style="resize:none;" aria-label="With textarea"></textarea>
+          </div>
+          <div class="modal-footer">
+            <button id="set-node-activity-prompt" type="button" class="btn btn-success" data-bs-dismiss="modal">Submit</button>
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 
   <div id="config"></div>
@@ -758,8 +784,8 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.1.3/axios.min.js" integrity="sha512-0qU9M9jfqPw6FKkPafM3gy2CBAvUWnYVOfNPDYKVuRTel1PrciTj+a9P3loJB+j0QmN2Y0JYQmkBBS8W+mbezg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.1.3/ace.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/neo4j-driver"></script>
-<script src="https://unpkg.com/leaflet@1.9.2/dist/leaflet.js" integrity="sha256-o9N1jGDZrf5tS+Ft4gbIK7mYMipq9lqpVJ91xHSyKhg=" crossorigin=""></script>
-<script type="text/javascript" src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.3/leaflet.js" integrity="sha512-Dqm3h1Y4qiHUjbhxTuBGQsza0Tfppn53SHlu/uj1f+RT+xfShfe7r6czRf5r2NmllO2aKx+tYJgoxboOkn1Scg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/standalone/umd/vis-network.min.js" integrity="sha512-DOpf3tO7m7MJHkMMRRoNxiJL4CR+TFLYy2XnIOeTh26Hz8j8i9RHrVkXzh+AQ7mffzIFk538/zcQ3Yoo+7VISA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script src="https://unpkg.com/mustache@latest"></script>
 <script src="https://code.responsivevoice.org/responsivevoice.js?key=mcboJNaC"></script>
 <script src='../../js/cookies.js'></script>
