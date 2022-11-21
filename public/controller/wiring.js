@@ -42,6 +42,9 @@ const setActivityPrompt = document.querySelector('#set-activity-prompt');
 const setNodeActivityPrompt = document.querySelector('#set-node-activity-prompt');
 const newActivityPrompt = document.querySelector('#new-activity-prompt');
 const runCode = document.querySelector('#run-javascript');
+const nodeAttributeNameInput = document.querySelector('#set-node-attribute-name');
+const nodeAttributeValueInput = document.querySelector('#set-node-attribute-value');
+const setNodeAttribute = document.querySelector('#set-node-attribute');
 
 const saveAsPrompt = document.querySelector('#save-prompt');
 const downloadData = document.querySelector('#download-data');
@@ -1580,7 +1583,7 @@ setActivityPrompt.onclick = () => {
 
 setNodeActivityPrompt.onclick = () => {
   // eslint-disable-next-line no-restricted-globals, no-alert
-  if (!confirm('Set a custom activity prompt for this node?')) return;
+  if (!confirm('Set a custom prompt for this node?')) return;
   // eslint-disable-next-line no-alert
   const newPrompt = prompt('Prompt:');
   if (!newPrompt) return;
@@ -1595,7 +1598,24 @@ setNodeActivityPrompt.onclick = () => {
 
   if (speechEnabled) {
     responsiveVoice.cancel();
-    responsiveVoice.speak(`Okay, with this node, I will consider:\n\n${newPrompt}`);
+    responsiveVoice.speak('Okay, with this node, I will consider this prompt.');
+  }
+};
+
+setNodeAttribute.onclick = () => {
+  const propName = nodeAttributeNameInput.value;
+  const propValue = nodeAttributeValueInput.value;
+  const isValid = propName && propValue;
+  if (!isValid) return;
+
+  activeNode[propName] = propValue;
+  nodes.update([activeNode]);
+  localStorage.setItem('wiringEditorNodeList', JSON.stringify(nodes.get()));
+  beaconAnimation();
+
+  if (speechEnabled) {
+    responsiveVoice.cancel();
+    responsiveVoice.speak('Okay, with this node, I will consider these attributes.');
   }
 };
 

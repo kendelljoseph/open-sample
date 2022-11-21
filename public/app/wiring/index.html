@@ -508,8 +508,11 @@
       <ol id="interaction-options" class="dropdown-menu shadow-lg">
         <div class="menu-header">reaction</div>
         <li>
-          <div id="set-node-activity-prompt"class="target-modal-opener dropdown-item graph-option" data-bs-toggle="modal">
+          <div id="set-node-activity-prompt" class="target-modal-opener dropdown-item graph-option">
             custom prompt
+          </div>
+          <div class="target-modal-opener dropdown-item graph-option" data-bs-toggle="modal" data-bs-target="#set-node-attribute-modal">
+            custom attribute
           </div>
         </li>
         <hr>
@@ -716,6 +719,31 @@
       </div>
     </div>
 
+    <div class="modal fade" id="set-node-attribute-modal" tabindex="-1" aria-labelledby="sample-prompt-properties" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 class="modal-title fs-5" id="exampleModalLabel">Custom Attribute</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            Set a custom attribute for this node.</br>
+            <br> <br>
+            This will cause your bot to consider these attributes for this node before analyzing activity.
+          </div>
+          <hr>
+          <div class="modal-body input-group">
+            <div class="input-group-text">attribute</div>
+            <input id="set-node-attribute-name" type="text" aria-label="Node attribute name" class="form-control" placeholder="name">
+            <input id="set-node-attribute-value" type="text" aria-label="Node attribute value" class="form-control" placeholder="value">
+          </div>
+          <div class="modal-footer">
+            <button id="set-node-attribute" type="button" class="btn btn-success" data-bs-dismiss="modal">Submit</button>
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 
   <div id="config"></div>
