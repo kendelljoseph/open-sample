@@ -46,6 +46,7 @@ const nodeAttributeNameInput = document.querySelector('#set-node-attribute-name'
 const nodeAttributeValueInput = document.querySelector('#set-node-attribute-value');
 const setNodeAttribute = document.querySelector('#set-node-attribute');
 const setNodePromptValueInput = document.querySelector('#set-node-prompt-value');
+const deleteNode = document.querySelector('#delete-node');
 
 const saveAsPrompt = document.querySelector('#save-prompt');
 const downloadData = document.querySelector('#download-data');
@@ -1328,13 +1329,42 @@ editor.commands.addCommand({
   },
 });
 
-network.on('hold', (params) => {
+network.on('hold', (params, details) => {
   if (params.nodes && params.nodes.length) {
     const node = nodes.get(params.nodes)[0];
 
     if (node.url) {
       openSimulation(node.url);
     }
+  } else {
+    nodes.add([
+      {
+        shape: 'circularImage',
+        // eslint-disable-next-line no-undef
+        label: `${displayName}'s Node`,
+        // eslint-disable-next-line no-undef
+        image: userPictureUrl,
+        size: 24,
+        font: {
+          size: 10,
+          color: '#333',
+          face: 'arial',
+          strokeWidth: 3,
+          strokeColor: '#ffffff',
+        },
+      },
+    ]);
+
+    localStorage.setItem('wiringEditorNodeList', JSON.stringify(nodes.get()));
+
+    network.moveTo({
+      position: { x: 0, y: 0 },
+      scale: 2,
+      animation: {
+        duration: 300,
+        easingFunction: 'easeInOutQuad',
+      },
+    });
   }
 });
 
@@ -1616,6 +1646,18 @@ setNodeAttribute.onclick = () => {
     responsiveVoice.speak(
       'Okay, with this node, I will consider these attributes before reacting.',
     );
+  }
+};
+
+deleteNode.onclick = () => {
+  // eslint-disable-next-line no-restricted-globals, no-alert
+  if (!confirm('Delete node?\n\n This action can not be undone!')) return;
+  nodes.remove([activeNode]);
+  localStorage.setItem('wiringEditorNodeList', JSON.stringify(nodes.get()));
+
+  if (speechEnabled) {
+    responsiveVoice.cancel();
+    responsiveVoice.speak('Node removed.');
   }
 };
 
