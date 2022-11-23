@@ -1636,7 +1636,13 @@ setNodeAttribute.onclick = () => {
   const isValid = propName && propValue;
   if (!isValid) return;
 
-  activeNode[propName] = propValue;
+  const [key, subKey] = propName.split('.');
+  if (subKey) {
+    if (!activeNode[key]) activeNode[key] = {};
+    activeNode[key][subKey] = propValue;
+  } else {
+    activeNode[propName] = propValue;
+  }
   nodes.update([activeNode]);
   localStorage.setItem('wiringEditorNodeList', JSON.stringify(nodes.get()));
   beaconAnimation();
