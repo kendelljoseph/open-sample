@@ -1563,7 +1563,7 @@ downloadData.onclick = () => {
   const dlAnchorElem = document.createElement('a');
   dlAnchorElem.setAttribute('href', dataStr);
   // eslint-disable-next-line no-undef
-  dlAnchorElem.setAttribute('download', `${displayName}'s Sample ${time}.json`);
+  dlAnchorElem.setAttribute('download', `${displayName}'s Sample ${time}.jct`);
   dlAnchorElem.click();
   dlAnchorElem.remove();
   if (speechEnabled) {
@@ -1672,7 +1672,8 @@ importData.onclick = () => {
   fileInputElem.setAttribute('type', 'file');
   fileInputElem.onchange = () => {
     const fileList = fileInputElem.files;
-    if (fileList.length && fileList[0].type !== 'application/json') return alert('Unsupported file type');
+    const supportedType = /\.jct/.test(fileList[0].name) || /\.json/.test(fileList[0].name);
+    if (fileList.length && !supportedType) return alert('Unsupported file type');
 
     // Create a FileReader
     const reader = new FileReader();
