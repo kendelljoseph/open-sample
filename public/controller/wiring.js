@@ -294,7 +294,7 @@ const networkInteractionAction = (params) => {
       editTargetImage.style.display = 'none';
       sampleMenu.classList.remove('yellow-glow');
     }
-    // https://casualos.com/?inst=disciplinary-azure-goose&gridPortal=home
+
     if (firstNode && firstNode.label) {
       if (firstNode.slug) {
         runTargetNode.style.display = 'block';
