@@ -25,6 +25,8 @@ const toCompletions = document.querySelector('#to-completions');
 const toProblems = document.querySelector('#to-problems');
 const toggleSpeech = document.querySelector('#toggle-speech');
 const speechIndicator = document.querySelector('#speech-indicator');
+const toggleGestures = document.querySelector('#toggle-gestures');
+const gesturesIndicator = document.querySelector('#gestures-indicator');
 const simIndicator = document.querySelector('#sim-indicator');
 const waText = document.querySelectorAll('.wa-text');
 const writeTip = document.querySelector('#write-tip');
@@ -47,6 +49,8 @@ const nodeAttributeValueInput = document.querySelector('#set-node-attribute-valu
 const setNodeAttribute = document.querySelector('#set-node-attribute');
 const setNodePromptValueInput = document.querySelector('#set-node-prompt-value');
 const deleteNode = document.querySelector('#delete-node');
+const emotionLabel = document.querySelector('#emotion-label');
+const gestureLabel = document.querySelector('#gesture-label');
 
 const saveAsPrompt = document.querySelector('#save-prompt');
 const downloadData = document.querySelector('#download-data');
@@ -63,6 +67,9 @@ window.simulationFrames = JSON.parse(localStorage.getItem('iframes'));
 
 window.buyLink = localStorage.getItem('buyLink');
 if (!window.buyLink) purchaseOption.innerHTML = 'claim';
+let gesturesEnabled = JSON.parse(localStorage.getItem('gesturesIndicatorMode'));
+gesturesIndicator.innerHTML = gesturesEnabled ? 'ON' : 'OFF';
+
 let speechEnabled = JSON.parse(localStorage.getItem('speechIndicatorMode'));
 speechIndicator.innerHTML = speechEnabled ? 'ON' : 'OFF';
 
@@ -1787,6 +1794,213 @@ const fadeInOutInterval = setInterval(() => {
   const nextCoord = panCoords[current];
   map.panTo(nextCoord);
 }, 23000);
+
+const humanConfig = {
+  filter: { enabled: true, equalization: true, flip: false },
+  face: {
+    enabled: true,
+    detector: { rotation: true },
+    mesh: { enabled: true },
+    attention: { enabled: false },
+    iris: { enabled: true },
+    description: { enabled: true },
+    emotion: { enabled: true },
+  },
+  body: { enabled: true },
+  hand: { enabled: true },
+  gesture: { enabled: true },
+  object: { enabled: false },
+  segmentation: { enabled: false },
+};
+
+const detectionData = {
+  point: 0,
+  openPalm: 0,
+  rightEye: 0,
+  leftEye: 0,
+};
+
+const gestureEmoji = {
+  asleep: '😴💤',
+  vote: '️🗳',
+  raise: '🤚',
+};
+let activeGesture = null;
+let userAlertedEyesClosed = false;
+const activateGesture = () => {
+  if (detectionData.rightEye > 70 && detectionData.leftEye > 70) {
+    activeGesture = gestureEmoji.asleep;
+    if (speechEnabled && gesturesEnabled && !userAlertedEyesClosed) {
+      userAlertedEyesClosed = true;
+      window.responsiveVoice.cancel();
+      window.responsiveVoice.speak(`${displayName}, are you still there?`);
+    }
+    return;
+  }
+
+  if (detectionData.point > 20) {
+    activeGesture = gestureEmoji.vote;
+    return;
+  }
+
+  if (detectionData.openPalm > 20) {
+    activeGesture = gestureEmoji.raise;
+    return;
+  }
+
+  userAlertedEyesClosed = false;
+  activeGesture = null;
+};
+
+const updateAppearanceText = (interp) => {
+  const emotionEnums = {
+    angry: '😡',
+    disgust: '🤢',
+    fear: '😨',
+    happy: '😃',
+    sad: '😞',
+    surprise: '😲',
+    neutral: '😐',
+  };
+  if (interp.face.length && interp.face[0].emotion && interp.face[0].emotion.length) {
+    const interpEmotion = interp.face[0].emotion;
+    const e1 = interpEmotion[0].emotion;
+    const e2 = interpEmotion[1] && interpEmotion[1].emotion;
+    const e3 = interpEmotion[2] && interpEmotion[2].emotion;
+
+    activateGesture();
+    if (activeGesture) {
+      emotionLabel.innerHTML = `${activeGesture}`;
+      emotionLabel.style.fontSize = '2em';
+      emotionLabel.style.top = '5px';
+    } else {
+      emotionLabel.style.fontSize = '0.75em';
+      emotionLabel.style.top = '30px';
+      emotionLabel.innerHTML = `
+        ${emotionEnums[e1]} ${e1}
+        <span style="opacity:0.5">${emotionEnums[e2] || ''} ${e2 || ''} </span>
+        <span style="opacity:0.25">${emotionEnums[e3] || ''} ${e3 || ''} </span>`;
+    }
+  }
+
+  if (interp.gesture && interp.gesture.length) {
+    const pointGestures = interp.gesture.filter((g) => g.gesture === 'point' && g.hand === 0);
+    const openPalmGestures = interp.gesture.filter(
+      (g) => g.gesture === 'open palm' && g.hand === 0,
+    );
+    const leftIrisGestures = interp.gesture.filter((g) => g.gesture === 'blink left eye');
+    const rightIrisGestures = interp.gesture.filter((g) => g.gesture === 'blink right eye');
+
+    if (pointGestures.length) {
+      if (detectionData.point < 50) {
+        detectionData.point += 2;
+      }
+    } else if (detectionData.point > 0) {
+      detectionData.point -= 2;
+    }
+
+    if (openPalmGestures.length) {
+      if (detectionData.openPalm < 50) {
+        detectionData.openPalm += 2;
+      }
+    } else if (detectionData.openPalm > 0) {
+      detectionData.openPalm -= 2;
+    }
+
+    if (leftIrisGestures.length) {
+      if (detectionData.leftEye < 100) {
+        detectionData.leftEye += 2;
+      }
+    } else if (detectionData.leftEye > 0) {
+      detectionData.leftEye -= 1;
+    }
+
+    if (rightIrisGestures.length) {
+      if (detectionData.rightEye < 100) {
+        detectionData.rightEye += 2;
+      }
+    } else if (detectionData.rightEye > 0) {
+      detectionData.rightEye -= 1;
+    }
+
+    gestureLabel.innerHTML = `${interp.gesture.length} gestures: ${
+      detectionData.point
+    } points: ${detectionData.openPalm} openPalm: ${detectionData.leftEye} leftEye: ${
+      detectionData.rightEye
+    } rightEye: ${JSON.stringify(interp.gesture, '</br>', 1)}`;
+  }
+};
+
+const human = new Human.Human(humanConfig);
+const canvas = document.getElementById('canvas');
+
+async function drawLoop() {
+  const interpolated = human.next();
+  window.interp = interpolated;
+  updateAppearanceText(interpolated);
+  human.draw.canvas(human.webcam.element, canvas);
+  await human.draw.all(canvas, interpolated);
+  setTimeout(drawLoop, 30);
+}
+
+let cameraAdded = false;
+let cameraPaused = false;
+async function startMonitoringGestures() {
+  await human.webcam.start({ crop: true });
+  if (!cameraAdded) {
+    human.video(human.webcam.element);
+    cameraAdded = true;
+    canvas.width = human.webcam.width;
+    canvas.height = human.webcam.height;
+    await drawLoop();
+  }
+}
+
+if (gesturesEnabled) {
+  startMonitoringGestures();
+  emotionLabel.style.display = 'block';
+  // gestureLabel.style.display = 'block';
+}
+
+toggleGestures.onclick = () => {
+  responsiveVoice.cancel();
+  gesturesEnabled = !gesturesEnabled;
+  const interfaceItems = document.querySelectorAll('.gesture-interface-item');
+  const showInterfaceItems = () => {
+    interfaceItems.forEach((item) => {
+      item.style.display = 'block';
+    });
+  };
+
+  const hideInterfaceItems = () => {
+    interfaceItems.forEach((item) => {
+      item.style.display = 'none';
+    });
+  };
+
+  if (gesturesEnabled) {
+    cameraPaused = false;
+    startMonitoringGestures();
+    showInterfaceItems();
+  } else {
+    cameraPaused = true;
+    hideInterfaceItems();
+  }
+
+  const offOrPaused = cameraPaused ? 'PAUSED' : 'OFF';
+  gesturesIndicator.innerHTML = gesturesEnabled ? 'ON' : offOrPaused;
+  localStorage.setItem('gesturesIndicatorMode', JSON.stringify(gesturesEnabled));
+
+  if (speechEnabled && gesturesEnabled) {
+    window.responsiveVoice.cancel();
+    window.responsiveVoice.speak('Enabling gestures');
+  }
+
+  if (speechEnabled && !gesturesEnabled) {
+    window.responsiveVoice.cancel();
+    window.responsiveVoice.speak('Pausing gestures');
+  }
+};
 
 beaconAnimation(true);
 bottomBeaconAnimation(true);
